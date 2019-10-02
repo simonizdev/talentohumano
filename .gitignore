@@ -3,4 +3,8 @@ assets/*
 protected/runtime/*
 !protected/runtime/.gitignore
 protected/data/*.db
-themes/classic/views/
+protected/config/*
+images/herramientas/*
+images/soporte_estudios/*
+images/soporte_medico/*
+pdf/*
