@@ -68,7 +68,7 @@ class CuentaController extends Controller
 
 		$tipos= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->tipo_correo.' AND Estado = 1 ORDER BY d.Dominio')->queryAll();
 
-		$dominios= Yii::app()->db->createCommand('SELECT d.Id_Dominio_Web, d.Dominio FROM TH_DOMINIO_WEB d WHERE Estado = 1 ORDER BY d.Dominio')->queryAll();
+		$dominios= Yii::app()->db->createCommand('SELECT d.Id_Dominio_Web, d.Dominio FROM TH_DOMINIO_WEB d WHERE Estado = 1 AND Id_Tipo = '.Yii::app()->params->dominios_cuenta_correo.' ORDER BY d.Dominio ')->queryAll();
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -342,7 +342,7 @@ class CuentaController extends Controller
 
 		$tipos= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->tipo_correo.' AND Estado = 1 ORDER BY d.Dominio')->queryAll();
 
-		$dominios= Yii::app()->db->createCommand('SELECT d.Id_Dominio_Web, d.Dominio FROM TH_DOMINIO_WEB d WHERE Estado = 1 ORDER BY d.Dominio')->queryAll();
+		$dominios= Yii::app()->db->createCommand('SELECT d.Id_Dominio_Web, d.Dominio FROM TH_DOMINIO_WEB d WHERE Estado = 1 AND Id_Tipo = '.Yii::app()->params->dominios_cuenta_correo.' ORDER BY d.Dominio ')->queryAll();
 
 		$estados_all = Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->estado_correo.' AND Estado = 1 ORDER BY d.Dominio')->queryAll();
 
@@ -916,7 +916,7 @@ class CuentaController extends Controller
 
 		$tipos= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->tipo_correo.' AND Estado = 1 ORDER BY d.Dominio')->queryAll();
 
-		$dominios= Yii::app()->db->createCommand('SELECT d.Id_Dominio_Web, d.Dominio FROM TH_DOMINIO_WEB d WHERE Estado = 1 ORDER BY d.Dominio')->queryAll();
+		$dominios= Yii::app()->db->createCommand('SELECT d.Id_Dominio_Web, d.Dominio FROM TH_DOMINIO_WEB d WHERE Estado = 1 AND Id_Tipo = '.Yii::app()->params->dominios_cuenta_correo.' ORDER BY d.Dominio ')->queryAll();
 
 		$estados= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->estado_correo.' AND Estado = 1 ORDER BY d.Dominio')->queryAll();
 
