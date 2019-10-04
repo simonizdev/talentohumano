@@ -150,7 +150,7 @@ class DominioWeb extends CActiveRecord
 	    }
 
  		if(empty($this->orderby)){
-			$criteria->order = 'idtipo.Dominio, t.Dominio ASC'; 	
+			$criteria->order = 'idtipo.Dominio ASC, t.Dominio ASC'; 	
 		}else{
 			switch ($this->orderby) {
 			    case 1:
