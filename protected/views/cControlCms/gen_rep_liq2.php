@@ -296,114 +296,13 @@ if($opc == 2){
 
     $n = 'Base_comisiones_'.$id.'_'.date('Y-m-d H_i_s');
 
-    header('Content-Type: application/vnd.ms-excel');
-    header('Content-Disposition: attachment;filename="'.$n.'.xls"');
-    header('Cache-Control: max-age=0');
-
-    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-    $objWriter->save('php://output');
-
-    exit;
+   header('Content-Type: application/vnd.ms-excel');
+   header('Content-Disposition: attachment;filename="'.$n.'.xlsx"');
+   header('Cache-Control: max-age=0');
+   $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
+   ob_end_clean();
+   $objWriter->save('php://output');
+   exit;
 }
-
-?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<?php
-
-
 
 ?>
