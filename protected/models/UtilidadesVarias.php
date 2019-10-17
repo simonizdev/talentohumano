@@ -116,8 +116,11 @@ class UtilidadesVarias {
 		// Se inactiva el autoloader de yii
 		spl_autoload_unregister(array('YiiBase','autoload'));  
 
-		require_once(Yii::app()->basePath . '\extensions\PHPMailer\class.phpmailer.php');
-		require_once(Yii::app()->basePath . '\extensions\PHPMailer\class.smtp.php');
+		//require_once(Yii::app()->basePath . '\extensions\PHPMailer\class.phpmailer.php');
+		//require_once(Yii::app()->basePath . '\extensions\PHPMailer\class.smtp.php');
+
+		require_once(Yii::app()->basePath . '\extensions\PHPMailer\src\PHPMailer.php');
+		require_once(Yii::app()->basePath . '\extensions\PHPMailer\src\SMTP.php');
 
 		//cuando se termina la accion relacionada con la libreria se activa el autoloader de yii
 		spl_autoload_register(array('YiiBase','autoload'));
