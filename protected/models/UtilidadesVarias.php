@@ -157,7 +157,7 @@ class UtilidadesVarias {
 		$mensaje = $mensaje_hora."<br><br>
 		Se Adjunta documento PDF con detalle de comisión.<br>";
 
-		$mail = new PHPMailer();
+		$mail = new PHPMailer\PHPMailer\PHPMailer;
 		$mail->IsSMTP();
 		$mail->CharSet = 'UTF-8';
 		$mail->Host = "secure.emailsrvr.com";
