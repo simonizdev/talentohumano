@@ -34,6 +34,7 @@ if($model->Dias == ""){
     <div class="col-sm-8">
         <div class="form-group">
             <input type="hidden" id="fecha_min" value="<?php echo $fecha_min; ?>">
+            <input type="hidden" id="fecha_max" value="<?php echo date('Y-m-d') ?>">
             <?php echo $form->label($model,'Id_Empleado'); ?>
             <?php echo '<p>'.UtilidadesEmpleado::nombreempleado($e).'</p>'; ?> 
         </div>
@@ -211,6 +212,7 @@ $(function() {
 	  autoclose: true,
 	  orientation: "right bottom",
       startDate: $("#fecha_min").val(),
+      endDate: $("#fecha_max").val(),
 	}).on('changeDate', function (selected) {
 
        if($("#AusenciaEmpleado_Fecha_Inicial").val() > $("#AusenciaEmpleado_Fecha_Final").val()){
@@ -233,8 +235,6 @@ $(function() {
         $("#AusenciaEmpleado_Fecha_Inicial").val('');
        }
 
-	   var maxDate = new Date(selected.date.valueOf());
-	   $('#AusenciaEmpleado_Fecha_Inicial').datepicker('setEndDate', maxDate);
 	}); 
 
 });
