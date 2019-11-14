@@ -607,26 +607,6 @@ $(function() {
 
   }); 
 
-  /*$("#DisciplinarioEmpleado_A_Fecha_Inicial").datepicker({
-    language: 'es',
-    autoclose: true,
-    orientation: "right bottom",
-      startDate: $("#fecha_min").val(),
-  }).on('changeDate', function (selected) {
-     var minDate = new Date(selected.date.valueOf());
-     $('#DisciplinarioEmpleado_A_Fecha_Final').datepicker('setStartDate', minDate);
-  });
-
-  $("#DisciplinarioEmpleado_A_Fecha_Final").datepicker({
-    language: 'es',
-    autoclose: true,
-    orientation: "right bottom",
-      startDate: $("#fecha_min").val(),
-  }).on('changeDate', function (selected) {
-     var maxDate = new Date(selected.date.valueOf());
-     $('#DisciplinarioEmpleado_A_Fecha_Inicial').datepicker('setEndDate', maxDate);
-  });*/ 
-
 });
 
 </script>

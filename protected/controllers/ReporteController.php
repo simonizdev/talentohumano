@@ -465,27 +465,35 @@ class ReporteController extends Controller
 										$fila_error = $i + 1;
 										$msj .= 'Error en la fila # '.$fila_error.', la fecha inicial de la ausencia no puede ser menor a la fecha de ingreso del contrato.<br>'; 
 									}else{
-										$model=new AusenciaEmpleado;
 
-									 	$model->Id_Empleado = $id_emp;
-									 	$model->Id_Contrato = $contrato_act;
-									 	$model->Fecha_Inicial = $fecha_inicial;
-									 	$model->Fecha_Final= $fecha_final;
-									 	$model->Id_M_Ausencia = $motivo;
-									 	$model->Cod_Soporte = strtoupper($cod_sop);
-									 	$model->Descontar = $descontar;
-									 	$model->Descontar_FDS = $descontar_fds;
-										$model->Dias = $dias;
-										$model->Horas = $horas;
-										$model->Observacion = strtoupper($observaciones);
-										$model->Nota = strtoupper($notas);
-										$model->Id_Usuario_Creacion = Yii::app()->user->getState('id_user');
-										$model->Id_Usuario_Actualizacion = Yii::app()->user->getState('id_user');
-										$model->Fecha_Creacion = date('Y-m-d H:i:s');
-										$model->Fecha_Actualizacion = date('Y-m-d H:i:s');
-										$model->save();
+										if($fecha_inicial > date('Y-m-d')){
+											$fila_error = $i + 1;
+											$msj .= 'Error en la fila # '.$fila_error.', la fecha inicial no puede ser mayor a la fecha actual.<br>'; 
+										}else{
+										
+											$model=new AusenciaEmpleado;
 
-										$cont = $cont + 1;
+										 	$model->Id_Empleado = $id_emp;
+										 	$model->Id_Contrato = $contrato_act;
+										 	$model->Fecha_Inicial = $fecha_inicial;
+										 	$model->Fecha_Final= $fecha_final;
+										 	$model->Id_M_Ausencia = $motivo;
+										 	$model->Cod_Soporte = strtoupper($cod_sop);
+										 	$model->Descontar = $descontar;
+										 	$model->Descontar_FDS = $descontar_fds;
+											$model->Dias = $dias;
+											$model->Horas = $horas;
+											$model->Observacion = strtoupper($observaciones);
+											$model->Nota = strtoupper($notas);
+											$model->Id_Usuario_Creacion = Yii::app()->user->getState('id_user');
+											$model->Id_Usuario_Actualizacion = Yii::app()->user->getState('id_user');
+											$model->Fecha_Creacion = date('Y-m-d H:i:s');
+											$model->Fecha_Actualizacion = date('Y-m-d H:i:s');
+											$model->save();
+
+											$cont = $cont + 1;
+
+										}
 									}
 								}	
 							}
