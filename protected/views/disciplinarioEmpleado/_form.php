@@ -21,7 +21,8 @@
   <div class="row">
     <div class="col-sm-8">
         <div class="form-group">
-          <input type="hidden" id="fecha_min" value="<?php echo $fecha_min; ?>">   
+          <input type="hidden" id="fecha_min" value="<?php echo $fecha_min; ?>">
+          <input type="hidden" id="fecha_max" value="<?php echo date('Y-m-d') ?>">   
           <?php echo $form->label($model,'Id_Empleado'); ?>
           <?php echo '<p>'.UtilidadesEmpleado::nombreempleado($e).'</p>'; ?> 
         </div>
@@ -110,7 +111,8 @@
   <div class="row">
     <div class="col-sm-8">
         <div class="form-group">
-          <input type="hidden" id="fecha_min" value="<?php echo $fecha_min; ?>">   
+          <input type="hidden" id="fecha_min" value="<?php echo $fecha_min; ?>">
+          <input type="hidden" id="fecha_max" value="<?php echo date('Y-m-d') ?>">    
           <?php echo $form->label($model,'Id_Empleado'); ?>
           <?php echo '<p>'.UtilidadesEmpleado::nombreempleado($e).'</p>'; ?> 
         </div>
@@ -306,7 +308,8 @@
         <div class="row">
           <div class="col-sm-8">
               <div class="form-group">
-                <input type="hidden" id="fecha_min" value="<?php echo $fecha_min; ?>">   
+                <input type="hidden" id="fecha_min" value="<?php echo $fecha_min; ?>">
+                <input type="hidden" id="fecha_max" value="<?php echo date('Y-m-d') ?>">     
                 <?php echo $form->label($model,'Id_Empleado'); ?>
                 <?php echo '<p>'.UtilidadesEmpleado::nombreempleado($e).'</p>'; ?> 
               </div>
@@ -570,9 +573,41 @@ $(function() {
       autoclose: true,
       orientation: "right bottom",
       startDate: $("#fecha_min").val(),
+      endDate: $("#fecha_max").val(),
   });
 
+
   $("#DisciplinarioEmpleado_A_Fecha_Inicial").datepicker({
+    language: 'es',
+    autoclose: true,
+    orientation: "right bottom",
+      startDate: $("#fecha_min").val(),
+      endDate: $("#fecha_max").val(),
+  }).on('changeDate', function (selected) {
+
+       if($("#DisciplinarioEmpleado_A_Fecha_Inicial").val() > $("#DisciplinarioEmpleado_A_Fecha_Final").val()){
+        $("#DisciplinarioEmpleado_A_Fecha_Final").val('');
+       }
+
+     var minDate = new Date(selected.date.valueOf());
+     $('#DisciplinarioEmpleado_A_Fecha_Final').datepicker('setStartDate', minDate);
+        valida_ausencia();
+  });
+
+  $("#DisciplinarioEmpleado_A_Fecha_Final").datepicker({
+    language: 'es',
+    autoclose: true,
+    orientation: "right bottom",
+      startDate: $("#fecha_min").val(),
+  }).on('changeDate', function (selected) {
+
+       if($("#DisciplinarioEmpleado_A_Fecha_Final").val() < $("#DisciplinarioEmpleado_A_Fecha_Inicial").val()){
+        $("#DisciplinarioEmpleado_A_Fecha_Inicial").val('');
+       }
+
+  }); 
+
+  /*$("#DisciplinarioEmpleado_A_Fecha_Inicial").datepicker({
     language: 'es',
     autoclose: true,
     orientation: "right bottom",
@@ -590,7 +625,7 @@ $(function() {
   }).on('changeDate', function (selected) {
      var maxDate = new Date(selected.date.valueOf());
      $('#DisciplinarioEmpleado_A_Fecha_Inicial').datepicker('setEndDate', maxDate);
-  }); 
+  });*/ 
 
 });
 
