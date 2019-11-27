@@ -86,6 +86,27 @@
 	        </div>
 	    </div>
 	    <div class="col-sm-3">
+	        <div class="form-group">
+	            <?php echo $form->label($model,'view'); ?>
+	            <?php 
+	                $array_view = array(1 => 'Registros fuera de termino', 2 => 'Registros sin alerta', 3 => 'Registros inactivos');
+	            ?>
+	            <?php
+	                $this->widget('ext.select2.ESelect2',array(
+	                    'name'=>'DominioWeb[view]',
+	                    'id'=>'DominioWeb_view',
+	                    'data'=>$array_view,
+	                    'htmlOptions'=>array(),
+	                    'options'=>array(
+	                        'placeholder'=>'Seleccione..',
+	                        'width'=> '100%',
+	                        'allowClear'=>true,
+	                    ),
+	                ));
+	            ?>
+	        </div>
+	    </div>
+	    <div class="col-sm-3">
 	    	<div class="form-group">
 	          	<?php echo $form->label($model,'orderby'); ?>
 			    <?php 
@@ -147,6 +168,7 @@
     	$('#DominioWeb_usuario_actualizacion').val('').trigger('change');
     	$('#DominioWeb_Fecha_Actualizacion').val('');
     	$('#DominioWeb_Estado').val('').trigger('change');
+    	$('#DominioWeb_view').val('').trigger('change');
     	$('#DominioWeb_orderby').val('').trigger('change');
 		$('#yt0').click();
 	}

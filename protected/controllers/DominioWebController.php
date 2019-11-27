@@ -32,7 +32,7 @@ class DominioWebController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update', 'export', 'exportexcel'),
+				'actions'=>array('create','update', 'export', 'exportexcel','viewres'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -216,5 +216,73 @@ class DominioWebController extends Controller
 	{
 		$data = Yii::app()->user->getState('dominio-web-export');
 		$this->renderPartial('dominio_web_export_excel',array('data' => $data));	
+	}
+
+	public function actionViewRes()
+	{		
+		
+		//panel de control exterior
+		$titulo ='<h3>Resumen dominios web</h3>';
+		$modeloconalerta=DominioWeb::model()->findAll("DATEDIFF(day,'".date('Y-m-d')."',Fecha_Vencimiento) < 45 AND Estado = 1");
+		$numconalerta = count ($modeloconalerta);
+		$modelosinalerta=DominioWeb::model()->findAll("DATEDIFF(day,'".date('Y-m-d')."',Fecha_Vencimiento) >= 45 AND Estado = 1");
+		$numsinalerta = count ($modelosinalerta);
+		$modeloinactivos=DominioWeb::model()->findAll("Estado = 0");
+		$numinactivos = count ($modeloinactivos);
+
+		//se imprimen los parametros para mostrar la alerta
+
+		echo $titulo;
+
+		if($numconalerta == 0 && $numsinalerta == 0 && $numinactivos == 0){
+
+			echo '
+		    <div class="info-box bg-blue">
+		        	<span class="info-box-icon"><i class="fa fa-info"></i></span>
+		        <div class="info-box-content">
+		          	<br>
+		          	<span class="info-box-number">No hay registros.</span>
+		      	  	<br>
+		        </div>
+		    </div>';
+
+		}else{
+
+			if($numconalerta > 0){
+				echo '
+			    <div class="info-box bg-red">
+			        	<span class="info-box-icon"><i class="fa fa-exclamation-triangle"></i></span>
+			        <div class="info-box-content">
+			          	<span class="info-box-number">'.$numconalerta.' Registro(s) fuera de termino</span>
+			      	  	<br>
+			       	  	<button class="btn btn-default" onclick="filtro(1)">Ver registro(s)</button>
+			        </div>
+			    </div>';
+			}
+
+			if($numsinalerta > 0){
+				echo '
+			    <div class="info-box bg-green">
+			        	<span class="info-box-icon"><i class="fa fa-check"></i></span>
+			        <div class="info-box-content">
+			          	<span class="info-box-number">'.$numsinalerta.' Registro(s) sin alerta</span>
+			      	  	<br>
+			       	  	<button class="btn btn-default" onclick="filtro(2)">Ver registro(s)</button>
+			        </div>
+			    </div>';
+			}
+
+			if($numinactivos > 0){
+				echo '
+			    <div class="info-box bg-gray">
+			        	<span class="info-box-icon"><i class="fa fa-power-off"></i></span>
+			        <div class="info-box-content">
+			          	<span class="info-box-number">'.$numinactivos.' Registro(s) inactivo(s)</span>
+			      	  	<br>
+			       	  	<button class="btn btn-default" onclick="filtro(3)">Ver registro(s)</button>
+			        </div>
+			    </div>';
+			}
+		}
 	}
 }

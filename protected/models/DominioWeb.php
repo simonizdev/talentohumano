@@ -34,6 +34,7 @@ class DominioWeb extends CActiveRecord
 	public $usuario_creacion;
 	public $usuario_actualizacion;
 	public $orderby;
+	public $view;
 
 	/**
 	 * @return string the associated database table name
@@ -57,7 +58,7 @@ class DominioWeb extends CActiveRecord
 			array('Observaciones', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id_Dominio_Web, Link, Usuario, Password, Empresa_Administradora, Contacto_Emp_Adm, Contratado_Por, Uso, Fecha_Activacion, Fecha_Vencimiento, Observaciones, Estado, Id_Usuario_Creacion, Fecha_Creacion, Id_Usuario_Actualizacion, Fecha_Actualizacion, Dominio, Id_Tipo, usuario_creacion, usuario_actualizacion, orderby', 'safe', 'on'=>'search'),
+			array('Id_Dominio_Web, Link, Usuario, Password, Empresa_Administradora, Contacto_Emp_Adm, Contratado_Por, Uso, Fecha_Activacion, Fecha_Vencimiento, Observaciones, Estado, Id_Usuario_Creacion, Fecha_Creacion, Id_Usuario_Actualizacion, Fecha_Actualizacion, Dominio, Id_Tipo, usuario_creacion, usuario_actualizacion, orderby, view', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -102,6 +103,7 @@ class DominioWeb extends CActiveRecord
 			'orderby' => 'Orden de resultados',
 			'Dominio' => 'Dominio',
 			'Id_Tipo' => 'Tipo',
+			'view'=>'Ver',
 		);
 	}
 
@@ -148,6 +150,20 @@ class DominioWeb extends CActiveRecord
     	if($this->Id_Tipo != ""){
 			$criteria->AddCondition("t.Id_Tipo = '".$this->Id_Tipo."'"); 
 	    }
+
+	    if(!empty($this->view)){
+			switch ($this->view) {
+			    case 1:
+			        $criteria->AddCondition("DATEDIFF(day,'".date('Y-m-d')."',t.Fecha_Vencimiento) < 45 AND t.Estado = 1");
+			        break;
+			    case 2:
+			        $criteria->AddCondition("DATEDIFF(day,'".date('Y-m-d')."',t.Fecha_Vencimiento) >= 45 AND t.Estado = 1"); 
+			        break;
+			    case 3:
+			        $criteria->AddCondition("t.Estado = 0");
+			        break;
+			}			
+		}
 
  		if(empty($this->orderby)){
 			$criteria->order = 'idtipo.Dominio ASC, t.Dominio ASC'; 	

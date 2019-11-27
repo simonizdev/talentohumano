@@ -64,7 +64,7 @@ $lista_tipos = CHtml::listData($tipos, 'Id_Dominio', 'Dominio');
             'value' => '($data->Id_Tipo == "") ? "NO ASIGNADO" : $data->idtipo->Dominio',
         ),
 		'Dominio',
-		'Link',
+		//'Link',
 		'Empresa_Administradora',
 		'Contacto_Emp_Adm',
         'Contratado_Por',
@@ -109,3 +109,44 @@ $lista_tipos = CHtml::listData($tipos, 'Id_Dominio', 'Dominio');
 )); 
 
 ?>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+$(function() {
+  $('.ajax-loader').fadeIn('fast');  
+  var url = "<?php echo Yii::app()->createUrl('DominioWeb/ViewRes'); ?>";
+  $('.modal-body').load(url,function(){
+    $('#myModal').modal({show:true});
+    $('.ajax-loader').fadeOut('fast');
+  });
+
+});
+
+function filtro(valor){
+    $('.ajax-loader').fadeIn('fast');
+    $('#DominioWeb_view').val(valor).trigger('change');
+    $('#yt0').click();
+    $('#myModal').modal('toggle');
+    $('.search-form').toggle('fast');
+    setTimeout(function(){ $('.ajax-loader').fadeOut('fast'); }, 3000);
+}
+
+
+</script>
+
+
