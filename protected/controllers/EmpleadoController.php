@@ -77,7 +77,8 @@ class EmpleadoController extends Controller
 				FROM TH_CONTRATO_EMPLEADO CE
 				WHERE CE.Id_M_Retiro IS NULL 
 				AND ((SELECT COUNT(*) FROM TH_ELEMENTO_EMPLEADO EE WHERE EE.Id_Contrato = CE.Id_Contrato AND EE.Estado IN (1,3)) > 0
-				OR (SELECT COUNT(*) FROM TH_HERRAMIENTA_EMPLEADO HE WHERE HE.Id_Contrato = CE.Id_Contrato AND HE.Estado IN (1,3)) > 0)
+				OR (SELECT COUNT(*) FROM TH_HERRAMIENTA_EMPLEADO HE WHERE HE.Id_Contrato = CE.Id_Contrato AND HE.Estado IN (1,3)) > 0
+				OR (SELECT COUNT(*) FROM TH_CUENTA_EMPLEADO CUE WHERE CUE.Id_Contrato = CE.Id_Contrato AND CUE.Estado = 1) > 0)
 				AND CE.Id_Empleado = '.$id.'
 			')->queryRow();
 
@@ -253,6 +254,24 @@ class EmpleadoController extends Controller
 		    'criteria'=>$criteria,
 		));
 
+		//cuentas contrato activo
+		$criteria=new CDbCriteria;
+		$criteria->condition = "Id_Empleado = :Id_Empleado AND Id_Contrato = :Id_Contrato";
+		$criteria->order = "Fecha_Actualizacion DESC";
+		$criteria->params = array (':Id_Empleado' => $id, ':Id_Contrato' => $contrato_act);
+		$model_cuentas_act = new CActiveDataProvider('CuentaEmpleado', array(
+		    'criteria'=>$criteria,
+		));
+
+		//cuentas contratos anteriores
+		$criteria=new CDbCriteria;
+		$criteria->condition = "Id_Empleado = :Id_Empleado AND Id_Contrato != :Id_Contrato";
+		$criteria->order = "Fecha_Actualizacion DESC";
+		$criteria->params = array (':Id_Empleado' => $id, ':Id_Contrato' => $contrato_act);
+		$model_cuentas_ant = new CActiveDataProvider('CuentaEmpleado', array(
+		    'criteria'=>$criteria,
+		));
+
 		$this->render('view',array(
 			'model'=>$model,
 			'asociacion_elementos'=>$asociacion_elementos,
@@ -275,7 +294,9 @@ class EmpleadoController extends Controller
 			'model_elementos_act'=>$model_elementos_act,
 			'model_elementos_ant'=>$model_elementos_ant,
 			'model_herramientas_act'=>$model_herramientas_act,
-			'model_herramientas_ant'=>$model_herramientas_ant,	
+			'model_herramientas_ant'=>$model_herramientas_ant,
+			'model_cuentas_act'=>$model_cuentas_act,
+			'model_cuentas_ant'=>$model_cuentas_ant,	
 		));
 	}
 

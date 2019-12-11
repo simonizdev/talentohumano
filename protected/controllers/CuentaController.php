@@ -32,7 +32,7 @@ class CuentaController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','searchCorreo','searchCorreobyid','searchAllCorreos','export', 'exportexcel',''),
+				'actions'=>array('create','update','verificarduplicidad','actred','desred','searchcuentared', 'export', 'exportexcel'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -51,8 +51,21 @@ class CuentaController extends Controller
 	 */
 	public function actionView($id)
 	{
+		
+		//usuarios asoc. 
+		$emp_asoc=new CuentaEmpleado('search');
+		$emp_asoc->unsetAttributes();  // clear any default values
+		$emp_asoc->Id_Cuenta = $id;
+
+		//novedades. 
+		$nov_cue=new NovedadCuenta('search');
+		$nov_cue->unsetAttributes();  // clear any default values
+		$nov_cue->Id_Cuenta = $id;
+
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
+			'emp_asoc'=>$emp_asoc,
+			'nov_cue'=>$nov_cue,
 		));
 	}
 
@@ -64,219 +77,37 @@ class CuentaController extends Controller
 	{
 		$model=new Cuenta;
 
-		$tipos_asoc= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->tipo_asociacion.' AND Estado = 1 ORDER BY d.Dominio')->queryAll();
+		$clases= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE d.Estado = 1 AND Id_Padre = '.Yii::app()->params->clase_cuenta.' ORDER BY d.Dominio')->queryAll();
 
-		$tipos= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->tipo_correo.' AND Estado = 1 ORDER BY d.Dominio')->queryAll();
+		$dominios= Yii::app()->db->createCommand('SELECT d.Id_Dominio_Web, d.Dominio FROM TH_DOMINIO_WEB d WHERE d.Estado = 1 AND Id_Tipo = '.Yii::app()->params->dominios_cuenta_correo.' ORDER BY d.Dominio ')->queryAll();
 
-		$dominios= Yii::app()->db->createCommand('SELECT d.Id_Dominio_Web, d.Dominio FROM TH_DOMINIO_WEB d WHERE Estado = 1 AND Id_Tipo = '.Yii::app()->params->dominios_cuenta_correo.' ORDER BY d.Dominio ')->queryAll();
+		$tipos= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE d.Estado = 1 AND Id_Padre = '.Yii::app()->params->tipo_correo.' ORDER BY d.Dominio')->queryAll();
+
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['Cuenta']))
 		{
-			
-			$tipo_asoc = $_POST['Cuenta']['Tipo_Asociacion'];
+			$clasificacion = $_POST['Cuenta']['Clasificacion'];
 
-			$model->Tipo_Asociacion = $tipo_asoc;
-				
-			if($_POST['Cuenta']['Id_Empleado'] == ""){
-				$model->Id_Empleado = NULL;
+			if($clasificacion == Yii::app()->params->c_correo){
+				$model->Clasificacion = $_POST['Cuenta']['Clasificacion'];
+				$model->Tipo_Cuenta = $_POST['Cuenta']['Tipo_Cuenta'];
+				$model->Tipo_Acceso = NULL;
+				$model->Cuenta_Usuario = trim($_POST['Cuenta']['Cuenta_Usuario']);
+				$model->Password = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password'].UtilidadesCuenta::generateRandomString();
+				$model->Dominio = $_POST['Cuenta']['Dominio'];
+				$model->Estado = Yii::app()->params->estado_act;
 			}else{
-				$model->Id_Empleado = $_POST['Cuenta']['Id_Empleado'];	
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_correo){
-				//CORREO
-				$model->Tipo = $_POST['Cuenta']['Tipo'];
-				$model->Usuario = $_POST['Cuenta']['Usuario'];
+				$model->Clasificacion = $_POST['Cuenta']['Clasificacion'];
+				$model->Tipo_Cuenta = NULL;
+				$model->Tipo_Acceso = $_POST['Cuenta']['Tipo_Acceso'];
+				$model->Cuenta_Usuario = trim($_POST['Cuenta']['Cuenta_Usuario']);
+				$model->Password = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password'].UtilidadesCuenta::generateRandomString();
 				$model->Dominio = $_POST['Cuenta']['Dominio'];
-				$model->Cuenta_Correo = $_POST['Cuenta']['Cuenta_Correo'];
-				$model->Password_Correo = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Correo'].UtilidadesCuenta::generateRandomString();
-				$model->Cuenta_Skype = NULL;
-				$model->Password_Skype = NULL;
-				$model->Usuario_Siesa = NULL;
-				$model->Password_Siesa = NULL;
-				$model->Usuario_Glpi = NULL;
-				$model->Password_Glpi = NULL;
-				$model->Usuario_Papercut = NULL;
-				$model->Password_Papercut = NULL;
+				$model->Estado = Yii::app()->params->estado_act;
 			}
-
-			if($tipo_asoc == Yii::app()->params->ta_correo_glpi_papercut){
-				//CORREO -  GLPI - PAPERCUT	
-				$model->Tipo = $_POST['Cuenta']['Tipo'];
-				$model->Usuario = $_POST['Cuenta']['Usuario'];
-				$model->Dominio = $_POST['Cuenta']['Dominio'];
-				$model->Cuenta_Correo = $_POST['Cuenta']['Cuenta_Correo'];
-				$model->Password_Correo = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Correo'].UtilidadesCuenta::generateRandomString();
-				$model->Cuenta_Skype = NULL;
-				$model->Password_Skype = NULL;
-				$model->Usuario_Siesa = NULL;
-				$model->Password_Siesa = NULL;
-				$model->Usuario_Glpi = $_POST['Cuenta']['Usuario_Glpi'];
-				$model->Password_Glpi = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Glpi'].UtilidadesCuenta::generateRandomString();
-				$model->Usuario_Papercut = $_POST['Cuenta']['Usuario_Papercut'];
-				$model->Password_Papercut = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Papercut'].UtilidadesCuenta::generateRandomString();
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_correo_siesa_papercut){
-				//CORREO - SIESA - PAPERCUT
-				$model->Tipo = $_POST['Cuenta']['Tipo'];
-				$model->Usuario = $_POST['Cuenta']['Usuario'];
-				$model->Dominio = $_POST['Cuenta']['Dominio'];
-				$model->Cuenta_Correo = $_POST['Cuenta']['Cuenta_Correo'];
-				$model->Password_Correo = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Correo'].UtilidadesCuenta::generateRandomString();
-				$model->Cuenta_Skype = NULL;
-				$model->Password_Skype = NULL;
-				$model->Usuario_Siesa = $_POST['Cuenta']['Usuario_Siesa'];
-				$model->Password_Siesa = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Siesa'].UtilidadesCuenta::generateRandomString();
-				$model->Usuario_Glpi = NULL;
-				$model->Password_Glpi = NULL;
-				$model->Usuario_Papercut = $_POST['Cuenta']['Usuario_Papercut'];
-				$model->Password_Papercut = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Papercut'].UtilidadesCuenta::generateRandomString();
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_correo_siesa_glpi_papercut){
-				//CORREO - SIESA - GLPI - PAPERCUT
-				$model->Tipo = $_POST['Cuenta']['Tipo'];
-				$model->Usuario = $_POST['Cuenta']['Usuario'];
-				$model->Dominio = $_POST['Cuenta']['Dominio'];
-				$model->Cuenta_Correo = $_POST['Cuenta']['Cuenta_Correo'];
-				$model->Password_Correo = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Correo'].UtilidadesCuenta::generateRandomString();
-				$model->Cuenta_Skype = NULL;
-				$model->Password_Skype = NULL;
-				$model->Usuario_Siesa = $_POST['Cuenta']['Usuario_Siesa'];
-				$model->Password_Siesa = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Siesa'].UtilidadesCuenta::generateRandomString();
-				$model->Usuario_Glpi = $_POST['Cuenta']['Usuario_Glpi'];
-				$model->Password_Glpi = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Glpi'].UtilidadesCuenta::generateRandomString();
-				$model->Usuario_Papercut = $_POST['Cuenta']['Usuario_Papercut'];
-				$model->Password_Papercut = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Papercut'].UtilidadesCuenta::generateRandomString();	
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_correo_skype_papercut){
-				//CORREO - SKYPE - PAPERCUT
-				$model->Tipo = $_POST['Cuenta']['Tipo'];
-				$model->Usuario = $_POST['Cuenta']['Usuario'];
-				$model->Dominio = $_POST['Cuenta']['Dominio'];
-				$model->Cuenta_Correo = $_POST['Cuenta']['Cuenta_Correo'];
-				$model->Password_Correo = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Correo'].UtilidadesCuenta::generateRandomString();
-				$model->Cuenta_Skype = $_POST['Cuenta']['Cuenta_Skype'];
-				$model->Password_Skype = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Skype'].UtilidadesCuenta::generateRandomString();
-				$model->Usuario_Siesa = NULL;
-				$model->Password_Siesa = NULL;
-				$model->Usuario_Glpi = NULL;
-				$model->Password_Glpi = NULL;
-				$model->Usuario_Papercut = $_POST['Cuenta']['Usuario_Papercut'];
-				$model->Password_Papercut = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Papercut'].UtilidadesCuenta::generateRandomString();	
-			}
-
-			
-
-			if($tipo_asoc == Yii::app()->params->ta_correo_skype_glpi_papercut){
-				//CORREO - SKYPE - GLPI - PAPERCUT
-				$model->Tipo = $_POST['Cuenta']['Tipo'];
-				$model->Usuario = $_POST['Cuenta']['Usuario'];
-				$model->Dominio = $_POST['Cuenta']['Dominio'];
-				$model->Cuenta_Correo = $_POST['Cuenta']['Cuenta_Correo'];
-				$model->Password_Correo = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Correo'].UtilidadesCuenta::generateRandomString();
-				$model->Cuenta_Skype = $_POST['Cuenta']['Cuenta_Skype'];
-				$model->Password_Skype = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Skype'].UtilidadesCuenta::generateRandomString();
-				$model->Usuario_Siesa = NULL;
-				$model->Password_Siesa = NULL;
-				$model->Usuario_Glpi = $_POST['Cuenta']['Usuario_Glpi'];
-				$model->Password_Glpi = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Glpi'].UtilidadesCuenta::generateRandomString();
-				$model->Usuario_Papercut = $_POST['Cuenta']['Usuario_Papercut'];
-				$model->Password_Papercut = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Papercut'].UtilidadesCuenta::generateRandomString();	
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_correo_skype_siesa_papercut){
-				//CORREO - SKYPE - SIESA
-				$model->Tipo = $_POST['Cuenta']['Tipo'];
-				$model->Usuario = $_POST['Cuenta']['Usuario'];
-				$model->Dominio = $_POST['Cuenta']['Dominio'];
-				$model->Cuenta_Correo = $_POST['Cuenta']['Cuenta_Correo'];
-				$model->Password_Correo = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Correo'].UtilidadesCuenta::generateRandomString();
-				$model->Cuenta_Skype = $_POST['Cuenta']['Cuenta_Skype'];
-				$model->Password_Skype = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Skype'].UtilidadesCuenta::generateRandomString();
-				$model->Usuario_Siesa = $_POST['Cuenta']['Usuario_Siesa'];
-				$model->Password_Siesa = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Siesa'].UtilidadesCuenta::generateRandomString();
-				$model->Usuario_Glpi = NULL;
-				$model->Password_Glpi = NULL;
-				$model->Usuario_Papercut = $_POST['Cuenta']['Usuario_Papercut'];
-				$model->Password_Papercut = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Papercut'].UtilidadesCuenta::generateRandomString();
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_correo_skype_siesa_glpi_papercut){
-				//CORREO - SKYPE - SIESA - GLPI - PAPERCUT
-				$model->Tipo = $_POST['Cuenta']['Tipo'];
-				$model->Usuario = $_POST['Cuenta']['Usuario'];
-				$model->Dominio = $_POST['Cuenta']['Dominio'];
-				$model->Cuenta_Correo = $_POST['Cuenta']['Cuenta_Correo'];
-				$model->Password_Correo = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Correo'].UtilidadesCuenta::generateRandomString();
-				$model->Cuenta_Skype = $_POST['Cuenta']['Cuenta_Skype'];
-				$model->Password_Skype = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Skype'].UtilidadesCuenta::generateRandomString();
-				$model->Usuario_Siesa = $_POST['Cuenta']['Usuario_Siesa'];
-				$model->Password_Siesa = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Siesa'].UtilidadesCuenta::generateRandomString();
-				$model->Usuario_Glpi = $_POST['Cuenta']['Usuario_Glpi'];
-				$model->Password_Glpi = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Glpi'].UtilidadesCuenta::generateRandomString();
-				$model->Usuario_Papercut = $_POST['Cuenta']['Usuario_Papercut'];
-				$model->Password_Papercut = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Papercut'].UtilidadesCuenta::generateRandomString();
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_glpi){
-				//GLPI
-				$model->Tipo = NULL;
-				$model->Usuario = NULL;
-				$model->Dominio = NULL;
-				$model->Cuenta_Correo = NULL;
-				$model->Password_Correo = NULL;
-				$model->Cuenta_Skype = NULL;
-				$model->Password_Skype = NULL;
-				$model->Usuario_Siesa = NULL;
-				$model->Password_Siesa = NULL;
-				$model->Usuario_Glpi = $_POST['Cuenta']['Usuario_Glpi'];
-				$model->Password_Glpi = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Glpi'].UtilidadesCuenta::generateRandomString();
-				$model->Usuario_Papercut = NULL;
-				$model->Password_Papercut = NULL;	
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_siesa){
-				//SIESA
-				$model->Tipo = NULL;
-				$model->Usuario = NULL;
-				$model->Dominio = NULL;
-				$model->Cuenta_Correo = NULL;
-				$model->Password_Correo = NULL;
-				$model->Cuenta_Skype = NULL;
-				$model->Password_Skype = NULL;
-				$model->Usuario_Siesa = $_POST['Cuenta']['Usuario_Siesa'];
-				$model->Password_Siesa = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Siesa'].UtilidadesCuenta::generateRandomString();
-				$model->Usuario_Glpi = NULL;
-				$model->Password_Glpi = NULL;
-				$model->Usuario_Papercut = NULL;
-				$model->Password_Papercut = NULL;	
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_siesa_glpi){
-				//SIESA - GLPI
-				$model->Tipo = NULL;
-				$model->Usuario = NULL;
-				$model->Dominio = NULL;
-				$model->Cuenta_Correo = NULL;
-				$model->Password_Correo = NULL;
-				$model->Cuenta_Skype = NULL;
-				$model->Password_Skype = NULL;
-				$model->Usuario_Siesa = $_POST['Cuenta']['Usuario_Siesa'];
-				$model->Password_Siesa = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Siesa'].UtilidadesCuenta::generateRandomString();
-				$model->Usuario_Glpi = $_POST['Cuenta']['Usuario_Glpi'];
-				$model->Password_Glpi = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Glpi'].UtilidadesCuenta::generateRandomString();
-				$model->Usuario_Papercut = NULL;
-				$model->Password_Papercut = NULL; 	
-			}
-
-			$model->Cuenta_Correo_Red = NULL;
-			$model->Estado = Yii::app()->params->estado_act;
 
 			if($_POST['Cuenta']['Observaciones'] == ""){
 				$model->Observaciones = NULL;
@@ -289,14 +120,14 @@ class CuentaController extends Controller
 			$model->Fecha_Creacion = date('Y-m-d H:i:s');
 			$model->Fecha_Actualizacion = date('Y-m-d H:i:s');
 			if($model->save())
-				$this->redirect(array('admin'));
+				$this->redirect(array('update','id'=>$model->Id_Cuenta));
 		}
 
 		$this->render('create',array(
 			'model'=>$model,
-			'tipos_asoc'=>$tipos_asoc,
-			'tipos'=>$tipos,
+			'clases'=>$clases,
 			'dominios'=>$dominios,
+			'tipos'=>$tipos,
 		));
 	}
 
@@ -309,44 +140,28 @@ class CuentaController extends Controller
 	{
 		$model=$this->loadModel($id);
 
-		$tipo_asociacion_act = $model->Tipo_Asociacion;
-		$id_empleado_act = $model->Id_Empleado;
-		
-		$tipo_act = $model->Tipo;
-		
-		$usuario_act = $model->Usuario;
-		$dominio_act = $model->Dominio;
-		
-		$cuenta_correo_act = $model->Cuenta_Correo;
-		$password_cuenta_act = $model->Password_Correo;
+		//usuarios asoc. 
+		$emp_asoc=new CuentaEmpleado('search');
+		$emp_asoc->unsetAttributes();  // clear any default values
+		$emp_asoc->Id_Cuenta = $model->Id_Cuenta;
 
-		$cuenta_correo_red_act = $model->Cuenta_Correo_Red;
-		
-		$cuenta_skype_act = $model->Cuenta_Skype;
-		$password_skype_act = $model->Password_Skype;
-		
-		$usuario_siesa_act = $model->Usuario_Siesa;
-		$password_siesa_act = $model->Password_Siesa;
+		//novedades. 
+		$nov_cue=new NovedadCuenta('search');
+		$nov_cue->unsetAttributes();  // clear any default values
+		$nov_cue->Id_Cuenta = $model->Id_Cuenta;
 
-		$usuario_glpi_act = $model->Usuario_Glpi;
-		$password_glpi_act = $model->Password_Glpi;
-
-		$usuario_papercut_act = $model->Usuario_Papercut;
-		$password_papercut_act = $model->Password_Papercut;
-		
-		$estado_act = $model->Estado;
-		
+		$password_act = $model->Password;
 		$observaciones_act = $model->Observaciones;
+		$estado_act = $model->Estado;
 
-		$tipos_asoc= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->tipo_asociacion.' AND Estado = 1 ORDER BY d.Dominio')->queryAll();
 
-		$tipos= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->tipo_correo.' AND Estado = 1 ORDER BY d.Dominio')->queryAll();
+		$clases= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE d.Estado = 1 AND Id_Padre = '.Yii::app()->params->clase_cuenta.' ORDER BY d.Dominio')->queryAll();
 
-		$dominios= Yii::app()->db->createCommand('SELECT d.Id_Dominio_Web, d.Dominio FROM TH_DOMINIO_WEB d WHERE Estado = 1 AND Id_Tipo = '.Yii::app()->params->dominios_cuenta_correo.' ORDER BY d.Dominio ')->queryAll();
+		$dominios= Yii::app()->db->createCommand('SELECT d.Id_Dominio_Web, d.Dominio FROM TH_DOMINIO_WEB d WHERE d.Estado = 1 AND Id_Tipo = '.Yii::app()->params->dominios_cuenta_correo.' ORDER BY d.Dominio ')->queryAll();
 
-		$estados_all = Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->estado_correo.' AND Estado = 1 ORDER BY d.Dominio')->queryAll();
+		$tipos= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE d.Estado = 1 AND Id_Padre = '.Yii::app()->params->tipo_correo.' ORDER BY d.Dominio')->queryAll();
 
-		$estados= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Dominio IN ('.Yii::app()->params->estado_act.','.Yii::app()->params->estado_eli.') AND Estado = 1 ORDER BY d.Dominio')->queryAll();
+		$estados= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE d.Estado = 1 AND Id_Padre = '.Yii::app()->params->estado_cuenta.' AND d.Id_Dominio IN ('.Yii::app()->params->estado_act.','.Yii::app()->params->estado_ina.') ORDER BY d.Dominio')->queryAll();
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -354,444 +169,14 @@ class CuentaController extends Controller
 		if(isset($_POST['Cuenta']))
 		{
 
-			$tipo_asoc = $_POST['Cuenta']['Tipo_Asociacion'];
+			$model->attributes=$_POST['Cuenta'];
 
-			$model->Tipo_Asociacion = $tipo_asoc;
-				
-			if($_POST['Cuenta']['Id_Empleado'] == ""){
-				$model->Id_Empleado = NULL;
+			if($_POST['Cuenta']['Password'] != $password_act){
+				$password = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password'].UtilidadesCuenta::generateRandomString();
+				$model->Password = $password;
 			}else{
-				$model->Id_Empleado = $_POST['Cuenta']['Id_Empleado'];	
-			}
-
-			if($_POST['Cuenta']['Cuenta_Correo_Red'] == ""){
-				$model->Cuenta_Correo_Red = NULL;
-			}else{
-				$model->Cuenta_Correo_Red = $_POST['Cuenta']['Cuenta_Correo_Red'];	
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_correo){
-				//CORREO
-				$model->Tipo = $_POST['Cuenta']['Tipo'];
-				$model->Usuario = $_POST['Cuenta']['Usuario'];
-				$model->Dominio = $_POST['Cuenta']['Dominio'];
-				$model->Cuenta_Correo = $_POST['Cuenta']['Cuenta_Correo'];
-				
-				if($_POST['Cuenta']['Password_Correo'] != $password_cuenta_act){
-					$password_correo = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Correo'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Correo = $password_correo;
-				}else{
-					$model->Password_Correo = $password_cuenta_act;	
-				}	
-				
-				$model->Cuenta_Skype = NULL;
-				$model->Password_Skype = NULL;
-				$model->Usuario_Siesa = NULL;
-				$model->Password_Siesa = NULL;
-				$model->Usuario_Glpi = NULL;
-				$model->Password_Glpi = NULL;
-				$model->Usuario_Papercut = NULL;
-				$model->Password_Papercut = NULL;
-				$model->Estado = $_POST['Cuenta']['Estado'];
-
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_correo_glpi_papercut){
-				//CORREO -  GLPI - PAPERCUT	
-				$model->Tipo = $_POST['Cuenta']['Tipo'];
-				$model->Usuario = $_POST['Cuenta']['Usuario'];
-				$model->Dominio = $_POST['Cuenta']['Dominio'];
-				$model->Cuenta_Correo = $_POST['Cuenta']['Cuenta_Correo'];
-
-				if($_POST['Cuenta']['Password_Correo'] != $password_cuenta_act){
-					$password_correo = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Correo'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Correo = $password_correo;
-				}else{
-					$model->Password_Correo = $password_cuenta_act;	
-				}	
-
-				$model->Cuenta_Skype = NULL;
-				$model->Password_Skype = NULL;
-				$model->Usuario_Siesa = NULL;
-				$model->Password_Siesa = NULL;
-				$model->Usuario_Glpi = $_POST['Cuenta']['Usuario_Glpi'];
-
-				if($_POST['Cuenta']['Password_Glpi'] != $password_glpi_act){
-					$password_glpi = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Glpi'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Glpi = $password_glpi;
-				}else{
-					$model->Password_Glpi = $password_glpi_act;	
-				}
-
-				$model->Usuario_Papercut = $_POST['Cuenta']['Usuario_Papercut'];
-
-				if($_POST['Cuenta']['Password_Papercut'] != $password_papercut_act){
-					$password_papercut = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Papercut'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Papercut = $password_papercut;
-				}else{
-					$model->Password_Papercut = $password_papercut_act;	
-				}
-
-				$model->Estado = $_POST['Cuenta']['Estado'];
-
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_correo_siesa_papercut){
-				//CORREO - SIESA - PAPERCUT
-				$model->Tipo = $_POST['Cuenta']['Tipo'];
-				$model->Usuario = $_POST['Cuenta']['Usuario'];
-				$model->Dominio = $_POST['Cuenta']['Dominio'];
-				$model->Cuenta_Correo = $_POST['Cuenta']['Cuenta_Correo'];
-
-				if($_POST['Cuenta']['Password_Correo'] != $password_cuenta_act){
-					$password_correo = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Correo'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Correo = $password_correo;
-				}else{
-					$model->Password_Correo = $password_cuenta_act;	
-				}	
-
-				$model->Cuenta_Skype = NULL;
-				$model->Password_Skype = NULL;
-				$model->Usuario_Siesa = $_POST['Cuenta']['Usuario_Siesa'];
-
-				if($_POST['Cuenta']['Password_Siesa'] != $password_siesa_act){
-					$password_siesa = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Siesa'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Siesa = $password_siesa;
-				}else{
-					$model->Password_Siesa = $password_siesa_act;	
-				}
-
-				$model->Usuario_Glpi = NULL;
-				$model->Password_Glpi = NULL;
-				
-				$model->Usuario_Papercut = $_POST['Cuenta']['Usuario_Papercut'];
-
-				if($_POST['Cuenta']['Password_Papercut'] != $password_papercut_act){
-					$password_papercut = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Papercut'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Papercut = $password_papercut;
-				}else{
-					$model->Password_Papercut = $password_papercut_act;	
-				}
-
-				$model->Estado = $_POST['Cuenta']['Estado'];
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_correo_skype_glpi_papercut){
-				//CORREO - SKYPE - GLPI - PAPERCUT
-				$model->Tipo = $_POST['Cuenta']['Tipo'];
-				$model->Usuario = $_POST['Cuenta']['Usuario'];
-				$model->Dominio = $_POST['Cuenta']['Dominio'];
-				$model->Cuenta_Correo = $_POST['Cuenta']['Cuenta_Correo'];
-				
-				if($_POST['Cuenta']['Password_Correo'] != $password_cuenta_act){
-					$password_correo = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Correo'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Correo = $password_correo;
-				}else{
-					$model->Password_Correo = $password_cuenta_act;	
-				}
-
-				$model->Cuenta_Skype = $_POST['Cuenta']['Cuenta_Skype'];
-				
-				if($_POST['Cuenta']['Password_Skype'] != $password_skype_act){
-					$password_skype = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Skype'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Skype = $password_skype;
-				}else{
-					$model->Password_Skype = $password_skype_act;	
-				}
-
-				$model->Usuario_Siesa = NULL;
-				$model->Password_Siesa = NULL;
-				$model->Usuario_Glpi = $_POST['Cuenta']['Usuario_Glpi'];
-				
-				if($_POST['Cuenta']['Password_Glpi'] != $password_glpi_act){
-					$password_glpi = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Glpi'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Glpi = $password_glpi;
-				}else{
-					$model->Password_Glpi = $password_glpi_act;	
-				}
-
-				$model->Usuario_Papercut = $_POST['Cuenta']['Usuario_Papercut'];
-
-				if($_POST['Cuenta']['Password_Papercut'] != $password_papercut_act){
-					$password_papercut = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Papercut'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Papercut = $password_papercut;
-				}else{
-					$model->Password_Papercut = $password_papercut_act;	
-				}
-
-				$model->Estado = $_POST['Cuenta']['Estado'];	
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_correo_skype_papercut){
-				//CORREO - SKYPE - PAPERCUT
-				$model->Tipo = $_POST['Cuenta']['Tipo'];
-				$model->Usuario = $_POST['Cuenta']['Usuario'];
-				$model->Dominio = $_POST['Cuenta']['Dominio'];
-				$model->Cuenta_Correo = $_POST['Cuenta']['Cuenta_Correo'];
-				
-				if($_POST['Cuenta']['Password_Correo'] != $password_cuenta_act){
-					$password_correo = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Correo'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Correo = $password_correo;
-				}else{
-					$model->Password_Correo = $password_cuenta_act;	
-				}
-
-				$model->Cuenta_Skype = $_POST['Cuenta']['Cuenta_Skype'];
-
-				if($_POST['Cuenta']['Password_Skype'] != $password_skype_act){
-					$password_skype = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Skype'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Skype = $password_skype;
-				}else{
-					$model->Password_Skype = $password_skype_act;	
-				}
-
-				$model->Usuario_Siesa = NULL;
-				$model->Password_Siesa = NULL;
-				$model->Usuario_Glpi = NULL;
-				$model->Password_Glpi = NULL;
-				
-				$model->Usuario_Papercut = $_POST['Cuenta']['Usuario_Papercut'];
-
-				if($_POST['Cuenta']['Password_Papercut'] != $password_papercut_act){
-					$password_papercut = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Papercut'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Papercut = $password_papercut;
-				}else{
-					$model->Password_Papercut = $password_papercut_act;	
-				}
-
-				$model->Estado = $_POST['Cuenta']['Estado'];	
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_correo_siesa_glpi_papercut){
-				//CORREO - SIESA - GLPI - PAPERCUT
-				$model->Tipo = $_POST['Cuenta']['Tipo'];
-				$model->Usuario = $_POST['Cuenta']['Usuario'];
-				$model->Dominio = $_POST['Cuenta']['Dominio'];
-				$model->Cuenta_Correo = $_POST['Cuenta']['Cuenta_Correo'];
-				
-				if($_POST['Cuenta']['Password_Correo'] != $password_cuenta_act){
-					$password_correo = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Correo'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Correo = $password_correo;
-				}else{
-					$model->Password_Correo = $password_cuenta_act;	
-				}
-
-				$model->Cuenta_Skype = NULL;
-				$model->Password_Skype = NULL;
-
-				$model->Usuario_Siesa = $_POST['Cuenta']['Usuario_Siesa'];
-				
-				if($_POST['Cuenta']['Password_Siesa'] != $password_siesa_act){
-					$password_siesa = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Siesa'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Siesa = $password_siesa;
-				}else{
-					$model->Password_Siesa = $password_siesa_act;	
-				}
-
-				$model->Usuario_Glpi = $_POST['Cuenta']['Usuario_Glpi'];
-				
-				if($_POST['Cuenta']['Password_Glpi'] != $password_glpi_act){
-					$password_glpi = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Glpi'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Glpi = $password_glpi;
-				}else{
-					$model->Password_Glpi = $password_glpi_act;	
-				}
-
-				$model->Usuario_Papercut = $_POST['Cuenta']['Usuario_Papercut'];
-
-				if($_POST['Cuenta']['Password_Papercut'] != $password_papercut_act){
-					$password_papercut = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Papercut'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Papercut = $password_papercut;
-				}else{
-					$model->Password_Papercut = $password_papercut_act;	
-				}
-
-				$model->Estado = $_POST['Cuenta']['Estado'];	
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_correo_skype_siesa_papercut){
-				//CORREO - SKYPE - SIESA - PAPERCUT
-				$model->Tipo = $_POST['Cuenta']['Tipo'];
-				$model->Usuario = $_POST['Cuenta']['Usuario'];
-				$model->Dominio = $_POST['Cuenta']['Dominio'];
-				$model->Cuenta_Correo = $_POST['Cuenta']['Cuenta_Correo'];
-				
-				if($_POST['Cuenta']['Password_Correo'] != $password_cuenta_act){
-					$password_correo = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Correo'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Correo = $password_correo;
-				}else{
-					$model->Password_Correo = $password_cuenta_act;	
-				}
-
-				$model->Cuenta_Skype = $_POST['Cuenta']['Cuenta_Skype'];
-				
-				if($_POST['Cuenta']['Password_Skype'] != $password_skype_act){
-					$password_skype = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Skype'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Skype = $password_skype;
-				}else{
-					$model->Password_Skype = $password_skype_act;	
-				}
-
-				$model->Usuario_Siesa = $_POST['Cuenta']['Usuario_Siesa'];
-				
-				if($_POST['Cuenta']['Password_Siesa'] != $password_siesa_act){
-					$password_siesa = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Siesa'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Siesa = $password_siesa;
-				}else{
-					$model->Password_Siesa = $password_siesa_act;	
-				}
-
-				$model->Usuario_Glpi = NULL;
-				$model->Password_Glpi = NULL;
-				
-				$model->Usuario_Papercut = $_POST['Cuenta']['Usuario_Papercut'];
-
-				if($_POST['Cuenta']['Password_Papercut'] != $password_papercut_act){
-					$password_papercut = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Papercut'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Papercut = $password_papercut;
-				}else{
-					$model->Password_Papercut = $password_papercut_act;	
-				}
-
-				$model->Estado = $_POST['Cuenta']['Estado'];
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_correo_skype_siesa_glpi_papercut){
-				//CORREO - SKYPE - SIESA - GLPI - PAPERCUT
-				$model->Tipo = $_POST['Cuenta']['Tipo'];
-				$model->Usuario = $_POST['Cuenta']['Usuario'];
-				$model->Dominio = $_POST['Cuenta']['Dominio'];
-				$model->Cuenta_Correo = $_POST['Cuenta']['Cuenta_Correo'];
-				
-				if($_POST['Cuenta']['Password_Correo'] != $password_cuenta_act){
-					$password_correo = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Correo'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Correo = $password_correo;
-				}else{
-					$model->Password_Correo = $password_cuenta_act;	
-				}
-
-				$model->Cuenta_Skype = $_POST['Cuenta']['Cuenta_Skype'];
-				
-				if($_POST['Cuenta']['Password_Skype'] != $password_skype_act){
-					$password_skype = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Skype'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Skype = $password_skype;
-				}else{
-					$model->Password_Skype = $password_skype_act;	
-				}
-
-				$model->Usuario_Siesa = $_POST['Cuenta']['Usuario_Siesa'];
-				
-				if($_POST['Cuenta']['Password_Siesa'] != $password_siesa_act){
-					$password_siesa = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Siesa'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Siesa = $password_siesa;
-				}else{
-					$model->Password_Siesa = $password_siesa_act;	
-				}
-
-				$model->Usuario_Glpi = $_POST['Cuenta']['Usuario_Glpi'];
-				
-				if($_POST['Cuenta']['Password_Glpi'] != $password_glpi_act){
-					$password_glpi = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Glpi'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Glpi = $password_glpi;
-				}else{
-					$model->Password_Glpi = $password_glpi_act;	
-				}
-
-				$model->Usuario_Papercut = $_POST['Cuenta']['Usuario_Papercut'];
-
-				if($_POST['Cuenta']['Password_Papercut'] != $password_papercut_act){
-					$password_papercut = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Papercut'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Papercut = $password_papercut;
-				}else{
-					$model->Password_Papercut = $password_papercut_act;	
-				}
-
-				$model->Estado = $_POST['Cuenta']['Estado'];
-
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_glpi){
-				//GLPI
-				$model->Tipo = NULL;
-				$model->Usuario = NULL;
-				$model->Dominio = NULL;
-				$model->Cuenta_Correo = NULL;
-				$model->Password_Correo = NULL;
-				$model->Cuenta_Skype = NULL;
-				$model->Password_Skype = NULL;
-				$model->Usuario_Siesa = NULL;
-				$model->Password_Siesa = NULL;
-				$model->Usuario_Glpi = $_POST['Cuenta']['Usuario_Glpi'];
-				
-				if($_POST['Cuenta']['Password_Glpi'] != $password_glpi_act){
-					$password_glpi = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Glpi'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Glpi = $password_glpi;
-				}else{
-					$model->Password_Glpi = $password_glpi_act;	
-				}
-
-				$model->Usuario_Papercut = NULL;
-				$model->Password_Papercut = NULL;
-				$model->Estado = $_POST['Cuenta']['Estado2'];	
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_siesa){
-				//SIESA
-				$model->Tipo = NULL;
-				$model->Usuario = NULL;
-				$model->Dominio = NULL;
-				$model->Cuenta_Correo = NULL;
-				$model->Password_Correo = NULL;
-				$model->Cuenta_Skype = NULL;
-				$model->Password_Skype = NULL;
-				$model->Usuario_Siesa = $_POST['Cuenta']['Usuario_Siesa'];
-								
-				if($_POST['Cuenta']['Password_Siesa'] != $password_siesa_act){
-					$password_siesa = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Siesa'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Siesa = $password_siesa;
-				}else{
-					$model->Password_Siesa = $password_siesa_act;	
-				}
-
-				$model->Usuario_Glpi = NULL;
-				$model->Password_Glpi = NULL;
-				$model->Usuario_Papercut = NULL;
-				$model->Password_Papercut = NULL;
-				$model->Estado = $_POST['Cuenta']['Estado2'];	
-			}
-
-			if($tipo_asoc == Yii::app()->params->ta_siesa_glpi){
-				//SIESA - GLPI
-				$model->Tipo = NULL;
-				$model->Usuario = NULL;
-				$model->Dominio = NULL;
-				$model->Cuenta_Correo = NULL;
-				$model->Password_Correo = NULL;
-				$model->Cuenta_Skype = NULL;
-				$model->Password_Skype = NULL;
-				
-				$model->Usuario_Siesa = $_POST['Cuenta']['Usuario_Siesa'];
-								
-				if($_POST['Cuenta']['Password_Siesa'] != $password_siesa_act){
-					$password_siesa = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Siesa'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Siesa = $password_siesa;
-				}else{
-					$model->Password_Siesa = $password_siesa_act;	
-				}
-
-				$model->Usuario_Glpi = $_POST['Cuenta']['Usuario_Glpi'];
-				
-				if($_POST['Cuenta']['Password_Glpi'] != $password_glpi_act){
-					$password_glpi = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password_Glpi'].UtilidadesCuenta::generateRandomString();
-					$model->Password_Glpi = $password_glpi;
-				}else{
-					$model->Password_Glpi = $password_glpi_act;	
-				}
-
-				$model->Usuario_Papercut = NULL;
-				$model->Password_Papercut = NULL;
-				$model->Estado = $_POST['Cuenta']['Estado2'];	
-			}
+				$model->Password = $password_act;	
+			}	
 
 			if($_POST['Cuenta']['Observaciones'] == ""){
 				$model->Observaciones = NULL;
@@ -799,79 +184,39 @@ class CuentaController extends Controller
 				$model->Observaciones = $_POST['Cuenta']['Observaciones'];	
 			}
 
+
+			$model->Estado = $_POST['Cuenta']['Estado'];	
+			
+
 			$model->Id_Usuario_Actualizacion = Yii::app()->user->getState('id_user');
 			$model->Fecha_Actualizacion = date('Y-m-d H:i:s');
+			if($model->save()){
+				
+				//función para registrar cambios en las Cuentas
+				UtilidadesCuenta::novedadcuenta(
+					$id,  
+					$password_act, 
+					$model->Password,
+					$observaciones_act, 
+					$model->Observaciones,
+					$estado_act, 
+					$model->Estado 
+				);
 
-			//función para registrar cambios en las Cuentas
-			UtilidadesCuenta::novedadcuenta(
-				$id, 
-				
-				$tipo_asociacion_act,
-				$model->Tipo_Asociacion,
-				
-				$id_empleado_act, 
-				$model->Id_Empleado, 
-				
-				$tipo_act, 
-				$model->Tipo, 
-				
-				$usuario_act, 
-				$model->Usuario, 
-				
-				$dominio_act, 
-				$model->Dominio, 
-				
-				$cuenta_correo_act, 
-				$model->Cuenta_Correo, 
-				
-				$password_cuenta_act, 
-				$model->Password_Correo,
 
-				$cuenta_correo_red_act,  
-				$model->Cuenta_Correo_Red, 
-				
-				$cuenta_skype_act, 
-				$model->Cuenta_Skype, 
-				
-				$password_skype_act, 
-				$model->Password_Skype,
-
-				$usuario_siesa_act, 
-				$model->Usuario_Siesa, 
-				
-				$password_siesa_act, 
-				$model->Password_Siesa,
-
-				$usuario_glpi_act, 
-				$model->Usuario_Glpi, 
-				
-				$password_glpi_act, 
-				$model->Password_Glpi,
-
-				$usuario_papercut_act, 
-				$model->Usuario_Papercut, 
-				
-				$password_papercut_act, 
-				$model->Password_Papercut,
-				
-				$estado_act, 
-				$model->Estado, 
-				
-				$observaciones_act, 
-				$model->Observaciones
-			);
-
-			if($model->save())
 				$this->redirect(array('admin'));
+			
+			}
 		}
 
 		$this->render('update',array(
 			'model'=>$model,
-			'tipos_asoc'=>$tipos_asoc,
-			'tipos'=>$tipos,
+			'clases'=>$clases,
 			'dominios'=>$dominios,
-			'estados_all'=>$estados_all,
+			'tipos'=>$tipos,
 			'estados'=>$estados,
+			'emp_asoc'=>$emp_asoc,
+			'nov_cue'=>$nov_cue,
 		));
 	}
 
@@ -905,21 +250,22 @@ class CuentaController extends Controller
 	 */
 	public function actionAdmin()
 	{
+		
 		if(Yii::app()->request->getParam('export')) {
     		$this->actionExport();
     		Yii::app()->end();
 		}
-		
+
 		$model=new Cuenta('search');
 
-		$tipos_asoc= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->tipo_asociacion.' AND Estado = 1 ORDER BY d.Dominio')->queryAll();
+		$clases= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->clase_cuenta.' ORDER BY d.Dominio')->queryAll();
 
-		$tipos= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->tipo_correo.' AND Estado = 1 ORDER BY d.Dominio')->queryAll();
+		$dominios= Yii::app()->db->createCommand('SELECT d.Id_Dominio_Web, d.Dominio FROM TH_DOMINIO_WEB d WHERE Id_Tipo = '.Yii::app()->params->dominios_cuenta_correo.' ORDER BY d.Dominio')->queryAll();
 
-		$dominios= Yii::app()->db->createCommand('SELECT d.Id_Dominio_Web, d.Dominio FROM TH_DOMINIO_WEB d WHERE Estado = 1 AND Id_Tipo = '.Yii::app()->params->dominios_cuenta_correo.' ORDER BY d.Dominio ')->queryAll();
+		$tipos= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->tipo_correo.' ORDER BY d.Dominio')->queryAll();
 
-		$estados= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->estado_correo.' AND Estado = 1 ORDER BY d.Dominio')->queryAll();
-
+		$estados= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE d.Estado = 1 AND Id_Padre = '.Yii::app()->params->estado_cuenta.' ORDER BY d.Dominio')->queryAll();
+		
 		$usuarios=Usuario::model()->findAll(array('order'=>'Usuario'));
 
 		$model->unsetAttributes();  // clear any default values
@@ -928,9 +274,9 @@ class CuentaController extends Controller
 
 		$this->render('admin',array(
 			'model'=>$model,
-			'tipos_asoc'=>$tipos_asoc,
-			'tipos'=>$tipos,
+			'clases'=>$clases,
 			'dominios'=>$dominios,
+			'tipos'=>$tipos,
 			'estados'=>$estados,
 			'usuarios'=>$usuarios,
 		));
@@ -957,56 +303,121 @@ class CuentaController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='Cuenta-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='cuenta-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 	}
 
-	public function actionSearchCorreo(){
-		$filtro = $_GET['q'];
+	public function actionVerificarDuplicidad()
+	{
+		
+		$clase = $_POST['clase'];
+		$cuenta_usuario = trim($_POST['cuenta_usuario']);
+		$dominio = $_POST['dominio'];
+
+		if($clase == Yii::app()->params->c_correo){
+			//CORREO ELECTRONICO
+			$q_cuenta = Yii::app()->db->createCommand("SELECT * FROM TH_CUENTA WHERE Clasificacion = ".$clase." AND cuenta_usuario = '".$cuenta_usuario."' AND Dominio = ".$dominio)->queryAll();
+		}else{
+			//DEMAS CUENTAS / USUARIOS
+			$q_cuenta = Yii::app()->db->createCommand("SELECT * FROM TH_CUENTA WHERE Clasificacion = ".$clase." AND cuenta_usuario = '".$cuenta_usuario."'")->queryAll();	
+		}
+
+		if(empty($q_cuenta)){
+			echo 1;
+		}else{
+			echo 0;
+		}
+	}
+
+	public function actionActRed($id)
+	{
+		
+		$model=$this->loadModel($id);
+		$model->scenario = 'actred';
+
+		$cuenta = $model->Cuenta_Usuario.'@'.$model->dominioweb->Dominio;
+		
+
+		if(isset($_POST['Cuenta']))
+		{
+
+			$model->attributes=$_POST['Cuenta'];
+
+			$cuenta_red = $model->DescCuentaUsuario($model->Id_Cuenta_Red);
+
+			$model->Id_Usuario_Actualizacion = Yii::app()->user->getState('id_user');
+			$model->Fecha_Actualizacion = date('Y-m-d H:i:s');
+			$model->Estado = Yii::app()->params->estado_red;
+			
+			if($model->save()){
+
+				$nueva_novedad = new NovedadCuenta;
+				$nueva_novedad->Id_Cuenta = $id;
+				$nueva_novedad->Novedades = 'Correo para redirección: No asignado / '.$cuenta_red.'.';
+				$nueva_novedad->Id_Usuario_Creacion = Yii::app()->user->getState('id_user');
+				$nueva_novedad->Fecha_Creacion = date('Y-m-d H:i:s');
+				if($nueva_novedad->save()){
+					Yii::app()->user->setFlash('success', "La cuenta ".$cuenta." fue redireccionada a ".$cuenta_red." correctamente.");
+					$this->redirect(array('admin'));
+				}
+
+			}else{
+				Yii::app()->user->setFlash('warning', "No se pudo redireccionar la cuenta ".$cuenta.".");
+					$this->redirect(array('admin'));
+			}
+		}
+
+		$this->render('red',array(
+			'model'=>$model,
+		));
+
+	}
+
+	public function actionDesRed($id)
+	{
+		
+		$model=$this->loadModel($id);
+
+		$cuenta = $model->Cuenta_Usuario.'@'.$model->dominioweb->Dominio;
+		$cuenta_red = $model->idcuentared->Cuenta_Usuario.'@'.$model->idcuentared->dominioweb->Dominio;
+		
+		$model->Id_Cuenta_Red = NULL;
+		$model->Id_Usuario_Actualizacion = Yii::app()->user->getState('id_user');
+		$model->Fecha_Actualizacion = date('Y-m-d H:i:s');
+		$model->Estado = Yii::app()->params->estado_act;
+		
+		if($model->save()){
+
+			$nueva_novedad = new NovedadCuenta;
+			$nueva_novedad->Id_Cuenta = $id;
+			$nueva_novedad->Novedades = 'Correo para redirección: '.$cuenta_red.' / No asignado.';
+			$nueva_novedad->Id_Usuario_Creacion = Yii::app()->user->getState('id_user');
+			$nueva_novedad->Fecha_Creacion = date('Y-m-d H:i:s');
+			if($nueva_novedad->save()){
+				Yii::app()->user->setFlash('success', "La redirección de la cuenta ".$cuenta." fue eliminada correctamente.");
+				$this->redirect(array('admin'));
+			}
+
+		}else{
+			Yii::app()->user->setFlash('warning', "No se pudo eliminar la redirección de la cuenta ".$cuenta.".");
+				$this->redirect(array('admin'));
+		}
+	}
+
+	public function actionSearchCuentaRed(){
 		$id = $_GET['id'];
-        $data = Cuenta::model()->searchByCorreo($filtro, $id);
-        $result = array();
-        foreach($data as $item):
-           $result[] = array(
-               'id'   => $item['Id_Cuenta'],
-               'text' => $item['Cuenta_Correo'],
-           );
-        endforeach;
-        header('Content-type: application/json');
-        echo CJSON::encode( $result );
-        Yii::app()->end(); 
- 	}
-
- 	public function actionSearchAllCorreos(){
 		$filtro = $_GET['q'];
-        $data = Cuenta::model()->searchByAllCorreos($filtro);
+        $data = Cuenta::model()->searchByCuentaRed($id, $filtro);
         $result = array();
-        foreach($data as $item):
+        foreach($data as $cue):
            $result[] = array(
-               'id'   => $item['Id_Cuenta'],
-               'text' => $item['Cuenta_Correo'],
+               'id'   => $cue['Id_Cuenta'],
+               'text' => $cue['Cuenta'],
            );
         endforeach;
-        header('Content-type: application/json');
-        echo CJSON::encode( $result );
-        Yii::app()->end(); 
- 	}
-
-	public function actionSearchCorreoById(){
-		$filtro = $_GET['id'];
-        $data = Cuenta::model()->searchById($filtro);
-
-        $result = array();
-        foreach($data as $item):
-           $result[] = array(
-               'id'   => $item['Id_Cuenta'],
-               'text' => $item['Cuenta_Correo'],
-           );
-        endforeach;
-
         header('Content-type: application/json');
         echo CJSON::encode( $result );
         Yii::app()->end(); 
@@ -1031,7 +442,7 @@ class CuentaController extends Controller
 
 	public function actionExportExcel()
 	{
-		$data = Yii::app()->user->getState('cuenta-export');
+		$data = Yii::app()->user->getState('cuenta-export');	
 		$this->renderPartial('cuenta_export_excel',array('data' => $data));	
 	}
 }

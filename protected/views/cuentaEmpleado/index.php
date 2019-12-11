@@ -1,18 +1,18 @@
 <?php
-/* @var $this CuentaController */
+/* @var $this CuentaEmpleadoController */
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs=array(
-	'Cuentas',
+	'Cuenta Empleados',
 );
 
 $this->menu=array(
-	array('label'=>'Create Cuenta', 'url'=>array('create')),
-	array('label'=>'Manage Cuenta', 'url'=>array('admin')),
+	array('label'=>'Create CuentaEmpleado', 'url'=>array('create')),
+	array('label'=>'Manage CuentaEmpleado', 'url'=>array('admin')),
 );
 ?>
 
-<h1>Cuentas</h1>
+<h1>Cuenta Empleados</h1>
 
 <?php $this->widget('zii.widgets.CListView', array(
 	'dataProvider'=>$dataProvider,

@@ -28,117 +28,103 @@ $('.search-form form').submit(function(){
 });
 ");
 
-//para combo de tipos de asociación
-$lista_tipos_asoc = CHtml::listData($tipos_asoc, 'Id_Dominio', 'Dominio'); 
+//para combos de clases de cuenta / usuario
+$lista_clases = CHtml::listData($clases, 'Id_Dominio', 'Dominio'); 
 
-//para combo de tipos
-$lista_tipos = CHtml::listData($tipos, 'Id_Dominio', 'Dominio'); 
-
-//para combo de dominios de correos
+//para combo de dominios (correo electronico)
 $lista_dominios = CHtml::listData($dominios, 'Id_Dominio_Web', 'Dominio'); 
 
-//para combo de estados de correos
-$lista_estados = CHtml::listData($estados, 'Id_Dominio', 'Dominio'); 
+//para combo de tipos
+$lista_tipos = CHtml::listData($tipos, 'Id_Dominio', 'Dominio');
+
+//para combos de estados
+$lista_estados = CHtml::listData($estados, 'Id_Dominio', 'Dominio');
 
 //para combos de usuarios
 $lista_usuarios = CHtml::listData($usuarios, 'Usuario', 'Usuario'); 
 
-
 ?>
 
-<h3>Administración de cuentas</h3>
+<h3>Administración de cuentas / usuarios</h3>
 
+<?php if(Yii::app()->user->hasFlash('success')):?>
+    <div class="alert alert-success alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <h4><i class="icon fa fa-check"></i>Realizado</h4>
+      <?php echo Yii::app()->user->getFlash('success'); ?>
+    </div>
+<?php endif; ?> 
+
+<?php if(Yii::app()->user->hasFlash('warning')):?>
+    <div class="alert alert-warning alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <h4><i class="icon fa fa-info"></i>Info</h4>
+      <?php echo Yii::app()->user->getFlash('warning'); ?>
+    </div>
+<?php endif; ?> 
 
 <div class="btn-group" style="padding-bottom: 2%">
-
-<?php if(Yii::app()->user->getState("permiso_act") == true){ ?>
-
    <button type="button" class="btn btn-success" onclick="location.href = '<?php echo Yii::app()->getBaseUrl(true).'/index.php?r=cuenta/create'; ?>';"><i class="fa fa-plus"></i> Nuevo registro</button>
     <button type="button" class="btn btn-success search-button"><i class="fa fa-filter"></i> Busqueda avanzada</button>
     <button type="button" class="btn btn-success" id="export-excel"><i class="fa fa-file-excel-o"></i> Exportar a excel</button>
-   
-<?php }else{ ?>
-
-    <button type="button" class="btn btn-success search-button"><i class="fa fa-filter"></i> Busqueda avanzada</button>
-
-<?php } ?>
-
-</div> 
+</div>
 
 <div class="search-form" style="display:none;">
 <?php $this->renderPartial('_search',array(
-    'model'=>$model,
-    'lista_tipos_asoc' => $lista_tipos_asoc,
-    'lista_tipos' => $lista_tipos,
+	'model'=>$model,
+    'lista_clases' => $lista_clases,
     'lista_dominios' => $lista_dominios,
+    'lista_tipos' => $lista_tipos,
     'lista_estados' => $lista_estados,
     'lista_usuarios' => $lista_usuarios,
 )); ?>
 </div><!-- search-form -->
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id'=>'cuenta-grid',
-    'dataProvider'=>$model->search(),
-    //'filter'=>$model,
+	'id'=>'cuenta-grid',
+	'dataProvider'=>$model->search(),
+	//'filter'=>$model,
     'enableSorting' => false,
-    'columns'=>array(
-        'Id_Cuenta',
+	'columns'=>array(
+		'Id_Cuenta',
         array(
-            'name'=>'Id_Empleado',
-            'value' => '($data->Id_Empleado == "") ? "-" :  UtilidadesEmpleado::nombreempleado($data->Id_Empleado)',
+            'name' => 'Clasificacion',
+            'value' => '$data->clasificacion->Dominio',
+        ),
+		array(
+            'name' => 'Cuenta_Usuario',
+            'value' => '$data->DescCuentaUsuario($data->Id_Cuenta)',
         ),
         array(
-            'name' => 'Cuenta_Correo',
-            'value' => '($data->Cuenta_Correo == "") ? "-" : $data->Cuenta_Correo',
+            'name' => 'num_cuentas_red',
+            'value' => '$data->NumCuentasRed($data->Id_Cuenta)',
         ),
         array(
-            'name' => 'Usuario_Siesa',
-            'value' => '($data->Usuario_Siesa == "") ? "-" : $data->Usuario_Siesa',
+            'name' => 'num_usuarios_asoc',
+            'value' => '$data->NumUsuariosAsoc($data->Id_Cuenta)',
         ),
-        array(
-            'name' => 'Cuenta_Skype',
-            'value' => '($data->Cuenta_Skype == "") ? "-" : $data->Cuenta_Skype',
+		array(
+            'name' => 'Tipo_Cuenta',
+            'value' => '($data->Tipo_Cuenta == "") ? "-" : $data->tipocuenta->Dominio',
         ),
-        array(
-            'name' => 'Usuario_Glpi',
-            'value' => '($data->Usuario_Glpi == "") ? "-" : $data->Usuario_Glpi',
+		array(
+            'name' => 'Tipo_Acceso',
+            'value' => '($data->Tipo_Acceso == "") ? "-" : $data->DescTipoAcceso($data->Tipo_Acceso)',
         ),
-        array(
-            'name' => 'Usuario_Papercut',
-            'value' => '($data->Usuario_Papercut == "") ? "-" : $data->Usuario_Papercut',
+		array(
+            'name' => 'Estado',
+            'value' => '$data->estado->Dominio',
         ),
-        /*array(
-            'name' => 'Observaciones',
-            'type' => 'raw',
-            'value' => '($data->Observaciones == "") ? "" : $data->Observaciones',
-        ),
-        array(
-            'name' => 'Id_Empleado',
-            'type' => 'raw',
-            'value' => '($data->Id_Empleado == "") ? "" : UtilidadesEmpleado::nombreempleado($data->Id_Empleado)',
-        ),
-        array(
-            'name' => 'area',
-            'type' => 'raw',
-            'value' => '($data->Id_Empleado == "") ? "" : UtilidadesEmpleado::areaactualempleado($data->Id_Empleado)',
-        ),
-        array(
-            'name' => 'cargo',
-            'type' => 'raw',
-            'value' => '($data->Id_Empleado == "") ? "" : UtilidadesEmpleado::cargoactualempleado($data->Id_Empleado)',
-        ),
-        array(
-            'name' => 'estado_emp',
-            'type' => 'raw',
-            'value' => '($data->Id_Empleado == "") ? "" : UtilidadesEmpleado::estadoactualempleado($data->Id_Empleado)',
-        ),*/
-        array(
-            'name'=>'Estado',
-            'value'=>'$data->estado->Dominio',
-        ),
-        array(
-            'class'=>'CButtonColumn',
-            'template'=>'{view}{update}',
+		/*
+		'Password',
+		'Id_Usuario_Creacion',
+		'Id_Usuario_Actualizacion',
+		'Fecha_Creacion',
+		'Fecha_Actualizacion',
+		*/
+		array(
+			'class'=>'CButtonColumn',
+            'template'=>'{view}{update}{actred}{desred}{eli}',
             'buttons'=>array(
                 'view'=>array(
                     'label'=>'<i class="fa fa-eye actions text-black"></i>',
@@ -149,9 +135,29 @@ $lista_usuarios = CHtml::listData($usuarios, 'Usuario', 'Usuario');
                     'label'=>'<i class="fa fa-pencil actions text-black"></i>',
                     'imageUrl'=>false,
                     'options'=>array('title'=>'Actualizar'),
-                    'visible'=> '(Yii::app()->user->getState("permiso_act") == true)',
+                    'visible'=> '(Yii::app()->user->getState("permiso_act") == true && $data->Estado == Yii::app()->params->estado_act || $data->Estado == Yii::app()->params->estado_ina)',
+                ),
+                'actred'=>array(
+                    'label'=>'<i class="fa fa-toggle-on actions text-black"></i>',
+                    'imageUrl'=>false,
+                    'url'=>'Yii::app()->createUrl("cuenta/actred", array("id"=>$data->Id_Cuenta))',
+                    'visible'=> '(Yii::app()->user->getState("permiso_act") == true && $data->Clasificacion == Yii::app()->params->c_correo && $data->Estado == Yii::app()->params->estado_act)',
+                    'options'=>array('title'=>'Redireccionar cuenta', 'confirm'=>'Esta seguro de redireccionar esta cuenta ?'),
+                ),
+                'desred'=>array(
+                    'label'=>'<i class="fa fa-toggle-off actions text-black"></i>',
+                    'imageUrl'=>false,
+                    'url'=>'Yii::app()->createUrl("cuenta/desred", array("id"=>$data->Id_Cuenta))',
+                    'visible'=> '(Yii::app()->user->getState("permiso_act") == true && $data->Clasificacion == Yii::app()->params->c_correo && $data->Estado == Yii::app()->params->estado_red)',
+                    'options'=>array('title'=>'Quitar redirección', 'confirm'=>'Esta seguro quitar el redireccionamiento ?'),
+                ),
+                'eli'=>array(
+                    'label'=>'<i class="fa fa-times actions text-black"></i>',
+                    'imageUrl'=>false,
+                    'visible'=> '(Yii::app()->user->getState("permiso_act") == true && $data->NumCuentasRed($data->Id_Cuenta) == 0 && $data->NumUsuariosAsoc($data->Id_Cuenta) == 0 && $data->Estado != Yii::app()->params->estado_red && $data->Estado != Yii::app()->params->estado_eli)',
+                    'options'=>array('title'=>'Eliminar', 'confirm'=>'Esta seguro de eliminar esta cuenta / usuario ?'),
                 ),
             )
-        ),
-    ),
+		),
+	),
 )); ?>

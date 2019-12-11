@@ -5,47 +5,32 @@
  *
  * The followings are the available columns in table 'TH_CUENTA':
  * @property integer $Id_Cuenta
- * @property integer $Id_Empleado
- * @property integer $Tipo
- * @property string $Cuenta_Correo
+ * @property integer $Clasificacion
+ * @property integer $Tipo_Cuenta
+ * @property integer $Tipo_Acceso
+ * @property string $Cuenta_Usuario
+ * @property string $Password
  * @property integer $Dominio
- * @property string $Password_Correo
- * @property string $Cuenta_Skype
- * @property string $Password_Skype
- * @property integer $Cuenta_Correo_Red
  * @property string $Observaciones
+ * @property integer $Id_Cuenta_Red
  * @property integer $Estado
  * @property integer $Id_Usuario_Creacion
  * @property integer $Id_Usuario_Actualizacion
  * @property string $Fecha_Creacion
  * @property string $Fecha_Actualizacion
- * @property string $Usuario
- * @property integer $Tipo_Asociacion
- * @property string $Cuenta_Skype
- * @property string $Password_Skype
- * @property string $Usuario_Glpi
- * @property string $Password_Glpi
- * @property string $Usuario_Papercut
- * @property string $Password_Papercut
  *
  * The followings are the available model relations:
- * @property THDOMINIO $tipo
- * @property THDOMINIO $dominio
- * @property THDOMINIO $estado
- * @property THEMPLEADO $idEmpleado
+ * @property THDOMINIO $clasificacion
  * @property THUSUARIO $idUsuarioCreacion
  * @property THUSUARIO $idUsuarioActualizacion
- * @property THNOVEDADCORREO[] $tHNOVEDADCORREOs
  */
 class Cuenta extends CActiveRecord
 {
-
-	public $orderby;
-	public $area;
-	public $cargo;
-	public $estado_emp;
-	public $Estado2;
-	public $empresa_emp;	
+	public $num_cuentas_red;
+	public $num_usuarios_asoc;	
+	public $usuario_creacion;
+	public $usuario_actualizacion;
+	public $orderby;	
 
 	/**
 	 * @return string the associated database table name
@@ -63,67 +48,95 @@ class Cuenta extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			//array('Tipo, Cuenta_Correo, Dominio, Password_Correo, Estado, Usuario', 'required'),
-			array('Cuenta_Correo','email', 'message'=>'Correo no valido'),
-			array('Id_Empleado, Tipo, Dominio, Estado, Id_Usuario_Creacion, Id_Usuario_Actualizacion, Cuenta_Correo_Red, Tipo_Asociacion', 'numerical', 'integerOnly'=>true),
-			array('Cuenta_Correo, Cuenta_Skype, Usuario_Siesa, Usuario_Glpi, Usuario_Papercut', 'length', 'max'=>100),
-			array('Password_Correo, Password_Skype, Usuario, Password_Siesa, Password_Glpi, Password_Papercut', 'length', 'max'=>50),
+			array('Id_Cuenta_Red', 'required', 'on' => 'actred'),
+			array('Clasificacion, Tipo_Cuenta, Tipo_Acceso, Dominio, Estado, Id_Usuario_Creacion, Id_Usuario_Actualizacion', 'numerical', 'integerOnly'=>true),
+			array('Cuenta_Usuario, Password', 'length', 'max'=>30),
 			array('Observaciones', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id_Cuenta, Tipo_Asociacion, Id_Empleado, Tipo, Cuenta_Correo, Dominio, Password_Correo, Cuenta_Skype, Password_Skype, Usuario_Siesa, Password_Siesa, Usuario_Glpi, Password_Glpi, Usuario_Papercut, Password_Papercut, Cuenta_Correo_Red, Estado, Id_Usuario_Creacion, Id_Usuario_Actualizacion, Fecha_Creacion, Fecha_Actualizacion, orderby', 'safe', 'on'=>'search'),
+			array('Id_Cuenta, Clasificacion, Tipo_Cuenta, Tipo_Acceso, Cuenta_Usuario, Password, Dominio, Estado, Fecha_Creacion, Fecha_Actualizacion, usuario_creacion, usuario_actualizacion, orderby', 'safe', 'on'=>'search'),
 		);
 	}
 
-	public function searchByCorreo($filtro, $id) {
+	public function DescTipoAcceso($Tipo_Acceso) {
 
-		if($id == 0){
-			$resp = Yii::app()->db->createCommand("
-			    SELECT TOP 10 Id_Cuenta , Cuenta_Correo FROM TH_CUENTA WHERE (Cuenta_Correo LIKE '%".$filtro."%') AND Estado = ".Yii::app()->params->estado_act." ORDER BY Cuenta_Correo 
-			")->queryAll();
-	        return $resp;
-		}else{
-			$resp = Yii::app()->db->createCommand("
-			    SELECT TOP 10 Id_Cuenta , Cuenta_Correo FROM TH_CUENTA WHERE (Cuenta_Correo LIKE '%".$filtro."%') AND Id_Cuenta != ".$id." AND Estado = ".Yii::app()->params->estado_act." ORDER BY Cuenta_Correo 
-			")->queryAll();
-	        return $resp;
+		if($Tipo_Acceso == 1){
+			return 'GENÉRICO';
+		}
+
+		if($Tipo_Acceso == 2){
+			return 'PERSONAL';
 		}
 
  	}
 
- 	public function searchByAllCorreos($filtro) {
+ 	public function DescCuentaUsuario($Id_Cuenta) {
 
-		$resp = Yii::app()->db->createCommand("
-		    SELECT TOP 10 Id_Cuenta , Cuenta_Correo FROM TH_CUENTA WHERE (Cuenta_Correo LIKE '%".$filtro."%') ORDER BY Cuenta_Correo 
-		")->queryAll();
-        return $resp;
+		$modelo_cuenta = Cuenta::model()->findByPk($Id_Cuenta);
+
+		if($modelo_cuenta->Clasificacion == Yii::app()->params->c_correo){
+			return $modelo_cuenta->Cuenta_Usuario.'@'.$modelo_cuenta->dominioweb->Dominio;
+		}else{
+			return $modelo_cuenta->Cuenta_Usuario;
+		}
  	}
 
- 	public function searchById($filtro) {
- 
-        $resp = Yii::app()->db->createCommand("
-		    SELECT Id_Cuenta , Cuenta_Correo FROM TH_CUENTA WHERE  Id_Cuenta = '".$filtro."'")->queryAll();
-        return $resp;
+ 	public function NumCuentasRed($Id_Cuenta) {
 
+		$modelo_cuenta = Cuenta::model()->findByPk($Id_Cuenta);
+
+		if($modelo_cuenta->Clasificacion == Yii::app()->params->c_correo){
+
+			$modelo_cuenta_red = Cuenta::model()->findAllByAttributes(array('Id_Cuenta_Red' => $Id_Cuenta));
+			
+			return count($modelo_cuenta_red);
+
+		}else{
+			return '-';
+		}
+
+ 	}
+
+ 	public function NumUsuariosAsoc($Id_Cuenta) {
+
+		$modelo_cuenta_emp = CuentaEmpleado::model()->findAllByAttributes(array('Id_Cuenta' => $Id_Cuenta, 'Estado' => 1));
+
+		return count($modelo_cuenta_emp);
+
+ 	}
+
+ 	public function searchByCuentaRed($id, $filtro) {
+       
+        $resp = Yii::app()->db->createCommand("
+		    SELECT 
+		    TOP 10 
+		    C.Id_Cuenta, 
+		    CONCAT (C.Cuenta_Usuario, '@', D.Dominio) AS Cuenta
+		    FROM TH_CUENTA C
+		    INNER JOIN TH_DOMINIO_WEB D ON C.Dominio = D.Id_Dominio_Web
+		    WHERE C.Id_Cuenta != ".$id." AND C.Clasificacion = ".Yii::app()->params->c_correo." AND C.Estado = ".Yii::app()->params->estado_act." AND (C.Cuenta_Usuario LIKE '%".$filtro."%' OR  C.Dominio LIKE '%".$filtro."%') ORDER BY Cuenta
+
+		")->queryAll();
+        return $resp;
+        
  	}
 
 	/**
-	 * @return array relational rules.
+	 * @return array relational rules
+	 .
 	 */
 	public function relations()
 	{
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'tipoasociacion' => array(self::BELONGS_TO, 'Dominio', 'Tipo_Asociacion'),
-			'tipo' => array(self::BELONGS_TO, 'Dominio', 'Tipo'),
-			'dominio' => array(self::BELONGS_TO, 'DominioWeb', 'Dominio'),
-			'estado' => array(self::BELONGS_TO, 'Dominio', 'Estado'),
-			'idempleado' => array(self::BELONGS_TO, 'Empleado', 'Id_Empleado'),
+			'clasificacion' => array(self::BELONGS_TO, 'Dominio', 'Clasificacion'),
+			'tipocuenta' => array(self::BELONGS_TO, 'Dominio', 'Tipo_Cuenta'),
+			'dominioweb' => array(self::BELONGS_TO, 'DominioWeb', 'Dominio'),
 			'idusuariocre' => array(self::BELONGS_TO, 'Usuario', 'Id_Usuario_Creacion'),
 			'idusuarioact' => array(self::BELONGS_TO, 'Usuario', 'Id_Usuario_Actualizacion'),
-			'cuentacorreored' => array(self::BELONGS_TO, 'Cuenta', 'Cuenta_Correo_Red'),
-			'tHNOVEDADCORREOs' => array(self::HAS_MANY, 'THNOVEDADCORREO', 'Id_Cuenta'),
+			'idcuentared' => array(self::BELONGS_TO, 'Cuenta', 'Id_Cuenta_Red'),
+			'estado' => array(self::BELONGS_TO, 'Dominio', 'Estado'),
 		);
 	}
 
@@ -134,36 +147,24 @@ class Cuenta extends CActiveRecord
 	{
 		return array(
 			'Id_Cuenta' => 'ID',
-			'Id_Empleado' => 'Empleado',
-			'Tipo' => 'Tipo de cuenta',
-			'Cuenta_Correo' => 'Cuenta de correo',
+			'Clasificacion' => 'Clasif.',
+			'Tipo_Cuenta' => 'Tipo de cuenta',
+			'Tipo_Acceso' => 'Tipo de acceso',
+			'Cuenta_Usuario' => 'Cuenta / Usuario',
+			'Password' => 'Password',
 			'Dominio' => 'Dominio',
-			'Password_Correo' => 'Password correo',
-			'Cuenta_Skype' => 'Cuenta de skype',
-			'Password_Skype' => 'Password skype',
-			'Cuenta_Correo_Red' => 'Cuenta de correo para redirección',
 			'Observaciones' => 'Observaciones',
-			'Estado' => 'Estado de cuenta',
+			'Id_Cuenta_Red' => 'Cuenta red.',
+			'Estado' => 'Estado',
+			'num_cuentas_red' => '# de cuentas red.',
+			'num_usuarios_asoc' => '# de usuarios asoc.',
 			'Id_Usuario_Creacion' => 'Usuario que creo',
 			'Id_Usuario_Actualizacion' => 'Usuario que actualizó',
 			'Fecha_Creacion' => 'Fecha de creación',
 			'Fecha_Actualizacion' => 'Fecha de actualización',
-			'Usuario' => 'Usuario',
 			'usuario_creacion' => 'Usuario que creo',
 			'usuario_actualizacion' => 'Usuario que actualizó',
-			'orderby' => 'Orden de resultados',
-			'area' => 'Área',
-			'cargo' => 'Cargo',
-			'estado_emp' => 'Estado de empleado',
-			'Tipo_Asociacion' => 'Tipo de asociación',
-			'Usuario_Siesa' => 'Usuario siesa',
-			'Password_Siesa' => 'Password siesa',
-			'Usuario_Glpi' => 'Usuario glpi',
-			'Password_Glpi' => 'Password glpi',
-			'Usuario_Papercut' =>'Usuario papercut',
-			'Password_Papercut' => 'Password papercut',
-			'Estado2' => 'Estado',
-			'empresa_emp' => 'Empresa',
+			'orderby' => 'Orden de resultados',	
 		);
 	}
 
@@ -186,32 +187,40 @@ class Cuenta extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->together  =  true;
-	   	$criteria->with=array('idempleado', 'tipoasociacion', 'tipo', 'dominio', 'cuentacorreored', 'estado');
+	   	$criteria->with=array('clasificacion','tipocuenta','dominioweb','idusuariocre','idusuarioact','estado');
 
 		$criteria->compare('t.Id_Cuenta',$this->Id_Cuenta);
-		$criteria->compare('t.Tipo_Asociacion',$this->Tipo_Asociacion);
-		$criteria->compare('t.Id_Empleado',$this->Id_Empleado);
-		$criteria->compare('t.Tipo',$this->Tipo);
+		$criteria->compare('t.Clasificacion',$this->Clasificacion);
+		$criteria->compare('t.Tipo_Cuenta',$this->Tipo_Cuenta);
+		$criteria->compare('t.Tipo_Acceso',$this->Tipo_Acceso);
+		$criteria->compare('t.Cuenta_Usuario',$this->Cuenta_Usuario,true);
+		$criteria->compare('t.Password',$this->Password,true);
 		$criteria->compare('t.Dominio',$this->Dominio);
-		$criteria->compare('t.Cuenta_Correo',$this->Cuenta_Correo,true);
-		$criteria->compare('t.Password_Correo',$this->Password_Correo,true);
-		$criteria->compare('t.Cuenta_Skype',$this->Cuenta_Skype,true);
-		$criteria->compare('t.Password_Skype',$this->Password_Skype,true);
-		$criteria->compare('t.Usuario_Siesa',$this->Usuario_Siesa,true);
-		$criteria->compare('t.Password_Siesa',$this->Password_Siesa,true);
-		$criteria->compare('t.Usuario_Glpi',$this->Usuario_Glpi,true);
-		$criteria->compare('t.Password_Glpi',$this->Password_Glpi,true);
-		$criteria->compare('t.Cuenta_Correo_Red',$this->Cuenta_Correo_Red,true);
 		$criteria->compare('t.Estado',$this->Estado);
-		/*$criteria->compare('t.Observaciones',$this->Observaciones,true);
-		$criteria->compare('t.Id_Usuario_Creacion',$this->Id_Usuario_Creacion);
-		$criteria->compare('t.Id_Usuario_Actualizacion',$this->Id_Usuario_Actualizacion);
-		$criteria->compare('t.Fecha_Creacion',$this->Fecha_Creacion,true);
-		$criteria->compare('t.Fecha_Actualizacion',$this->Fecha_Actualizacion,true);
-		$criteria->compare('t.Usuario',$this->Usuario,true);*/
-		$criteria->order = 't.Id_Cuenta DESC'; 
+		
+		if($this->Fecha_Creacion != ""){
+      		$fci = $this->Fecha_Creacion." 00:00:00";
+      		$fcf = $this->Fecha_Creacion." 23:59:59";
 
-		if(empty($this->orderby)){
+      		$criteria->addBetweenCondition('t.Fecha_Creacion', $fci, $fcf);
+    	}
+
+    	if($this->Fecha_Actualizacion != ""){
+      		$fai = $this->Fecha_Actualizacion." 00:00:00";
+      		$faf = $this->Fecha_Actualizacion." 23:59:59";
+
+      		$criteria->addBetweenCondition('t.Fecha_Actualizacion', $fai, $faf);
+    	}
+
+		if($this->usuario_creacion != ""){
+			$criteria->AddCondition("idusuariocre.Usuario = '".$this->usuario_creacion."'"); 
+	    }
+
+    	if($this->usuario_actualizacion != ""){
+			$criteria->AddCondition("idusuarioact.Usuario = '".$this->usuario_actualizacion."'"); 
+	    }
+
+	    if(empty($this->orderby)){
 			$criteria->order = 't.Id_Cuenta DESC'; 	
 		}else{
 			switch ($this->orderby) {
@@ -222,69 +231,63 @@ class Cuenta extends CActiveRecord
 			        $criteria->order = 't.Id_Cuenta DESC'; 
 			        break;
 			    case 3:
-			        $criteria->order = 'tipoasociacion.Dominio ASC'; 
+			        $criteria->order = 'clasificacion.Dominio ASC'; 
 			        break;
 			    case 4:
-			        $criteria->order = 'tipoasociacion.Dominio DESC'; 
-			        break;    
+			        $criteria->order = 'clasificacion.Dominio DESC'; 
+			        break; 
 			    case 5:
-			        $criteria->order = 'idempleado.Nombre ASC, idempleado.Apellido ASC'; 
+			        $criteria->order = 't.Cuenta_Usuario ASC'; 
 			        break;
 			    case 6:
-			        $criteria->order = 'idempleado.Nombre DESC, idempleado.Apellido DESC'; 
+			        $criteria->order = 't.Cuenta_Usuario DESC'; 
 			        break;
-		        case 7:
-			        $criteria->order = 'tipo.Dominio ASC'; 
+			    case 7:
+			        $criteria->order = 'dominioweb.Dominio ASC'; 
 			        break;
 			    case 8:
-			        $criteria->order = 'tipo.Dominio DESC'; 
-			        break;
-			    case 9:
-			        $criteria->order = 'dominio.Dominio ASC'; 
+			        $criteria->order = 'dominioweb.Dominio DESC'; 
+			        break; 
+		        case 9:
+			        $criteria->order = 'tipocuenta.Dominio ASC'; 
 			        break;
 			    case 10:
-			        $criteria->order = 'dominio.Dominio DESC'; 
+			        $criteria->order = 'tipocuenta.Dominio DESC'; 
 			        break;
 			    case 11:
-			        $criteria->order = 't.Cuenta_Correo ASC'; 
+			        $criteria->order = 't.Tipo_Acceso ASC'; 
 			        break;
 			    case 12:
-			        $criteria->order = 't.Cuenta_Correo DESC'; 
-			        break;
-			    case 13:
-			        $criteria->order = 't.Cuenta_Skype ASC'; 
+			        $criteria->order = 't.Tipo_Acceso DESC'; 
+			        break; 
+		        case 13:
+			        $criteria->order = 'idusuariocre.Usuario ASC'; 
 			        break;
 			    case 14:
-			        $criteria->order = 't.Cuenta_Skype DESC'; 
+			        $criteria->order = 'idusuariocre.Usuario DESC'; 
 			        break;
-		        case 15:
-			        $criteria->order = 't.Usuario_Siesa ASC'; 
+			    case 15:
+			        $criteria->order = 't.Fecha_Creacion ASC'; 
 			        break;
 			    case 16:
-			        $criteria->order = 't.Usuario_Siesa DESC'; 
+			        $criteria->order = 't.Fecha_Creacion DESC'; 
 			        break;
 			    case 17:
-			        $criteria->order = 't.Usuario_Glpi ASC'; 
+			        $criteria->order = 'idusuarioact.Usuario ASC'; 
 			        break;
 			    case 18:
-			        $criteria->order = 't.Usuario_Glpi DESC'; 
+			        $criteria->order = 'idusuarioact.Usuario DESC'; 
 			        break;
-			    case 19:
-			        $criteria->order = 't.Usuario_Papercut ASC'; 
+				case 19:
+			        $criteria->order = 't.Fecha_Actualizacion ASC'; 
 			        break;
 			    case 20:
-			        $criteria->order = 't.Usuario_Papercut DESC'; 
+			        $criteria->order = 't.Fecha_Actualizacion DESC'; 
 			        break;
 			    case 21:
-			        $criteria->order = 'cuentacorreored.Cuenta_Correo ASC'; 
-			        break;
-			    case 22:
-			        $criteria->order = 'cuentacorreored.Cuenta_Correo DESC'; 
-			        break;
-			    case 23:
 			        $criteria->order = 'estado.Dominio ASC'; 
 			        break;
-			    case 24:
+			    case 22:
 			        $criteria->order = 'estado.Dominio DESC'; 
 			        break;
 			}
@@ -300,7 +303,7 @@ class Cuenta extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Correo the static model class
+	 * @return Cuenta the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

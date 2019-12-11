@@ -33,7 +33,7 @@ $lista_usuarios = CHtml::listData($usuarios, 'Usuario', 'Usuario');
 
 ?>
 
-<h3>Consulta de novedades por cuenta</h3>
+<h3>Consulta de novedades por cuenta / usuario</h3>
 
 <div class="btn-group" style="padding-bottom: 2%">
     <button type="button" class="btn btn-success search-button"><i class="fa fa-filter"></i> Busqueda avanzada</button>
@@ -53,10 +53,9 @@ $lista_usuarios = CHtml::listData($usuarios, 'Usuario', 'Usuario');
 	//'filter'=>$model,
     'enableSorting' => false,
 	'columns'=>array(
-		'Id_N_Cuenta',
 		array(
             'name'=>'Id_Cuenta',
-            'value'=>'$data->Id_Cuenta',
+            'value'=>'$data->DescCuentaUsuario($data->Id_Cuenta)',
         ),
 		'Novedades',
 		array(
@@ -67,16 +66,5 @@ $lista_usuarios = CHtml::listData($usuarios, 'Usuario', 'Usuario');
             'name'=>'Fecha_Creacion',
             'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
         ),
-		array(
-			'class'=>'CButtonColumn',
-            'template'=>'{view}',
-            'buttons'=>array(
-                'view'=>array(
-                    'label'=>'<i class="fa fa-eye actions text-black"></i>',
-                    'imageUrl'=>false,
-                    'options'=>array('title'=>'Visualizar'),
-                ),
-            )
-		),
 	),
 )); ?>

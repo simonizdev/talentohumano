@@ -44,6 +44,38 @@ class NovedadCuenta extends CActiveRecord
 		);
 	}
 
+	public function DescCuentaUsuario($Id_Cuenta) {
+
+		$modelo_cuenta = Cuenta::model()->findByPk($Id_Cuenta);
+
+		if($modelo_cuenta->Clasificacion == Yii::app()->params->c_correo){
+			return $modelo_cuenta->Cuenta_Usuario.'@'.$modelo_cuenta->dominioweb->Dominio.' ('.$modelo_cuenta->clasificacion->Dominio.')';
+		}else{
+			return $modelo_cuenta->Cuenta_Usuario.' ('.$modelo_cuenta->clasificacion->Dominio.')';
+		}
+ 	}
+
+ 	public function searchByCuenta($filtro) {
+       
+ 		$resp = Yii::app()->db->createCommand("
+			SELECT 
+			TOP 10
+			C.Id_Cuenta,
+			C.Clasificacion,
+			CASE
+		    WHEN C.Clasificacion = ".Yii::app()->params->c_correo." THEN CONCAT (C.Cuenta_Usuario, '@', DW.Dominio, ' (', CL.Dominio, ')')
+		    WHEN C.Clasificacion != ".Yii::app()->params->c_correo." THEN CONCAT (C.Cuenta_Usuario, ' (', CL.Dominio, ')')
+		    ELSE ''
+		    END AS Desc_Cuenta_Usuario
+		    FROM TH_CUENTA C
+			LEFT JOIN TH_DOMINIO_WEB DW ON C.Dominio = DW.Id_Dominio_Web
+			LEFT JOIN TH_DOMINIO CL ON C.Clasificacion = CL.Id_Dominio
+			WHERE (C.Cuenta_Usuario LIKE '%".$filtro."%' OR DW.Dominio LIKE '%".$filtro."%')
+		")->queryAll();
+
+        return $resp;
+    }
+
 	/**
 	 * @return array relational rules.
 	 */
@@ -64,7 +96,7 @@ class NovedadCuenta extends CActiveRecord
 	{
 		return array(
 			'Id_N_Cuenta' => 'ID',
-			'Id_Cuenta' => 'ID de cuenta',
+			'Id_Cuenta' => 'Cuenta / Usuario',
 			'Novedades' => 'Novedades',
 			'Id_Usuario_Creacion' => 'Usuario que creo',
 			'Fecha_Creacion' => 'Fecha de creación',

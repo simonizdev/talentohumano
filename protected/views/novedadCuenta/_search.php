@@ -14,18 +14,34 @@
 	<p>Utilice los filtros para optimizar la busqueda:</p>
 
 	<div class="row">
-		<div class="col-sm-3">
-	    	<div class="form-group">
-	          	<?php echo $form->label($model,'Id_N_Cuenta'); ?>
-			    <?php echo $form->numberField($model,'Id_N_Cuenta', array('class' => 'form-control', 'autocomplete' => 'off', 'type' => 'number')); ?>
+		<div class="col-sm-6">
+	        <div class="form-group">
+	        	<?php echo $form->error($model,'Id_Cuenta', array('class' => 'pull-right badge bg-red')); ?>
+	    		<?php echo $form->label($model,'Id_Cuenta'); ?>
+	            <?php echo $form->textField($model,'Id_Cuenta'); ?>
+	            <?php
+	                $this->widget('ext.select2.ESelect2', array(
+	                    'selector' => '#NovedadCuenta_Id_Cuenta',
+	                    'options'  => array(
+	                        'allowClear' => true,
+	                        'minimumInputLength' => 3,
+	                        'width' => '100%',
+	                        'language' => 'es',
+	                        'ajax' => array(
+	                            'url' => Yii::app()->createUrl('novedadcuenta/SearchCuenta'),
+	                            'dataType'=>'json',
+	                            'data'=>'js:function(term){return{q: term};}',
+	                            'results'=>'js:function(data){ return {results:data};}'                   
+	                        ),
+	                        'formatNoMatches'=> 'js:function(){ clear_select2_ajax("NovedadCuenta_Id_Cuenta"); return "No se encontraron resultados"; }',
+	                        'formatInputTooShort' =>  'js:function(){ return "Digite más de 3 caracteres para iniciar busqueda <button type=\"button\" class=\"btn btn-success btn-xs pull-right\" onclick=\"clear_select2_ajax(\'NovedadCuenta_Id_Cuenta\')\">Limpiar campo</button>"; }',
+	                    ),
+	                ));
+	            ?>
 	        </div>
 	    </div>
-	    <div class="col-sm-3">
-	    	<div class="form-group">
-	          	<?php echo $form->label($model,'Id_Cuenta'); ?>
-	            <?php echo $form->numberField($model,'Id_Cuenta', array('class' => 'form-control', 'autocomplete' => 'off', 'type' => 'number')); ?>
-	        </div>
-	    </div>
+	</div>
+	<div class="row">
     	<div class="col-sm-3">
 	    	<div class="form-group">
 	          	<?php echo $form->label($model,'Fecha_Creacion'); ?>
@@ -50,13 +66,11 @@
 				?>
 	        </div>
 	    </div>
-	</div>
-	<div class="row">
 	    <div class="col-sm-3">
 	    	<div class="form-group">
 	          	<?php echo $form->label($model,'orderby'); ?>
 			    <?php 
-                	$array_orden = array(1 => 'ID ASC', 2 => 'ID DESC', 3 => 'ID de cuenta ASC', 4 => 'ID de cuenta DESC', 5 => 'Usuario que creo ASC', 6 => 'Usuario que creo DESC', 7 => 'Fecha de creación ASC', 8 => 'Fecha de creación DESC'
+                	$array_orden = array(1 => 'Usuario que creo ASC', 2 => 'Usuario que creo DESC', 3 => 'Fecha de creación ASC', 4 => 'Fecha de creación DESC'
 					);
             	?>
             	<?php
@@ -103,7 +117,6 @@
 	}
 
 	function resetfields(){
-		$('#NovedadCuenta_Id_N_Cuenta').val('');
 		$('#NovedadCuenta_Id_Cuenta').val('').trigger('change');
     	$('#s2id_NovedadCuenta_Id_Cuenta span').html("");
     	$('#NovedadCuenta_Fecha_Creacion').val('');

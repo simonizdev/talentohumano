@@ -20,12 +20,15 @@
   /*Cabecera tabla*/
 
   $objPHPExcel->setActiveSheetIndex()->setCellValue('A1', 'Cuenta / Usuario');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('B1', 'Novedades');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('C1', 'Usuario que creo');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('D1', 'Fecha de creación');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('B1', 'Empleado');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('C1', 'Estado');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('D1', 'Usuario que creo');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('E1', 'Fecha de creación');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('F1', 'Usuario que actualizó');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('G1', 'Fecha de actualización');
 
-  $objPHPExcel->getActiveSheet()->getStyle('A1:D1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
-  $objPHPExcel->getActiveSheet()->getStyle('A1:D1')->getFont()->setBold(true);
+  $objPHPExcel->getActiveSheet()->getStyle('A1:G1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+  $objPHPExcel->getActiveSheet()->getStyle('A1:G1')->getFont()->setBold(true);
 
   $Fila= 3;
 
@@ -34,15 +37,21 @@
   foreach ($data as $reg) {
   
     $cuenta = $reg->DescCuentaUsuario($reg->Id_Cuenta);
-    $novedades = $reg->Novedades;
+    $empleado = UtilidadesEmpleado::nombreempleado($reg->Id_Empleado);
+    $estado = UtilidadesVarias::textoestado1($reg->Estado);
     $usuario_creacion = $reg->idusuariocre->Usuario;
     $fecha_creacion = $reg->Fecha_Creacion;
+    $usuario_actualizacion = $reg->idusuarioact->Usuario;
+    $fecha_creacion = $reg->Fecha_Creacion;
+
 
     $objPHPExcel->setActiveSheetIndex()->setCellValue('A'.$Fila,$cuenta);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('B'.$Fila,$novedades);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('C'.$Fila,$usuario_creacion);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('D'.$Fila,$fecha_creacion);
-
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('B'.$Fila,$empleado);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('C'.$Fila,$estado);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('D'.$Fila,$usuario_creacion);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('E'.$Fila,$fecha_creacion);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('F'.$Fila,$usuario_actualizacion);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('G'.$Fila,$fecha_creacion);
     $Fila ++;
          
   }
@@ -62,7 +71,7 @@
       }
   }
 
-  $n = 'Novedad_Cuentas_'.date('Y-m-d H_i_s');
+  $n = 'Cuentas_empleado_'.date('Y-m-d H_i_s');
 
   header('Content-Type: application/vnd.ms-excel');
   header('Content-Disposition: attachment;filename="'.$n.'.xlsx"');

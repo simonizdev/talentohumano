@@ -569,22 +569,6 @@ function calcularEdad(fecha) {
                         'name'=>'Fecha_Nacimiento',
                         'value'=>'UtilidadesVarias::textofecha($data->Fecha_Nacimiento)',
                     ),
-                    /*array(
-                        'name'=>'Id_Usuario_Creacion',
-                        'value'=>'$data->idusuariocre->Usuario',
-                    ),
-                    array(
-                        'name'=>'Fecha_Creacion',
-                        'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                    ),
-                    array(
-                        'name'=>'Id_Usuario_Actualizacion',
-                        'value'=>'$data->idusuarioact->Usuario',
-                    ),
-                    array(
-                        'name'=>'Fecha_Actualizacion',
-                        'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                    ),*/
                     array(
                         'class'=>'CButtonColumn',
                         'template'=>'{view}{update}',
@@ -620,22 +604,6 @@ function calcularEdad(fecha) {
                     ),
                     'Entidad',
                     'Titulo_Obtenido',
-                    /*array(
-                        'name'=>'Id_Usuario_Creacion',
-                        'value'=>'$data->idusuariocre->Usuario',
-                    ),
-                    array(
-                        'name'=>'Fecha_Creacion',
-                        'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                    ),
-                    array(
-                        'name'=>'Id_Usuario_Actualizacion',
-                        'value'=>'$data->idusuarioact->Usuario',
-                    ),
-                    array(
-                        'name'=>'Fecha_Actualizacion',
-                        'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                    ),*/
                     array(
                         'class'=>'CButtonColumn',
                         'template'=>'{view}{update}',
@@ -675,22 +643,6 @@ function calcularEdad(fecha) {
                     ),
                     'Puntaje',
                     'Observacion',
-                    /*array(
-                        'name'=>'Id_Usuario_Creacion',
-                        'value'=>'$data->idusuariocre->Usuario',
-                    ),
-                    array(
-                        'name'=>'Fecha_Creacion',
-                        'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                    ),
-                    array(
-                        'name'=>'Id_Usuario_Actualizacion',
-                        'value'=>'$data->idusuarioact->Usuario',
-                    ),
-                    array(
-                        'name'=>'Fecha_Actualizacion',
-                        'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                    ),*/
                     array(
                         'class'=>'CButtonColumn',
                         'template'=>'{view}{update}',
@@ -721,10 +673,11 @@ function calcularEdad(fecha) {
                     <li><a href="#nov_act" data-toggle="tab">Novedades de contrato</a></li>
                     <li><a href="#tur_act" data-toggle="tab">Turnos</a></li>
                     <li><a href="#aus_act" data-toggle="tab">Ausencias</a></li>
-                    <li><a href="#dis_act" data-toggle="tab">Llamados de atención / Sanciones</a></li>
+                    <li><a href="#dis_act" data-toggle="tab">Llam. de atención / Sanciones</a></li>
                     <li><a href="#com_act" data-toggle="tab">Comparendos</a></li>
                     <li><a href="#ele_act" data-toggle="tab">Elementos</a></li>
                     <li><a href="#her_act" data-toggle="tab">Herramientas</a></li>
+                    <li><a href="#cue_act" data-toggle="tab">Cuentas</a></li>
                 </ul>
             </div>
             <div class="tab-content">
@@ -802,14 +755,6 @@ function calcularEdad(fecha) {
                         'columns'=>array(
                             'Id_Contrato',
                             'Novedad',
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),*/
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}',
@@ -848,15 +793,6 @@ function calcularEdad(fecha) {
                                 'name'=>'Estado',
                                 'value'=>'UtilidadesVarias::textoestado1($data->Estado)',
                             ),
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),*/
-                            
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}{update}',
@@ -967,22 +903,6 @@ function calcularEdad(fecha) {
                                 'value'=>'UtilidadesEmpleado::nombreempleado($data->Id_Empleado_Imp)',
                             ),
                             'Orden_No',
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),
-                            array(
-                                'name'=>'Id_Usuario_Actualizacion',
-                                'value'=>'$data->idusuarioact->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Actualizacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                            ),*/
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}{update}',
@@ -1026,22 +946,6 @@ function calcularEdad(fecha) {
                                 'value'=>'UtilidadesEmpleado::nombreempleado($data->Id_Empleado_Imp)',
                             ),
                             'Orden_No',
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),
-                            array(
-                                'name'=>'Id_Usuario_Actualizacion',
-                                'value'=>'$data->idusuarioact->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Actualizacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                            ),*/
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}{update}',
@@ -1097,22 +1001,6 @@ function calcularEdad(fecha) {
                                 'name'=>'Estado',
                                 'value'=>'UtilidadesElemento::textoestado($data->Estado)',
                             ),
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),
-                            array(
-                                'name'=>'Id_Usuario_Actualizacion',
-                                'value'=>'$data->idusuarioact->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Actualizacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                            ),*/
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}',
@@ -1144,22 +1032,6 @@ function calcularEdad(fecha) {
                                 'name'=>'Estado',
                                 'value'=>'UtilidadesHerramienta::textoestado($data->Estado)',
                             ),
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),
-                            array(
-                                'name'=>'Id_Usuario_Actualizacion',
-                                'value'=>'$data->idusuarioact->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Actualizacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                            ),*/
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}',
@@ -1174,6 +1046,43 @@ function calcularEdad(fecha) {
                             ),
                         ),
                     )); ?>
+                </div>
+                <div class="tab-pane" id="cue_act">
+                    <?php
+                    $this->widget('zii.widgets.grid.CGridView', array(
+                        'id'=>'cuenta-empleado-grid',
+                        'dataProvider'=>$model_cuentas_act,
+                        //'filter'=>$model,
+                        'enableSorting' => false,
+                        'columns'=>array(
+                            array(
+                                'name'=>'clasificacion',
+                                'value' => '$data->idcuenta->clasificacion->Dominio',
+                            ),
+                            array(
+                                'name'=>'Id_Cuenta',
+                                'value' => '$data->idcuenta->DescCuentaUsuario($data->Id_Cuenta)',
+                            ),
+                            array(
+                                'name' => 'Estado',
+                                'value' => 'UtilidadesVarias::textoestado1($data->Estado)',
+                            ),
+                            array(
+                                'class'=>'CButtonColumn',
+                                'template'=>'{view}',
+                                'buttons'=>array(
+                                    'view'=>array(
+                                        'label'=>'<i class="fa fa-eye actions text-black"></i>',
+                                        'imageUrl'=>false,
+                                        'options'=>array('title'=>'Visualizar'),
+                                        'url'=>'Yii::app()->createUrl("cuentaEmpleado/view", array("id"=>$data->Id_Cuenta_Emp))',
+                                    ),
+                                )
+                            ),
+                        ),
+                    ));
+
+                    ?>
                 </div>    
             </div>     
         </div>
@@ -1184,10 +1093,12 @@ function calcularEdad(fecha) {
                     <li><a href="#nov_ant" data-toggle="tab">Novedades de contratos</a></li>
                     <li><a href="#tur_ant" data-toggle="tab">Turnos</a></li>
                     <li><a href="#aus_ant" data-toggle="tab">Ausencias</a></li>
-                    <li><a href="#dis_ant" data-toggle="tab">Llamados de atención / Sanciones</a></li>
+                    <li><a href="#dis_ant" data-toggle="tab">Llam. de atención / Sanciones</a></li>
                     <li><a href="#com_ant" data-toggle="tab">Comparendos</a></li>
                     <li><a href="#ele_ant" data-toggle="tab">Elementos</a></li>
                     <li><a href="#her_ant" data-toggle="tab">Herramientas</a></li>
+                    <li><a href="#cue_ant" data-toggle="tab">Cuentas</a></li>
+
                 </ul>
             </div>
             <div class="tab-content">  
@@ -1269,14 +1180,6 @@ function calcularEdad(fecha) {
                         'columns'=>array(
                             'Id_Contrato',
                             'Novedad',
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),*/
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}',
@@ -1316,15 +1219,6 @@ function calcularEdad(fecha) {
                                 'name'=>'Estado',
                                 'value'=>'UtilidadesVarias::textoestado1($data->Estado)',
                             ),
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),*/
-                            
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}{update}',
@@ -1346,36 +1240,6 @@ function calcularEdad(fecha) {
                             ),
                         ),
                     )); ?>
-                    <?php /*$this->widget('zii.widgets.grid.CGridView', array(
-                        'id'=>'novedad-contrato-grid-ant',
-                        'dataProvider'=>$model_novedades_ant,
-                        //'filter'=>$model,
-                        'enableSorting' => false,
-                        'columns'=>array(
-                            'Id_Contrato',
-                            'Novedad',
-                            array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),
-                            array(
-                                'class'=>'CButtonColumn',
-                                'template'=>'{view}',
-                                'buttons'=>array(
-                                    'view'=>array(
-                                        'label'=>'<i class="fa fa-eye actions text-black"></i>',
-                                        'imageUrl'=>false,
-                                        'options'=>array('title'=>'Visualizar'),
-                                        'url'=>'Yii::app()->createUrl("novedadContrato/view", array("id"=>$data->Id_N_Contrato))',
-                                    ),
-                                )
-                            ),
-                        ),
-                    )); */?>
                 </div>
                 <div class="tab-pane" id="aus_ant">
                     <?php $this->widget('zii.widgets.grid.CGridView', array(
@@ -1461,22 +1325,6 @@ function calcularEdad(fecha) {
                                 'value'=>'UtilidadesEmpleado::nombreempleado($data->Id_Empleado_Imp)',
                             ),
                             'Orden_No',
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),
-                            array(
-                                'name'=>'Id_Usuario_Actualizacion',
-                                'value'=>'$data->idusuarioact->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Actualizacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                            ),*/
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}{update}',
@@ -1520,22 +1368,6 @@ function calcularEdad(fecha) {
                                 'value'=>'UtilidadesEmpleado::nombreempleado($data->Id_Empleado_Imp)',
                             ),
                             'Orden_No',
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),
-                            array(
-                                'name'=>'Id_Usuario_Actualizacion',
-                                'value'=>'$data->idusuarioact->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Actualizacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                            ),*/
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}{update}',
@@ -1591,22 +1423,6 @@ function calcularEdad(fecha) {
                                 'name'=>'Estado',
                                 'value'=>'UtilidadesElemento::textoestado($data->Estado)',
                             ),
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),
-                            array(
-                                'name'=>'Id_Usuario_Actualizacion',
-                                'value'=>'$data->idusuarioact->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Actualizacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                            ),*/
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}',
@@ -1638,22 +1454,6 @@ function calcularEdad(fecha) {
                                 'name'=>'Estado',
                                 'value'=>'UtilidadesHerramienta::textoestado($data->Estado)',
                             ),
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),
-                            array(
-                                'name'=>'Id_Usuario_Actualizacion',
-                                'value'=>'$data->idusuarioact->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Actualizacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                            ),*/
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}',
@@ -1668,7 +1468,43 @@ function calcularEdad(fecha) {
                             ),
                         ),
                     )); ?>
-                </div>  
+                </div>
+                <div class="tab-pane" id="cue_ant">
+                    <?php
+                    $this->widget('zii.widgets.grid.CGridView', array(
+                        'id'=>'cuenta-empleado-grid',
+                        'dataProvider'=>$model_cuentas_ant,
+                        //'filter'=>$model,
+                        'enableSorting' => false,
+                        'columns'=>array(
+                            array(
+                                'name'=>'clasificacion',
+                                'value' => '$data->idcuenta->clasificacion->Dominio',
+                            ),
+                            array(
+                                'name'=>'Id_Cuenta',
+                                'value' => '$data->idcuenta->DescCuentaUsuario($data->Id_Cuenta)',
+                            ),
+                            array(
+                                'name' => 'Estado',
+                                'value' => 'UtilidadesVarias::textoestado1($data->Estado)',
+                            ),
+                            array(
+                                'class'=>'CButtonColumn',
+                                'template'=>'{view}',
+                                'buttons'=>array(
+                                    'view'=>array(
+                                        'label'=>'<i class="fa fa-eye actions text-black"></i>',
+                                        'imageUrl'=>false,
+                                        'options'=>array('title'=>'Visualizar'),
+                                        'url'=>'Yii::app()->createUrl("cuentaEmpleado/view", array("id"=>$data->Id_Cuenta_Emp))',
+                                    ),
+                                )
+                            ),
+                        ),
+                    ));
+                    ?>
+                </div> 
             </div>
         </div>
     </div>
@@ -2190,22 +2026,6 @@ function calcularEdad(fecha) {
                                 'value'=>'UtilidadesEmpleado::nombreempleado($data->Id_Empleado_Imp)',
                             ),
                             'Orden_No',
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),
-                            array(
-                                'name'=>'Id_Usuario_Actualizacion',
-                                'value'=>'$data->idusuarioact->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Actualizacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                            ),*/
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}{update}',
@@ -2261,22 +2081,6 @@ function calcularEdad(fecha) {
                                 'name'=>'Estado',
                                 'value'=>'UtilidadesElemento::textoestado($data->Estado)',
                             ),
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),
-                            array(
-                                'name'=>'Id_Usuario_Actualizacion',
-                                'value'=>'$data->idusuarioact->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Actualizacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                            ),*/
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}',
@@ -2308,22 +2112,6 @@ function calcularEdad(fecha) {
                                 'name'=>'Estado',
                                 'value'=>'UtilidadesHerramienta::textoestado($data->Estado)',
                             ),
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),
-                            array(
-                                'name'=>'Id_Usuario_Actualizacion',
-                                'value'=>'$data->idusuarioact->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Actualizacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                            ),*/
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}',
@@ -2427,22 +2215,6 @@ function calcularEdad(fecha) {
                                 'value'=>'UtilidadesEmpleado::nombreempleado($data->Id_Empleado_Imp)',
                             ),
                             'Orden_No',
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),
-                            array(
-                                'name'=>'Id_Usuario_Actualizacion',
-                                'value'=>'$data->idusuarioact->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Actualizacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                            ),*/
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}{update}',
@@ -2498,22 +2270,6 @@ function calcularEdad(fecha) {
                                 'name'=>'Estado',
                                 'value'=>'UtilidadesElemento::textoestado($data->Estado)',
                             ),
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),
-                            array(
-                                'name'=>'Id_Usuario_Actualizacion',
-                                'value'=>'$data->idusuarioact->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Actualizacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                            ),*/
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}',
@@ -2545,22 +2301,6 @@ function calcularEdad(fecha) {
                                 'name'=>'Estado',
                                 'value'=>'UtilidadesHerramienta::textoestado($data->Estado)',
                             ),
-                            /*array(
-                                'name'=>'Id_Usuario_Creacion',
-                                'value'=>'$data->idusuariocre->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Creacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                            ),
-                            array(
-                                'name'=>'Id_Usuario_Actualizacion',
-                                'value'=>'$data->idusuarioact->Usuario',
-                            ),
-                            array(
-                                'name'=>'Fecha_Actualizacion',
-                                'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                            ),*/
                             array(
                                 'class'=>'CButtonColumn',
                                 'template'=>'{view}',

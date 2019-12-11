@@ -12,14 +12,20 @@
 	<p>Utilice los filtros para optimizar la busqueda:</p>
 
 	<div class="row">
-	     <div class="col-sm-6">
+	    <div class="col-sm-3">
 	    	<div class="form-group">
-	          	<?php echo $form->label($model,'Tipo_Asociacion'); ?>
-            	<?php
+	          	<?php echo $form->label($model,'Id_Cuenta'); ?>
+			    <?php echo $form->numberField($model,'Id_Cuenta', array('class' => 'form-control', 'autocomplete' => 'off', 'type' => 'number')); ?>
+	        </div>
+	    </div>
+	    <div class="col-sm-3">
+	    	<div class="form-group">
+	          	<?php echo $form->label($model,'Clasificacion'); ?>
+			    <?php
             		$this->widget('ext.select2.ESelect2',array(
-						'name'=>'Cuenta[Tipo_Asociacion]',
-						'id'=>'Cuenta_Tipo_Asociacion',
-						'data'=>$lista_tipos_asoc,
+						'name'=>'Cuenta[Clasificacion]',
+						'id'=>'Cuenta_Clasificacion',
+						'data'=>$lista_clases,
 						'htmlOptions'=>array(),
 					  	'options'=>array(
     						'placeholder'=>'Seleccione...',
@@ -29,62 +35,19 @@
 					));
 				?>
 	        </div>
-	    </div>
-	    <div class="col-sm-6">
-	    	<div class="form-group">
-	          	<?php echo $form->label($model,'Id_Empleado'); ?>
-	            <?php echo $form->textField($model,'Id_Empleado'); ?>
-	            <?php
-	                $this->widget('ext.select2.ESelect2', array(
-	                    'selector' => '#Cuenta_Id_Empleado',
-	                    'options'  => array(
-	                        'allowClear' => true,
-	                        'minimumInputLength' => 5,
-	                        'width' => '100%',
-	                        'language' => 'es',
-	                        'ajax' => array(
-	                            'url' => Yii::app()->createUrl('empleado/SearchEmpleado'),
-	                            'dataType'=>'json',
-	                            'data'=>'js:function(term){return{q: term};}',
-	                            'results'=>'js:function(data){ return {results:data};}'                   
-	                        ),
-	                        'formatNoMatches'=> 'js:function(){ clear_select2_ajax("Cuenta_Id_Empleado"); return "No se encontraron resultados"; }',
-	                        'formatInputTooShort' =>  'js:function(){ return "Digite más de 5 caracteres para iniciar busqueda <button type=\"button\" class=\"btn btn-success btn-xs pull-right\" onclick=\"clear_select2_ajax(\'Cuenta_Id_Empleado\')\">Limpiar campo</button>"; }',
-	                    ),
-	                ));
-	            ?>
-	        </div>
-	    </div>
-	</div>
-	<div class="row">
+	    </div> 
+    </div>
+    <div class="row">
 	    <div class="col-sm-3">
 	    	<div class="form-group">
-	          	<?php echo $form->label($model,'Tipo'); ?>
-            	<?php
-            		$this->widget('ext.select2.ESelect2',array(
-						'name'=>'Cuenta[Tipo]',
-						'id'=>'Cuenta_Tipo',
-						'data'=>$lista_tipos,
-						'htmlOptions'=>array(),
-					  	'options'=>array(
-    						'placeholder'=>'Seleccione...',
-    						'width'=> '100%',
-    						'allowClear'=>true,
-						),
-					));
-				?>
-	        </div>
-	    </div>
-	    <div class="col-sm-3">
-	    	<div class="form-group">
-	          	<?php echo $form->label($model,'Cuenta_Correo'); ?>
-			    <?php echo $form->textField($model,'Cuenta_Correo', array('class' => 'form-control', 'autocomplete' => 'off')); ?>
+	          	<?php echo $form->label($model,'Cuenta_Usuario'); ?>
+			    <?php echo $form->textField($model,'Cuenta_Usuario', array('class' => 'form-control', 'autocomplete' => 'off')); ?>
 	        </div>
 	    </div>
 	    <div class="col-sm-3">
 	    	<div class="form-group">
 	          	<?php echo $form->label($model,'Dominio'); ?>
-            	<?php
+			    <?php
             		$this->widget('ext.select2.ESelect2',array(
 						'name'=>'Cuenta[Dominio]',
 						'id'=>'Cuenta_Dominio',
@@ -99,62 +62,95 @@
 				?>
 	        </div>
 	    </div>
-	    
-
+	    <div class="col-sm-3">
+	    	<div class="form-group">
+	          	<?php echo $form->label($model,'Tipo_Cuenta'); ?>
+			    <?php
+            		$this->widget('ext.select2.ESelect2',array(
+						'name'=>'Cuenta[Tipo_Cuenta]',
+						'id'=>'Cuenta_Tipo_Cuenta',
+						'data'=>$lista_tipos,
+						'htmlOptions'=>array(),
+					  	'options'=>array(
+    						'placeholder'=>'Seleccione...',
+    						'width'=> '100%',
+    						'allowClear'=>true,
+						),
+					));
+				?>
+	        </div>
+	    </div>
+	    <div class="col-sm-3">
+	    	<div class="form-group">
+	          	<?php echo $form->label($model,'Tipo_Acceso'); ?>
+			    <?php
+            		$this->widget('ext.select2.ESelect2',array(
+						'name'=>'Cuenta[Tipo_Acceso]',
+						'id'=>'Cuenta_Tipo_Acceso',
+						'data'=> array(1 => 'GENÉRICO', 2 => 'PERSONAL'),
+						'htmlOptions'=>array(),
+					  	'options'=>array(
+    						'placeholder'=>'Seleccione...',
+    						'width'=> '100%',
+    						'allowClear'=>true,
+						),
+					));
+				?>
+	        </div>
+	    </div>
 	</div>
 	<div class="row">
 	    <div class="col-sm-3">
 	    	<div class="form-group">
-	          	<?php echo $form->label($model,'Usuario_Siesa'); ?>
-			    <?php echo $form->textField($model,'Usuario_Siesa', array('class' => 'form-control', 'autocomplete' => 'off')); ?>
+	          	<?php echo $form->label($model,'usuario_creacion'); ?>
+            	<?php
+            		$this->widget('ext.select2.ESelect2',array(
+						'name'=>'Cuenta[usuario_creacion]',
+						'id'=>'Cuenta_usuario_creacion',
+						'data'=>$lista_usuarios,
+						'htmlOptions'=>array(),
+					  	'options'=>array(
+    						'placeholder'=>'Seleccione...',
+    						'width'=> '100%',
+    						'allowClear'=>true,
+						),
+					));
+				?>
 	        </div>
 	    </div>
 	    <div class="col-sm-3">
 	    	<div class="form-group">
-	          	<?php echo $form->label($model,'Cuenta_Skype'); ?>
-			    <?php echo $form->textField($model,'Cuenta_Skype', array('class' => 'form-control', 'autocomplete' => 'off')); ?>
+	          	<?php echo $form->label($model,'Fecha_Creacion'); ?>
+			    <?php echo $form->textField($model,'Fecha_Creacion', array('class' => 'form-control datepicker', 'autocomplete' => 'off', 'readonly' => true)); ?>
 	        </div>
 	    </div>
-	   	<div class="col-sm-3">
-	    	<div class="form-group">
-	          	<?php echo $form->label($model,'Usuario_Glpi'); ?>
-			    <?php echo $form->textField($model,'Usuario_Glpi', array('class' => 'form-control', 'autocomplete' => 'off')); ?>
-	        </div>
-	    </div> 
 	    <div class="col-sm-3">
 	    	<div class="form-group">
-	          	<?php echo $form->label($model,'Usuario_Papercut'); ?>
-			    <?php echo $form->textField($model,'Usuario_Papercut', array('class' => 'form-control', 'autocomplete' => 'off')); ?>
+	          	<?php echo $form->label($model,'usuario_actualizacion'); ?>
+            	<?php
+            		$this->widget('ext.select2.ESelect2',array(
+						'name'=>'Cuenta[usuario_actualizacion]',
+						'id'=>'Cuenta_usuario_actualizacion',
+						'data'=>$lista_usuarios,
+						'htmlOptions'=>array(),
+					  	'options'=>array(
+    						'placeholder'=>'Seleccione...',
+    						'width'=> '100%',
+    						'allowClear'=>true,
+						),
+					));
+				?>
 	        </div>
-	    </div> 
+	    </div>
+	    <div class="col-sm-3">
+	    	<div class="form-group">
+	          	<?php echo $form->label($model,'Fecha_Actualizacion'); ?>
+			    <?php echo $form->textField($model,'Fecha_Actualizacion', array('class' => 'form-control datepicker', 'autocomplete' => 'off', 'readonly' => true)); ?>
+	        </div>
+	    </div>
 	</div>
-	<div class="row">    
-	    <div class="col-sm-6">
-	    	<div class="form-group">
-	          	 <?php echo $form->label($model,'Cuenta_Correo_Red'); ?>
-	            <?php echo $form->textField($model,'Cuenta_Correo_Red'); ?>
-	            <?php
-	                $this->widget('ext.select2.ESelect2', array(
-	                    'selector' => '#Cuenta_Cuenta_Correo_Red',
-	                    'options'  => array(
-	                        'allowClear' => true,
-	                        'minimumInputLength' => 3,
-	                        'width' => '100%',
-	                        'language' => 'es',
-	                        'ajax' => array(
-	                            'url' => Yii::app()->createUrl('cuenta/SearchCorreo'),
-	                            'dataType'=>'json',
-	                            'data'=>'js:function(term){return{q: term, id: 0};}',
-	                            'results'=>'js:function(data){ return {results:data};}'                   
-	                        ),
-	                        'formatNoMatches'=> 'js:function(){ clear_select2_ajax("Cuenta_Cuenta_Correo_Red"); return "No se encontraron resultados"; }',
-	                        'formatInputTooShort' =>  'js:function(){ return "Digite más de 3 caracteres para iniciar busqueda <button type=\"button\" class=\"btn btn-success btn-xs pull-right\" onclick=\"clear_select2_ajax(\'Cuenta_Cuenta_Correo_Red\')\">Limpiar campo</button>"; }',
-	                    ),
-	                ));
-	            ?>
-	        </div>
-	    </div>
-	    <div class="col-sm-6">
+	<div class="row">
+	    <div class="col-sm-3">
 	    	<div class="form-group">
 	          	<?php echo $form->label($model,'Estado'); ?>
             	<?php
@@ -169,16 +165,14 @@
     						'allowClear'=>true,
 						),
 					));
-				?>
+				?>	
 	        </div>
 	    </div>
-	</div>
-	<div class="row">
-		<div class="col-sm-4">
+	    <div class="col-sm-3">
 	    	<div class="form-group">
 	          	<?php echo $form->label($model,'orderby'); ?>
 			    <?php 
-                	$array_orden = array(1 => 'ID ASC', 2 => 'ID DESC', 3 => 'Tipo de asociación ASC', 4 => 'Tipo de asociación DESC', 5 => 'Empleado ASC', 6 => 'Empleado DESC', 7 => 'Tipo de cuenta ASC', 8 => 'Tipo de cuenta DESC', 9 => 'Dominio ASC', 10 => 'Dominio DESC', 11 => 'Cuenta de correo ASC', 12 => 'Cuenta de correo DESC',  13 => 'Cuenta de skype ASC', 14 => 'Cuenta de skype DESC', 15 => 'Usuario siesa ASC', 16 => 'Usuario siesa DESC', 17 => 'Usuario glpi ASC', 18 => 'Usuario glpi DESC', 19 => 'Usuario glpi ASC', 20 => 'Usuario glpi DESC', 21 => 'Cuenta de correo para redirección ASC', 22 => 'Cuenta de correo para redirección DESC', 23 => 'Estado ASC', 24 => 'Estado DESC'
+                	$array_orden = array(1 => 'ID ASC', 2 => 'ID DESC', 3 => 'Clasif. ASC', 4 => 'Clasif. DESC', 5 => 'Cuenta / Usuario ASC', 6 => 'Cuenta / Usuario DESC', 7 => 'Dominio ASC', 8 => 'Dominio DESC', 9 => 'Tipo de cuenta ASC', 10 => 'Tipo de cuenta DESC', 11 => 'Tipo de acceso ASC', 12 => 'Tipo de acceso DESC', 13 => 'Usuario que creo ASC', 14 => 'Usuario que creo DESC', 15 => 'Fecha de creación ASC', 16 => 'Fecha de creación DESC', 17 => 'Usuario que actualizó ASC', 18 => 'Usuario que actualizó DESC', 19 => 'Fecha de actualización ASC', 20 => 'Fecha de actualización DESC', 21 => 'Estado ASC', 22 => 'Estado DESC',
 					);
             	?>
             	<?php
@@ -209,39 +203,30 @@
 	        </div>
 	    </div>
 	</div>
-
 	<div class="btn-group" style="padding-bottom: 2%">
 		<button type="button" class="btn btn-success" onclick="resetfields();"><i class="fa fa-eraser"></i> Limpiar filtros</button>
+		<?php echo CHtml::submitButton('', array('style' => 'display:none;', 'id' => 'yt0')); ?>
 		<button type="submit" class="btn btn-success" id="yt0"><i class="fa fa-search"></i> Buscar</button>
 	</div>
-	
+
 <?php $this->endWidget(); ?>
 
 <script type="text/javascript">
 
-	function clear_select2_ajax(id){
-	    $('#'+id+'').val('').trigger('change');
-	    $('#s2id_'+id+' span').html("");
-	}
-
 	function resetfields(){
 		$('#Cuenta_Id_Cuenta').val('');
-		$('#Cuenta_Tipo_Asociacion').val('').trigger('change');
-		$('#Cuenta_Id_Empleado').val('').trigger('change');
-    	$('#s2id_Cuenta_Id_Empleado span').html("");
-    	$('#Cuenta_Tipo').val('').trigger('change');
-    	$('#Cuenta_Dominio').val('').trigger('change');
-    	$('#Cuenta_Cuenta_Correo').val('');
-    	$('#Cuenta_Cuenta_Skype').val('');
-    	$('#Cuenta_Usuario_Siesa').val('');
-    	$('#Cuenta_Usuario_Glpi').val('');
-    	$('#Cuenta_Usuario_Papercut').val('');
-    	$('#Cuenta_Cuenta_Correo_Red').val('').trigger('change');
-    	$('#s2id_Cuenta_Cuenta_Correo_Red span').html("");
-    	$('#Cuenta_Estado').val('').trigger('change');
-    	$('#Cuenta_orderby').val('').trigger('change');
+		$('#Cuenta_Clasificacion').val('').trigger('change');
+		$('#Cuenta_Tipo_Acceso').val('').trigger('change');
+		$('#Cuenta_Cuenta_Usuario').val('');
+		$('#Cuenta_Dominio').val('').trigger('change');
+		$('#Cuenta_Tipo_Cuenta').val('').trigger('change');
+		$('#Cuenta_usuario_creacion').val('').trigger('change');
+		$('#Cuenta_Fecha_Creacion').val('');
+		$('#Cuenta_usuario_actualizacion').val('').trigger('change');
+		$('#Cuenta_Fecha_Actualizacion').val('');
+		$('#Cuenta_Estado').val('').trigger('change');
+		$('#Cuenta_orderby').val('').trigger('change');
 		$('#yt0').click();
 	}
 	
 </script>
-

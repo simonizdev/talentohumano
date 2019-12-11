@@ -32,7 +32,7 @@ class NovedadCuentaController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update', 'export', 'exportexcel'),
+				'actions'=>array('create','update', 'export', 'exportexcel','searchcuenta'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -202,4 +202,19 @@ class NovedadCuentaController extends Controller
 		$data = Yii::app()->user->getState('novedad-cuenta-export');	
 		$this->renderPartial('novedad_cuenta_export_excel',array('data' => $data));	
 	}
+
+	public function actionSearchCuenta(){
+		$filtro = $_GET['q'];
+        $data = NovedadCuenta::model()->searchByCuenta($filtro);
+        $result = array();
+        foreach($data as $item):
+           $result[] = array(
+               'id'   => $item['Id_Cuenta'],
+               'text' => $item['Desc_Cuenta_Usuario'],
+           );
+        endforeach;
+        header('Content-type: application/json');
+        echo CJSON::encode( $result );
+        Yii::app()->end(); 
+ 	}
 }
