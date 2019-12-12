@@ -193,7 +193,14 @@ class Cuenta extends CActiveRecord
 		$criteria->compare('t.Clasificacion',$this->Clasificacion);
 		$criteria->compare('t.Tipo_Cuenta',$this->Tipo_Cuenta);
 		$criteria->compare('t.Tipo_Acceso',$this->Tipo_Acceso);
-		$criteria->compare('t.Cuenta_Usuario',$this->Cuenta_Usuario,true);
+		//$criteria->compare('t.Cuenta_Usuario',$this->Cuenta_Usuario,true);
+
+		if($this->Cuenta_Usuario != ""){
+
+			$criteria->AddCondition("t.Cuenta_Usuario LIKE '%".$this->Cuenta_Usuario."%'"); 
+	    
+	    }
+
 		$criteria->compare('t.Password',$this->Password,true);
 		$criteria->compare('t.Dominio',$this->Dominio);
 		$criteria->compare('t.Estado',$this->Estado);

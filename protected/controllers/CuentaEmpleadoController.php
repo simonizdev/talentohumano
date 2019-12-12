@@ -88,8 +88,13 @@ class CuentaEmpleadoController extends Controller
 			}else{
 				Yii::app()->user->setFlash('warning', "no se pudo vincular el empleado ".$empleado.".");
 				$this->redirect(array('cuenta/update','id'=>$id));
+
 			}
+			
+			Yii::app()->end();
+
 		}
+
 
 		$this->render('create',array(
 			'model'=>$model,
@@ -217,11 +222,14 @@ class CuentaEmpleadoController extends Controller
 		if($model->save()){
 			
 			if($opc == 1){
-				//consulta emp
-				Yii::app()->user->setFlash('success', "Se desvinculo el empleado ".$empleado." de la cuenta / usuario (".$cuenta->DescCuentaUsuario($cuenta->Id_Cuenta).") correctamente.");
-				$this->redirect(array('admin'));
+				//consulta emp (AJAX)
+
+				$res = 1;
+				$msg = "Se desvinculo el empleado ".$empleado." de la cuenta / usuario (".$cuenta->DescCuentaUsuario($cuenta->Id_Cuenta).") correctamente.";
+
 			}else{
 				//por cuenta
+
 				Yii::app()->user->setFlash('success', "Se desvinculo el empleado ".$empleado." correctamente.");
 				$this->redirect(array('cuenta/update','id'=>$model->Id_Cuenta));	
 			}
@@ -229,16 +237,22 @@ class CuentaEmpleadoController extends Controller
 		}else{
 
 			if($opc == 1){
-				//consulta emp
-				Yii::app()->user->setFlash('warning', "no se pudo desvincular el empleado ".$empleado." de la cuenta / usuario (".$$cuenta->DescCuentaUsuario($cuenta->Id_Cuenta).").");
-				$this->redirect(array('admin'));
+				//consulta emp (AJAX)
+
+				$res = 0;
+				$msg = "No se pudo desvincular el empleado ".$empleado." de la cuenta / usuario (".$cuenta->DescCuentaUsuario($cuenta->Id_Cuenta).").";
+
 			}else{
 				//por cuenta
+
 				Yii::app()->user->setFlash('warning', "no se pudo desvincular el empleado ".$empleado.".");
 				$this->redirect(array('cuenta/update','id'=>$model->Id_Cuenta));
 			}
 
 		}
+
+		$resp = array('res' => $res, 'msg' => $msg);
+        echo json_encode($resp);
 
 	}
 

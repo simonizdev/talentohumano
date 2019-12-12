@@ -38,21 +38,7 @@ $lista_usuarios = CHtml::listData($usuarios, 'Usuario', 'Usuario');
 
 <h3>Consulta usuario(s) / cuenta(s) x empleado</h3>
 
-<?php if(Yii::app()->user->hasFlash('success')):?>
-    <div class="alert alert-success alert-dismissible">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-      <h4><i class="icon fa fa-check"></i>Realizado</h4>
-      <?php echo Yii::app()->user->getFlash('success'); ?>
-    </div>
-<?php endif; ?> 
-
-<?php if(Yii::app()->user->hasFlash('warning')):?>
-    <div class="alert alert-warning alert-dismissible">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-      <h4><i class="icon fa fa-info"></i>Info</h4>
-      <?php echo Yii::app()->user->getFlash('warning'); ?>
-    </div>
-<?php endif; ?> 
+<div id="div_mensaje" style="display: none;"></div>
 
 <div class="btn-group" style="padding-bottom: 2%">
     <button type="button" class="btn btn-success search-button"><i class="fa fa-filter"></i> Busqueda avanzada</button>
@@ -105,14 +91,54 @@ $lista_usuarios = CHtml::listData($usuarios, 'Usuario', 'Usuario');
 			'class'=>'CButtonColumn',
 	        'template'=>'{upd}',
 	        'buttons'=>array(
-	            'upd'=>array(
-	                'label'=>'<i class="fa fa-user-times actions text-black"></i>',
-	                'imageUrl'=>false,
-	                'url'=>'Yii::app()->createUrl("CuentaEmpleado/inact", array("id"=>$data->Id_Cuenta_Emp, "opc"=>1))',
-	                'visible'=> '(Yii::app()->user->getState("permiso_act") == true && $data->Estado == 1)',
-	                'options'=>array('title'=>' Desvincular empleado', 'confirm'=>'Esta seguro de desvincular el empleado de esta cuenta ?'),
-	            ),
+                'upd' => array(
+                    'label'=>'<i class="fa fa-user-times actions text-black"></i>',
+                    'imageUrl'=>false,                    
+                    'url'=>'Yii::app()->createUrl("CuentaEmpleado/inact", array("id"=>$data->Id_Cuenta_Emp, "opc"=>1))',
+                    'visible'=> '(Yii::app()->user->getState("permiso_act") == true && $data->Estado == 1)',
+                    'options'=>array('title'=>' Desvincular empleado', 'confirm'=>'Esta seguro de desvincular el empleado de esta cuenta ?'),
+                    'click'=>"function(){
+                        $.fn.yiiGridView.update('cuenta-empleado-grid', {
+                            type:'POST',
+                            dataType: 'json',
+                            url:$(this).attr('href'),
+                            success:function(data) {
+
+                                var res = data.res; 
+                                var mensaje = data.msg;
+
+                                if(res == 0){
+                                    $('#div_mensaje').addClass('alert alert-warning alert-dismissible');
+                                    $('#div_mensaje').html('<button type=\"button\" class=\"close\" aria-hidden=\"true\" onclick=\"limp_div_msg();\">×</button><h4><i class=\"icon fa fa-info\"></i>Info</h4><p>'+mensaje+'</p>');
+                                }
+
+                                if(res == 1){
+                                    $('#div_mensaje').addClass('alert alert-success alert-dismissible');
+                                    $('#div_mensaje').html('<button type=\"button\" class=\"close\" aria-hidden=\"true\" onclick=\"limp_div_msg();\">×</button><h4><i class=\"icon fa fa-check\"></i>Realizado</h4><p>'+mensaje+'</p>');
+                                }
+
+
+                                $('#div_mensaje').fadeIn('fast');
+                                $.fn.yiiGridView.update('cuenta-empleado-grid');
+                            }
+                        })
+                        return false;
+                    }",
+                ),
 	        )
 		),
 	),
 )); ?>
+
+
+<script type="text/javascript">
+    
+    //función para limpiar el mensaje retornado por el ajax
+    function limp_div_msg(){
+        $("#div_mensaje").hide();  
+        classact = $('#div_mensaje').attr('class');
+        $("#div_mensaje").removeClass(classact);
+        $("#mensaje").html('');
+    }
+
+</script>

@@ -32,7 +32,7 @@ class CuentaController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','verificarduplicidad','actred','desred','searchcuentared', 'export', 'exportexcel'),
+				'actions'=>array('create','update','verificarduplicidad','actred','desred','searchcuentared', 'export', 'exportexcel','eli'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -445,4 +445,37 @@ class CuentaController extends Controller
 		$data = Yii::app()->user->getState('cuenta-export');	
 		$this->renderPartial('cuenta_export_excel',array('data' => $data));	
 	}
+
+	public function actionEli($id)
+	{
+		
+		$model=$this->loadModel($id);
+
+		$estado_act = $model->estado->Dominio;
+		$cuenta = $model->DescCuentaUsuario($id).' - '.$model->clasificacion->Dominio;
+		
+		$model->Id_Usuario_Actualizacion = Yii::app()->user->getState('id_user');
+		$model->Fecha_Actualizacion = date('Y-m-d H:i:s');
+		$model->Estado = Yii::app()->params->estado_eli;
+
+		$estado_nue = Dominio::model()->findByPk(Yii::app()->params->estado_eli)->Dominio;
+		
+		if($model->save()){
+
+			$nueva_novedad = new NovedadCuenta;
+			$nueva_novedad->Id_Cuenta = $id;
+			$nueva_novedad->Novedades = 'Estado: '.$estado_act.' / '.$estado_nue.'.';
+			$nueva_novedad->Id_Usuario_Creacion = Yii::app()->user->getState('id_user');
+			$nueva_novedad->Fecha_Creacion = date('Y-m-d H:i:s');
+			if($nueva_novedad->save()){
+				Yii::app()->user->setFlash('success', "La cuenta / usuario (".$cuenta.") fue eliminada correctamente.");
+				$this->redirect(array('admin'));
+			}
+
+		}else{
+			Yii::app()->user->setFlash('warning', "No se pudo eliminar la cuenta / usuario (".$cuenta.").");
+			$this->redirect(array('admin'));
+		}
+	}
+
 }

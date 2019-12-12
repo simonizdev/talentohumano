@@ -154,6 +154,7 @@ $lista_usuarios = CHtml::listData($usuarios, 'Usuario', 'Usuario');
                 'eli'=>array(
                     'label'=>'<i class="fa fa-times actions text-black"></i>',
                     'imageUrl'=>false,
+                    'url'=>'Yii::app()->createUrl("cuenta/eli", array("id"=>$data->Id_Cuenta))',
                     'visible'=> '(Yii::app()->user->getState("permiso_act") == true && $data->NumCuentasRed($data->Id_Cuenta) == 0 && $data->NumUsuariosAsoc($data->Id_Cuenta) == 0 && $data->Estado != Yii::app()->params->estado_red && $data->Estado != Yii::app()->params->estado_eli)',
                     'options'=>array('title'=>'Eliminar', 'confirm'=>'Esta seguro de eliminar esta cuenta / usuario ?'),
                 ),
