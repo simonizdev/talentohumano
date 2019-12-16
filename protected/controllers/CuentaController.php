@@ -366,8 +366,9 @@ class CuentaController extends Controller
 
 			}else{
 				Yii::app()->user->setFlash('warning', "No se pudo redireccionar la cuenta ".$cuenta.".");
-					$this->redirect(array('admin'));
+				$this->redirect(array('admin'));
 			}
+
 		}
 
 		$this->render('red',array(
@@ -397,14 +398,17 @@ class CuentaController extends Controller
 			$nueva_novedad->Id_Usuario_Creacion = Yii::app()->user->getState('id_user');
 			$nueva_novedad->Fecha_Creacion = date('Y-m-d H:i:s');
 			if($nueva_novedad->save()){
-				Yii::app()->user->setFlash('success', "La redirección de la cuenta ".$cuenta." fue eliminada correctamente.");
-				$this->redirect(array('admin'));
+				$res = 1;
+				$msg = "La redirección de la cuenta ".$cuenta." fue eliminada correctamente.";
 			}
-
 		}else{
-			Yii::app()->user->setFlash('warning', "No se pudo eliminar la redirección de la cuenta ".$cuenta.".");
-				$this->redirect(array('admin'));
+			$res = 0;
+			$msg = "No se pudo eliminar la redirección de la cuenta ".$cuenta.".";
 		}
+
+		$resp = array('res' => $res, 'msg' => $msg);
+        echo json_encode($resp);
+
 	}
 
 	public function actionSearchCuentaRed(){
@@ -468,14 +472,17 @@ class CuentaController extends Controller
 			$nueva_novedad->Id_Usuario_Creacion = Yii::app()->user->getState('id_user');
 			$nueva_novedad->Fecha_Creacion = date('Y-m-d H:i:s');
 			if($nueva_novedad->save()){
-				Yii::app()->user->setFlash('success', "La cuenta / usuario (".$cuenta.") fue eliminada correctamente.");
-				$this->redirect(array('admin'));
+				$res = 1;
+				$msg = "La cuenta / usuario (".$cuenta.") fue eliminada correctamente.";
 			}
 
 		}else{
-			Yii::app()->user->setFlash('warning', "No se pudo eliminar la cuenta / usuario (".$cuenta.").");
-			$this->redirect(array('admin'));
+			$res = 0;
+			$msg = "No se pudo eliminar la cuenta / usuario (".$cuenta.").";
 		}
+
+		$resp = array('res' => $res, 'msg' => $msg);
+        echo json_encode($resp);
 	}
 
 }

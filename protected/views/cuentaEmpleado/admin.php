@@ -96,33 +96,39 @@ $lista_usuarios = CHtml::listData($usuarios, 'Usuario', 'Usuario');
                     'imageUrl'=>false,                    
                     'url'=>'Yii::app()->createUrl("CuentaEmpleado/inact", array("id"=>$data->Id_Cuenta_Emp, "opc"=>1))',
                     'visible'=> '(Yii::app()->user->getState("permiso_act") == true && $data->Estado == 1)',
-                    'options'=>array('title'=>' Desvincular empleado', 'confirm'=>'Esta seguro de desvincular el empleado de esta cuenta ?'),
-                    'click'=>"function(){
-                        $.fn.yiiGridView.update('cuenta-empleado-grid', {
-                            type:'POST',
-                            dataType: 'json',
-                            url:$(this).attr('href'),
-                            success:function(data) {
+                    'options'=>array('title'=>' Desvincular empleado'),
+                    'click'=>"
+                    function() {
+                        if(confirm('Esta seguro de desvincular el empleado de esta cuenta ?')) {
 
-                                var res = data.res; 
-                                var mensaje = data.msg;
+                            $.fn.yiiGridView.update('cuenta-empleado-grid', {
+                                type:'POST',
+                                dataType: 'json',
+                                url:$(this).attr('href'),
+                                success:function(data) {
 
-                                if(res == 0){
-                                    $('#div_mensaje').addClass('alert alert-warning alert-dismissible');
-                                    $('#div_mensaje').html('<button type=\"button\" class=\"close\" aria-hidden=\"true\" onclick=\"limp_div_msg();\">×</button><h4><i class=\"icon fa fa-info\"></i>Info</h4><p>'+mensaje+'</p>');
+                                    var res = data.res; 
+                                    var mensaje = data.msg;
+
+                                    if(res == 0){
+                                        $('#div_mensaje').addClass('alert alert-warning alert-dismissible');
+                                        $('#div_mensaje').html('<button type=\"button\" class=\"close\" aria-hidden=\"true\" onclick=\"limp_div_msg();\">×</button><h4><i class=\"icon fa fa-info\"></i>Info</h4><p>'+mensaje+'</p>');
+                                    }
+
+                                    if(res == 1){
+                                        $('#div_mensaje').addClass('alert alert-success alert-dismissible');
+                                        $('#div_mensaje').html('<button type=\"button\" class=\"close\" aria-hidden=\"true\" onclick=\"limp_div_msg();\">×</button><h4><i class=\"icon fa fa-check\"></i>Realizado</h4><p>'+mensaje+'</p>');
+                                    }
+
+
+                                    $('#div_mensaje').fadeIn('fast');
+                                    $.fn.yiiGridView.update('cuenta-empleado-grid');
                                 }
-
-                                if(res == 1){
-                                    $('#div_mensaje').addClass('alert alert-success alert-dismissible');
-                                    $('#div_mensaje').html('<button type=\"button\" class=\"close\" aria-hidden=\"true\" onclick=\"limp_div_msg();\">×</button><h4><i class=\"icon fa fa-check\"></i>Realizado</h4><p>'+mensaje+'</p>');
-                                }
-
-
-                                $('#div_mensaje').fadeIn('fast');
-                                $.fn.yiiGridView.update('cuenta-empleado-grid');
-                            }
-                        })
-                        return false;
+                            })
+                            return false;
+                        }else{
+                            return false;    
+                        }
                     }",
                 ),
 	        )

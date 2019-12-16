@@ -47,6 +47,8 @@ $lista_usuarios = CHtml::listData($usuarios, 'Usuario', 'Usuario');
 
 <h3>Administración de cuentas / usuarios</h3>
 
+<div id="div_mensaje" style="display: none;"></div>
+
 <?php if(Yii::app()->user->hasFlash('success')):?>
     <div class="alert alert-success alert-dismissible">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -142,23 +144,109 @@ $lista_usuarios = CHtml::listData($usuarios, 'Usuario', 'Usuario');
                     'imageUrl'=>false,
                     'url'=>'Yii::app()->createUrl("cuenta/actred", array("id"=>$data->Id_Cuenta))',
                     'visible'=> '(Yii::app()->user->getState("permiso_act") == true && $data->Clasificacion == Yii::app()->params->c_correo && $data->Estado == Yii::app()->params->estado_act)',
-                    'options'=>array('title'=>'Redireccionar cuenta', 'confirm'=>'Esta seguro de redireccionar esta cuenta ?'),
+                    'options'=>array('title'=>'Redireccionar cuenta'),
+                    'click'=>"
+                    function() {
+                        if(!confirm('Esta seguro de redireccionar esta cuenta ?')) {
+                            return false;    
+                        }
+                    }",
+
                 ),
                 'desred'=>array(
                     'label'=>'<i class="fa fa-toggle-off actions text-black"></i>',
                     'imageUrl'=>false,
                     'url'=>'Yii::app()->createUrl("cuenta/desred", array("id"=>$data->Id_Cuenta))',
                     'visible'=> '(Yii::app()->user->getState("permiso_act") == true && $data->Clasificacion == Yii::app()->params->c_correo && $data->Estado == Yii::app()->params->estado_red)',
-                    'options'=>array('title'=>'Quitar redirección', 'confirm'=>'Esta seguro quitar el redireccionamiento ?'),
+                    'options'=>array('title'=>'Quitar redirección'),
+                    'click'=>"
+                    function() {
+                        if(confirm('Esta seguro quitar el redireccionamiento ?')) {
+
+                            $.fn.yiiGridView.update('cuenta-grid', {
+                                type:'POST',
+                                dataType: 'json',
+                                url:$(this).attr('href'),
+                                success:function(data) {
+
+                                    var res = data.res; 
+                                    var mensaje = data.msg;
+
+                                    if(res == 0){
+                                        $('#div_mensaje').addClass('alert alert-warning alert-dismissible');
+                                        $('#div_mensaje').html('<button type=\"button\" class=\"close\" aria-hidden=\"true\" onclick=\"limp_div_msg();\">×</button><h4><i class=\"icon fa fa-info\"></i>Info</h4><p>'+mensaje+'</p>');
+                                    }
+
+                                    if(res == 1){
+                                        $('#div_mensaje').addClass('alert alert-success alert-dismissible');
+                                        $('#div_mensaje').html('<button type=\"button\" class=\"close\" aria-hidden=\"true\" onclick=\"limp_div_msg();\">×</button><h4><i class=\"icon fa fa-check\"></i>Realizado</h4><p>'+mensaje+'</p>');
+                                    }
+
+
+                                    $('#div_mensaje').fadeIn('fast');
+                                    $.fn.yiiGridView.update('cuenta-grid');
+                                }
+                            })
+                            return false;
+                        }else{
+                            return false;    
+                        }
+                    }",
                 ),
                 'eli'=>array(
                     'label'=>'<i class="fa fa-times actions text-black"></i>',
                     'imageUrl'=>false,
                     'url'=>'Yii::app()->createUrl("cuenta/eli", array("id"=>$data->Id_Cuenta))',
                     'visible'=> '(Yii::app()->user->getState("permiso_act") == true && $data->NumCuentasRed($data->Id_Cuenta) == 0 && $data->NumUsuariosAsoc($data->Id_Cuenta) == 0 && $data->Estado != Yii::app()->params->estado_red && $data->Estado != Yii::app()->params->estado_eli)',
-                    'options'=>array('title'=>'Eliminar', 'confirm'=>'Esta seguro de eliminar esta cuenta / usuario ?'),
+                    'options'=>array('title'=>'Eliminar'),
+                    'click'=>"
+                    function() {
+                        if(confirm('Esta seguro de eliminar esta cuenta / usuario ?')) {
+
+                            $.fn.yiiGridView.update('cuenta-grid', {
+                                type:'POST',
+                                dataType: 'json',
+                                url:$(this).attr('href'),
+                                success:function(data) {
+
+                                    var res = data.res; 
+                                    var mensaje = data.msg;
+
+                                    if(res == 0){
+                                        $('#div_mensaje').addClass('alert alert-warning alert-dismissible');
+                                        $('#div_mensaje').html('<button type=\"button\" class=\"close\" aria-hidden=\"true\" onclick=\"limp_div_msg();\">×</button><h4><i class=\"icon fa fa-info\"></i>Info</h4><p>'+mensaje+'</p>');
+                                    }
+
+                                    if(res == 1){
+                                        $('#div_mensaje').addClass('alert alert-success alert-dismissible');
+                                        $('#div_mensaje').html('<button type=\"button\" class=\"close\" aria-hidden=\"true\" onclick=\"limp_div_msg();\">×</button><h4><i class=\"icon fa fa-check\"></i>Realizado</h4><p>'+mensaje+'</p>');
+                                    }
+
+
+                                    $('#div_mensaje').fadeIn('fast');
+                                    $.fn.yiiGridView.update('cuenta-grid');
+                                }
+                            })
+                            return false;
+                        }else{
+                            return false;    
+                        }
+                    }",
                 ),
             )
 		),
 	),
 )); ?>
+
+<script type="text/javascript">
+    
+    //función para limpiar el mensaje retornado por el ajax
+    function limp_div_msg(){
+        $("#div_mensaje").hide();  
+        classact = $('#div_mensaje').attr('class');
+        $("#div_mensaje").removeClass(classact);
+        $("#mensaje").html('');
+    }
+
+</script>
+
