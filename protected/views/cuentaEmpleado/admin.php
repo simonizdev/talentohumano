@@ -89,8 +89,14 @@ $lista_usuarios = CHtml::listData($usuarios, 'Usuario', 'Usuario');
         ),
 		array(
 			'class'=>'CButtonColumn',
-	        'template'=>'{upd}',
+	        'template'=>'{viewcuenta}{upd}',
 	        'buttons'=>array(
+                'viewcuenta' => array(
+                    'label'=>'<i class="fa fa-eye actions text-black"></i>',
+                    'imageUrl'=>false,                    
+                    'url'=>'Yii::app()->createUrl("Cuenta/view", array("id"=>$data->Id_Cuenta))',
+                    'options'=>array('title'=>' Ver detalle de cuenta en nueva pestaña', 'target' => '_new'),
+                ),
                 'upd' => array(
                     'label'=>'<i class="fa fa-user-times actions text-black"></i>',
                     'imageUrl'=>false,                    
