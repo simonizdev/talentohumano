@@ -97,19 +97,19 @@
         <div class="form-group">
             <div class="pull-right badge bg-red" id="error_tipo_acceso" style="display: none;"></div>
             <?php echo $form->label($model,'Tipo_Acceso'); ?>
-		    <?php
-        		$this->widget('ext.select2.ESelect2',array(
-					'name'=>'Cuenta[Tipo_Acceso]',
-					'id'=>'Cuenta_Tipo_Acceso',
-					'data'=> array(1 => 'GENÉRICO', 2 => 'PERSONAL'),
-					'htmlOptions'=>array(),
-				  	'options'=>array(
-						'placeholder'=>'Seleccione...',
-						'width'=> '100%',
-						'allowClear'=>true,
-					),
-				));
-			?>
+    		    <?php
+            		$this->widget('ext.select2.ESelect2',array(
+    					'name'=>'Cuenta[Tipo_Acceso]',
+    					'id'=>'Cuenta_Tipo_Acceso',
+    					'data'=> array(1 => 'GENÉRICO', 2 => 'PERSONAL'),
+    					'htmlOptions'=>array(),
+    				  	'options'=>array(
+    						'placeholder'=>'Seleccione...',
+    						'width'=> '100%',
+    						'allowClear'=>true,
+    					),
+    				));
+    			?>
         </div>
     </div>
     <div class="col-sm-8" id="div_observaciones" style="display: none;">

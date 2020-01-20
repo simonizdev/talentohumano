@@ -129,6 +129,10 @@
                     'value' => '($data->Id_Empleado == "") ? "-" :  UtilidadesEmpleado::nombreempleado($data->Id_Empleado)',
                 ),
                 array(
+                    'header'=>'Empresa',
+                    'value' => '($data->Id_Empleado == "") ? "-" :  UtilidadesEmpleado::empresaactualempleado($data->Id_Empleado)',
+                ),
+                array(
                     'name'=>'Id_Usuario_Creacion',
                     'value'=>'$data->idusuariocre->Usuario',
                 ),

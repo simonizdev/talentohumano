@@ -350,7 +350,7 @@ class UtilidadesCuenta {
 		}
 	}*/
 
-	public static function novedadcuenta($id, $password_act, $password_nue, $observaciones_act, $observaciones_nue, $estado_act, $estado_nue){
+	public static function novedadcuenta($id, $password_act, $password_nue, $observaciones_act, $observaciones_nue, $tipo_cuenta_act, $tipo_cuenta_nue, $tipo_acceso_act, $tipo_acceso_nue, $estado_act, $estado_nue){
 
 		$texto_novedad = "";
 		$flag = 0;
@@ -359,6 +359,38 @@ class UtilidadesCuenta {
 			$flag = 1;
 
 			$texto_novedad .= "Password: ".$password_act." / ".$password_nue.", ";
+		}
+
+		if($tipo_cuenta_act != $tipo_cuenta_nue){
+			$flag = 1;	
+
+			$n_tipo_cuenta_act = Dominio::model()->findByPk($tipo_cuenta_act);
+			$n_tipo_cuenta_nue = Dominio::model()->findByPk($tipo_cuenta_nue);
+
+			$texto_novedad .= "Tipo de cuenta: ".$n_tipo_cuenta_act->Dominio." / ".$n_tipo_cuenta_nue->Dominio.", ";
+		}
+
+		if($tipo_acceso_act != $tipo_acceso_nue){
+			$flag = 1;
+
+			if($tipo_acceso_act == 1){
+				$n_tipo_acceso_act = 'GENÉRICO';	
+			}
+
+			if($tipo_acceso_act == 2){
+				$n_tipo_acceso_act = 'PERSONAL';
+			}
+
+			if($tipo_acceso_nue == 1){
+				$n_tipo_acceso_nue = 'GENÉRICO';
+			}
+
+			if($tipo_acceso_nue == 2){
+				$n_tipo_acceso_nue = 'PERSONAL';
+			}
+
+
+			$texto_novedad .= "Tipo de acceso: ".$n_tipo_acceso_act." / ".$n_tipo_acceso_nue.", ";
 		}
 
 		if($estado_act != $estado_nue){

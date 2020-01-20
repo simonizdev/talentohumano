@@ -72,14 +72,42 @@
     </div>
     <div class="col-sm-4" id="div_tipo_cuenta" style="display: none;">
         <div class="form-group">
-            <?php echo $form->label($model,'Tipo_Cuenta'); ?><br>
-            <p><?php if($model->Tipo_Cuenta != "" ){ echo $model->tipocuenta->Dominio; } ?></p>
+            <div class="pull-right badge bg-red" id="error_tipo_cuenta" style="display: none;"></div>
+            <?php echo $form->label($model,'Tipo_Cuenta'); ?>
+            <?php
+        		$this->widget('ext.select2.ESelect2',array(
+					'name'=>'Cuenta[Tipo_Cuenta]',
+					'id'=>'Cuenta_Tipo_Cuenta',
+					'data'=>$lista_tipos,
+					'value' => $model->Tipo_Cuenta,
+					'htmlOptions'=>array(),
+				  	'options'=>array(
+						'placeholder'=>'Seleccione...',
+						'width'=> '100%',
+						'allowClear'=>true,
+					),
+				));
+			?>
         </div>
     </div>
     <div class="col-sm-4" id="div_tipo_acceso" style="display: none;">
         <div class="form-group">
-            <?php echo $form->label($model,'Tipo_Acceso'); ?><br>
-            <p><?php if($model->Tipo_Acceso != "" ){ echo $model->DescTipoAcceso($model->Tipo_Acceso); } ?></p>
+        	<div class="pull-right badge bg-red" id="error_tipo_acceso" style="display: none;"></div>
+            <?php echo $form->label($model,'Tipo_Acceso'); ?>
+		    <?php
+        		$this->widget('ext.select2.ESelect2',array(
+					'name'=>'Cuenta[Tipo_Acceso]',
+					'id'=>'Cuenta_Tipo_Acceso',
+					'data'=> array(1 => 'GENÉRICO', 2 => 'PERSONAL'),
+					'value' => $model->Tipo_Acceso,
+					'htmlOptions'=>array(),
+				  	'options'=>array(
+						'placeholder'=>'Seleccione...',
+						'width'=> '100%',
+						'allowClear'=>true,
+					),
+				));
+			?>
         </div>
     </div>
     <div class="col-sm-8" id="div_observaciones" style="display: none;">
@@ -158,6 +186,10 @@
 		            'name'=>'Id_Empleado',
 		            'value' => '($data->Id_Empleado == "") ? "-" :  UtilidadesEmpleado::nombreempleado($data->Id_Empleado)',
 		        ),
+		        array(
+                    'header'=>'Empresa',
+                    'value' => '($data->Id_Empleado == "") ? "-" :  UtilidadesEmpleado::empresaactualempleado($data->Id_Empleado)',
+                ),
 		        array(
 		            'name'=>'Id_Usuario_Creacion',
 		            'value'=>'$data->idusuariocre->Usuario',
@@ -244,7 +276,7 @@ $(function() {
         $('#div_observaciones').show();
         $('#div_estado').show();
 
-        var tipo_acceso = <?php echo $model->Tipo_Acceso ?>;
+        var tipo_acceso = $('#Cuenta_Tipo_Acceso').val();
         var num_emp = <?php echo $model->NumUsuariosAsoc($model->Id_Cuenta) ?>;
 
         if(tipo_acceso == 2 && num_emp == 1){
@@ -277,16 +309,6 @@ $(function() {
 				form.submit();
 		                
 			}else{
-				
-				if(cuenta_usuario == ""){
-				  $('#error_cuenta_usuario').html('Cuenta / Usuario no puede ser nulo.');
-				  $('#error_cuenta_usuario').show(); 
-				}
-
-				if(dominio == ""){
-				  $('#error_dominio').html('Dominio no puede ser nulo.');
-				  $('#error_dominio').show(); 
-				}
 
 				if(password == ""){
 				  $('#error_password').html('Password no puede ser nulo.');
@@ -319,10 +341,6 @@ $(function() {
 				form.submit();
 
 			}else{
-				if(cuenta_usuario == ""){
-				  $('#error_cuenta_usuario').html('Cuenta / Usuario no puede ser nulo.');
-				  $('#error_cuenta_usuario').show(); 
-				}
 
 				if(password == ""){
 				  $('#error_password').html('Password no puede ser nulo.');

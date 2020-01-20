@@ -154,6 +154,15 @@ class CuentaController extends Controller
 		$observaciones_act = $model->Observaciones;
 		$estado_act = $model->Estado;
 
+		if($model->Clasificacion == Yii::app()->params->c_correo){
+			$tipo_cuenta_act = $model->Tipo_Cuenta;
+			$tipo_acceso_act = NULL;
+
+		}else{
+			$tipo_cuenta_act = NULL;
+			$tipo_acceso_act = $model->Tipo_Acceso;
+		}
+
 
 		$clases= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE d.Estado = 1 AND Id_Padre = '.Yii::app()->params->clase_cuenta.' ORDER BY d.Dominio')->queryAll();
 
@@ -184,6 +193,15 @@ class CuentaController extends Controller
 				$model->Observaciones = $_POST['Cuenta']['Observaciones'];	
 			}
 
+			if($model->Clasificacion == Yii::app()->params->c_correo){
+				$model->Tipo_Cuenta = $model->Tipo_Cuenta;
+				$model->Tipo_Acceso = NULL;
+
+			}else{
+				$model->Tipo_Cuenta = NULL;
+				$model->Tipo_Acceso = $model->Tipo_Acceso;
+			}
+
 
 			$model->Estado = $_POST['Cuenta']['Estado'];	
 			
@@ -199,6 +217,10 @@ class CuentaController extends Controller
 					$model->Password,
 					$observaciones_act, 
 					$model->Observaciones,
+					$tipo_cuenta_act,
+					$model->Tipo_Cuenta,
+					$tipo_acceso_act,
+					$model->Tipo_Acceso,
 					$estado_act, 
 					$model->Estado 
 				);
