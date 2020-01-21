@@ -18,6 +18,7 @@
  * @property integer $Id_Usuario_Actualizacion
  * @property string $Fecha_Creacion
  * @property string $Fecha_Actualizacion
+ * @property string $Ext
  *
  * The followings are the available model relations:
  * @property THDOMINIO $clasificacion
@@ -51,6 +52,7 @@ class Cuenta extends CActiveRecord
 			array('Id_Cuenta_Red', 'required', 'on' => 'actred'),
 			array('Clasificacion, Tipo_Cuenta, Tipo_Acceso, Dominio, Estado, Id_Usuario_Creacion, Id_Usuario_Actualizacion', 'numerical', 'integerOnly'=>true),
 			array('Cuenta_Usuario, Password', 'length', 'max'=>30),
+			array('Ext', 'length', 'max'=>6),
 			array('Observaciones', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -164,7 +166,8 @@ class Cuenta extends CActiveRecord
 			'Fecha_Actualizacion' => 'Fecha de actualización',
 			'usuario_creacion' => 'Usuario que creo',
 			'usuario_actualizacion' => 'Usuario que actualizó',
-			'orderby' => 'Orden de resultados',	
+			'orderby' => 'Orden de resultados',
+			'Ext' => 'Ext.',
 		);
 	}
 
@@ -193,7 +196,6 @@ class Cuenta extends CActiveRecord
 		$criteria->compare('t.Clasificacion',$this->Clasificacion);
 		$criteria->compare('t.Tipo_Cuenta',$this->Tipo_Cuenta);
 		$criteria->compare('t.Tipo_Acceso',$this->Tipo_Acceso);
-		//$criteria->compare('t.Cuenta_Usuario',$this->Cuenta_Usuario,true);
 
 		if($this->Cuenta_Usuario != ""){
 

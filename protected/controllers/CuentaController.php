@@ -99,6 +99,13 @@ class CuentaController extends Controller
 				$model->Password = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password'].UtilidadesCuenta::generateRandomString();
 				$model->Dominio = $_POST['Cuenta']['Dominio'];
 				$model->Estado = Yii::app()->params->estado_act;
+				
+				if($_POST['Cuenta']['Ext'] == ""){
+					$model->Ext = NULL;
+				}else{
+					$model->Ext = $_POST['Cuenta']['Ext'];
+				}
+
 			}else{
 				$model->Clasificacion = $_POST['Cuenta']['Clasificacion'];
 				$model->Tipo_Cuenta = NULL;
@@ -107,6 +114,7 @@ class CuentaController extends Controller
 				$model->Password = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password'].UtilidadesCuenta::generateRandomString();
 				$model->Dominio = $_POST['Cuenta']['Dominio'];
 				$model->Estado = Yii::app()->params->estado_act;
+				$model->Ext = NULL;
 			}
 
 			if($_POST['Cuenta']['Observaciones'] == ""){
@@ -157,10 +165,16 @@ class CuentaController extends Controller
 		if($model->Clasificacion == Yii::app()->params->c_correo){
 			$tipo_cuenta_act = $model->Tipo_Cuenta;
 			$tipo_acceso_act = NULL;
-
+			if($model->Tipo_Cuenta == Yii::app()->params->t_c_generico){
+				$ext_act = $model->Ext;
+			}else{
+				$ext_act = NULL;
+			}
+		
 		}else{
 			$tipo_cuenta_act = NULL;
 			$tipo_acceso_act = $model->Tipo_Acceso;
+			$ext_act = NULL;
 		}
 
 
@@ -197,9 +211,16 @@ class CuentaController extends Controller
 				$model->Tipo_Cuenta = $model->Tipo_Cuenta;
 				$model->Tipo_Acceso = NULL;
 
+				if($_POST['Cuenta']['Ext'] == ""){
+					$model->Ext = NULL;
+				}else{
+					$model->Ext = $_POST['Cuenta']['Ext'];
+				}
+
 			}else{
 				$model->Tipo_Cuenta = NULL;
 				$model->Tipo_Acceso = $model->Tipo_Acceso;
+				$model->Ext = NULL;
 			}
 
 
@@ -222,7 +243,9 @@ class CuentaController extends Controller
 					$tipo_acceso_act,
 					$model->Tipo_Acceso,
 					$estado_act, 
-					$model->Estado 
+					$model->Estado,
+					$ext_act,
+					$model->Ext
 				);
 
 

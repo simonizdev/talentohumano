@@ -73,6 +73,12 @@
             <p><?php if($model->Observaciones != "" ){ echo $model->Observaciones; }else{ echo 'No asignado'; } ?></p>
         </div>
     </div>
+    <div class="col-sm-4" id="div_ext" style="display: none;">
+        <div class="form-group">
+            <?php echo $form->label($model,'Ext'); ?>
+            <p><?php if($model->Ext != "" ){ echo $model->Ext; }else{ echo 'No asignado'; } ?></p>
+        </div>
+    </div>
     <div class="col-sm-4" id="div_estado" style="display: none;">
         <div class="form-group">
             <?php echo $form->label($model,'Estado'); ?><br>
@@ -195,6 +201,15 @@ $(function() {
         $('#div_tipo_acceso').hide();
         $('#div_observaciones').show();
         $('#div_estado').show();
+
+        var tipo_cuenta = <?php echo $model->Tipo_Cuenta ?>;
+
+        if(tipo_cuenta == <?php echo Yii::app()->params->t_c_generico ?>){
+            $('#div_ext').show();
+        }else{
+            $('#div_ext').hide();
+        }
+
     }else{
         $('#div_cuenta_usuario').show();
         $('#div_dominio').hide(); 

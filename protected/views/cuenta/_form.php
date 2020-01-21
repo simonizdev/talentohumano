@@ -119,6 +119,14 @@
         </div>
     </div>
 </div>
+<div class="row">
+  <div class="col-sm-4" id="div_ext" style="display: none;">
+    <div class="form-group">
+      <?php echo $form->label($model,'Ext'); ?>
+      <?php echo $form->textField($model,'Ext', array('class' => 'form-control', 'maxlength' => '6', 'autocomplete' => 'off')); ?>
+    </div>
+  </div>
+</div>
 
 
 
@@ -355,10 +363,18 @@ $(function() {
   $("#Cuenta_Tipo_Cuenta").change(function() {
     var valor = $('#Cuenta_Tipo_Cuenta').val(); 
 
-    if(valor != ""){
-      $('#error_tipo_cuenta').html('');
-      $('#error_tipo_cuenta').hide();
+    if(valor == ""){
+      $('#div_ext').hide();
+      $('#Cuenta_Ext').val('');
+    }else{
+      if(valor == <?php echo Yii::app()->params->t_c_generico ?>){
+        $('#div_ext').show();
+      }else{
+        $('#div_ext').hide();
+        $('#Cuenta_Ext').val('');
+      }
     }
+
   });
 
   $("#Cuenta_Tipo_Acceso").change(function() {

@@ -350,7 +350,7 @@ class UtilidadesCuenta {
 		}
 	}*/
 
-	public static function novedadcuenta($id, $password_act, $password_nue, $observaciones_act, $observaciones_nue, $tipo_cuenta_act, $tipo_cuenta_nue, $tipo_acceso_act, $tipo_acceso_nue, $estado_act, $estado_nue){
+	public static function novedadcuenta($id, $password_act, $password_nue, $observaciones_act, $observaciones_nue, $tipo_cuenta_act, $tipo_cuenta_nue, $tipo_acceso_act, $tipo_acceso_nue, $estado_act, $estado_nue, $ext_act, $ext_nue){
 
 		$texto_novedad = "";
 		$flag = 0;
@@ -359,6 +359,20 @@ class UtilidadesCuenta {
 			$flag = 1;
 
 			$texto_novedad .= "Password: ".$password_act." / ".$password_nue.", ";
+		}
+
+		if($observaciones_act != $observaciones_nue){
+			$flag = 1;
+
+			if($observaciones_act == ''){
+				$observaciones_act = 'No asignado';
+			}
+
+			if($observaciones_nue == ''){
+				$observaciones_nue = 'No asignado';
+			}
+
+			$texto_novedad .= "Observaciones: ".$observaciones_act." / ".$observaciones_nue.", ";
 		}
 
 		if($tipo_cuenta_act != $tipo_cuenta_nue){
@@ -401,20 +415,22 @@ class UtilidadesCuenta {
 
 			$texto_novedad .= "Estado: ".$n_estado_act->Dominio." / ".$n_estado_nue->Dominio.", ";
 		}
-
-		if($observaciones_act != $observaciones_nue){
+		
+		if($ext_act != $ext_nue){
 			$flag = 1;
 
-			if($observaciones_act == ''){
-				$observaciones_act = 'No asignado';
+			if($ext_act == ''){
+				$ext_act = 'No asignado';
 			}
 
-			if($observaciones_nue == ''){
-				$observaciones_nue = 'No asignado';
+			if($ext_nue == ''){
+				$ext_nue = 'No asignado';
 			}
 
-			$texto_novedad .= "Observaciones: ".$observaciones_act." / ".$observaciones_nue.", ";
+			$texto_novedad .= "Extensión: ".$ext_act." / ".$ext_nue.", ";
 		}
+
+		
 
 		//alguno de los criterios cambio
 		if($flag == 1){

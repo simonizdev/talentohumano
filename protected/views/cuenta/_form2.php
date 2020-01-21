@@ -116,6 +116,12 @@
             <?php echo $form->textArea($model,'Observaciones',array('class' => 'form-control', 'rows'=>3, 'cols'=>50)); ?>
         </div>
     </div>
+    <div class="col-sm-4" id="div_ext" style="display: none;">
+    	<div class="form-group">
+      		<?php echo $form->label($model,'Ext'); ?>
+      		<?php echo $form->textField($model,'Ext', array('class' => 'form-control', 'maxlength' => '6', 'autocomplete' => 'off')); ?>
+    	</div>
+ 	</div>
     <div class="col-sm-4" id="div_estado" style="display: none;">
         <div class="form-group">
             <div class="pull-right badge bg-red" id="error_estado" style="display: none;"></div>
@@ -267,6 +273,15 @@ $(function() {
         $('#div_tipo_acceso').hide();
         $('#div_observaciones').show();
         $('#div_estado').show();
+        
+        var tipo_cuenta = <?php echo $model->Tipo_Cuenta ?>;
+
+        if(tipo_cuenta == <?php echo Yii::app()->params->t_c_generico ?>){
+        	$('#div_ext').show();
+        }else{
+        	$('#div_ext').hide();
+        }
+
 	}else{
 		$('#div_cuenta_usuario').show();
         $('#div_dominio').hide(); 
@@ -275,6 +290,7 @@ $(function() {
         $('#div_tipo_acceso').show();
         $('#div_observaciones').show();
         $('#div_estado').show();
+        $('#div_ext').hide();
 
         var tipo_acceso = $('#Cuenta_Tipo_Acceso').val();
         var num_emp = <?php echo $model->NumUsuariosAsoc($model->Id_Cuenta) ?>;
@@ -390,12 +406,20 @@ $(function() {
 	});
 
 	$("#Cuenta_Tipo_Cuenta").change(function() {
-		var valor = $('#Cuenta_Tipo_Cuenta').val(); 
+	    var valor = $('#Cuenta_Tipo_Cuenta').val(); 
 
-		if(valor != ""){
-	  		$('#error_tipo_cuenta').html('');
-	  		$('#error_tipo_cuenta').hide();
-		}
+	    if(valor == ""){
+	      $('#div_ext').hide();
+	      $('#Cuenta_Ext').val('');
+	    }else{
+	      if(valor == <?php echo Yii::app()->params->t_c_generico ?>){
+	        $('#div_ext').show();
+	      }else{
+	        $('#div_ext').hide();
+	        $('#Cuenta_Ext').val('');
+	      }
+	    }
+
 	});
 
 	$("#Cuenta_Tipo_Acceso").change(function() {
