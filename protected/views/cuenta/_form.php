@@ -123,7 +123,7 @@
   <div class="col-sm-4" id="div_ext" style="display: none;">
     <div class="form-group">
       <?php echo $form->label($model,'Ext'); ?>
-      <?php echo $form->textField($model,'Ext', array('class' => 'form-control', 'maxlength' => '6', 'autocomplete' => 'off')); ?>
+      <?php echo $form->textField($model,'Ext', array('class' => 'form-control', 'maxlength' => '10', 'autocomplete' => 'off')); ?>
     </div>
   </div>
 </div>

@@ -35,7 +35,7 @@
         <div class="form-group">
             <?php echo $form->error($model,'Ext', array('class' => 'pull-right badge bg-red')); ?>
             <?php echo $form->label($model,'Ext'); ?>
-            <?php echo $form->textField($model,'Ext', array('class' => 'form-control', 'maxlength' => '6', 'autocomplete' => 'off', 'onkeyup' => 'convert_may(this)')); ?>
+            <?php echo $form->textField($model,'Ext', array('class' => 'form-control', 'maxlength' => '10', 'autocomplete' => 'off', 'onkeyup' => 'convert_may(this)')); ?>
         </div>
     </div>
 </div>

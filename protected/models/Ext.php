@@ -44,7 +44,7 @@ class Ext extends CActiveRecord
 			array('Ubicacion, Contacto, Ext, Estado', 'required'),
 			array('Estado, Id_Usuario_Creacion, Id_Usuario_Actualizacion', 'numerical', 'integerOnly'=>true),
 			array('Ubicacion, Contacto', 'length', 'max'=>200),
-			array('Ext', 'length', 'max'=>6),
+			array('Ext', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('Id_Ext, Ubicacion, Contacto, Ext, Estado, Id_Usuario_Creacion, Id_Usuario_Actualizacion, Fecha_Creacion, Fecha_Actualizacion, usuario_creacion, usuario_actualizacion, orderby', 'safe', 'on'=>'search'),
