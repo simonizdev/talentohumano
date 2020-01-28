@@ -263,7 +263,7 @@
   
 $(function() {
 
-	var clase = $('#Cuenta_Clasificacion').val();;
+	var clase = $('#Cuenta_Clasificacion').val();
 
 	if(clase == <?php echo Yii::app()->params->c_correo ?>){
 		$('#div_cuenta_usuario').show();

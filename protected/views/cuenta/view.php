@@ -191,7 +191,7 @@
   
 $(function() {
 
-    var clase = <?php echo $model->Clasificacion ?>;
+    var clase = $('#Cuenta_Clasificacion').val();
 
     if(clase == <?php echo Yii::app()->params->c_correo ?>){
         $('#div_cuenta_usuario').show();
@@ -202,8 +202,8 @@ $(function() {
         $('#div_observaciones').show();
         $('#div_estado').show();
 
-        var tipo_cuenta = <?php echo $model->Tipo_Cuenta ?>;
-
+        var tipo_cuenta = $('#Cuenta_Tipo_Cuenta').val();
+        
         if(tipo_cuenta == <?php echo Yii::app()->params->t_c_generico ?>){
             $('#div_ext').show();
         }else{
