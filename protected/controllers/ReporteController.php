@@ -30,7 +30,7 @@ class ReporteController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform actions
-				'actions'=>array('empleadosactivos', 'empleadosactivospant', 'tallajeempleadosactivos', 'tallajeempleadosactivospant', 'hijos', 'hijospant','ausencias', 'ausenciaspant', 'llamatenc', 'llamatencpant','sanciones','sancionespant','comparendos','comparendospant','contratosfinalizados','contratosfinalizadospant','importadorausencias','uploadausencias','elemherremp','elemherremppant','obscuenta','obscuentapant','elemherrpend','elemherrpendpant','importadorturnos','uploadturnos','empleadosxug'),
+				'actions'=>array('empleadosactivos', 'empleadosactivospant', 'tallajeempleadosactivos', 'tallajeempleadosactivospant', 'hijos', 'hijospant','ausencias', 'ausenciaspant', 'llamatenc', 'llamatencpant','sanciones','sancionespant','comparendos','comparendospant','contratosfinalizados','contratosfinalizadospant','importadorausencias','uploadausencias','elemherremp','elemherremppant','obscuenta','obscuentapant','elemherrpend','elemherrpendpant','importadorturnos','uploadturnos','empleadosxug','cuentas','cuentaspant'),
 				'users'=>array('@'),
 			),
 			array('deny',  // deny all users
@@ -753,6 +753,38 @@ class ReporteController extends Controller
 			'model'=>$model,
 			'unidades_gerencia'=>$unidades_gerencia,
 		));
+	}
+
+	public function actionCuentas()
+	{		
+		$model=new Reporte;
+		$model->scenario = 'cuentas';
+
+		$dominios= Yii::app()->db->createCommand('SELECT d.Id_Dominio_Web, d.Dominio FROM TH_DOMINIO_WEB d WHERE d.Estado = 1 AND Id_Tipo = '.Yii::app()->params->dominios_cuenta_correo.' ORDER BY d.Dominio ')->queryAll();
+
+		$estados= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE d.Estado = 1 AND Id_Padre = '.Yii::app()->params->estado_cuenta.' ORDER BY d.Dominio')->queryAll();
+
+		if(isset($_POST['Reporte']))
+		{
+			$model=$_POST['Reporte'];
+			$this->renderPartial('cuentas_resp',array('model' => $model));	
+		}
+
+		$this->render('cuentas',array(
+			'model'=>$model,
+			'dominios'=>$dominios,
+			'estados'=>$estados,
+		));
+	}
+
+	public function actionCuentasPant()
+	{		
+		if (isset($_POST['dominio'])){ $dominio = $_POST['dominio']; } else { $dominio = ""; }
+		if (isset($_POST['estado'])){ $estado = $_POST['estado']; } else { $estado = ""; }
+
+		$resultados = UtilidadesReportes::cuentaspantalla($dominio, $estado);
+
+		echo $resultados;
 	}
 
 }

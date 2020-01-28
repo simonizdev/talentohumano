@@ -1537,4 +1537,103 @@ class UtilidadesReportes {
 
   }
 
+  public static function cuentaspantalla($dominio, $estado) {
+    
+    $condicion = "WHERE c.Clasificacion = 314 AND c.Tipo_Cuenta = 100";
+
+    if($dominio != ""){
+      
+      $condicion .= " AND c.Dominio = ".$dominio;
+
+    }
+
+    if($estado != null){
+  
+      $condicion .= " AND c.Estado = ".$estado;
+
+    }
+
+    $query ="
+    SELECT
+    CONCAT(c.Cuenta_Usuario, '@', dw.Dominio) AS Cuenta,
+    CASE
+    WHEN c.Observaciones IS NULL THEN '-'
+    WHEN c.Observaciones IS NOT NULL THEN c.Observaciones
+    Else '-'
+    END AS Observaciones,
+    est.Dominio AS Estado_Cuenta,
+    CASE
+    WHEN e.Id_Empleado IS NULL THEN '-'
+    WHEN e.Id_Empleado IS NOT NULL THEN CONCAT (e.Nombre, ' ', e.Apellido)
+    Else '-'
+    END AS Empleado,
+    CASE
+    WHEN e.Estado = 1 THEN 'ACTIVO'
+    WHEN e.Estado = 0 THEN 'INACTIVO'
+    Else '-'
+    END AS Estado_Empleado
+    FROM TH_CUENTA c
+    LEFT JOIN TH_CUENTA_EMPLEADO ce ON c.Id_Cuenta = ce.Id_Cuenta AND ce.Estado = 1
+    LEFT JOIN TH_EMPLEADO e ON ce.Id_Empleado = e.Id_Empleado 
+    LEFT JOIN TH_DOMINIO est ON c.Estado = est.Id_Dominio
+    LEFT JOIN TH_DOMINIO_WEB dw ON c.Dominio = dw.Id_Dominio_Web
+    ".$condicion."
+    ORDER BY dw.Dominio, c.Cuenta_Usuario 
+    ";
+
+    $tabla = '
+      <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                <th>Correo</th>
+                <th>Notas</th>
+                <th>Estado de Correo</th>
+                <th>Empleado</th>
+                <th>Estado de empleado</th>
+                </tr>
+              </thead>
+          <tbody>';
+
+        $query1 = Yii::app()->db->createCommand($query)->queryAll();
+
+        $i = 1; 
+
+        if(!empty($query1)){
+          foreach ($query1 as $reg1) {
+
+            $Cuenta          = $reg1 ['Cuenta']; 
+            $Notas           = $reg1 ['Observaciones']; 
+            $Estado_Cuenta   = $reg1 ['Estado_Cuenta']; 
+            $Empleado        = $reg1 ['Empleado']; 
+            $Estado_Empleado = $reg1 ['Estado_Empleado']; 
+
+            if ($i % 2 == 0){
+              $clase = 'odd'; 
+            }else{
+              $clase = 'even'; 
+            }
+
+            $tabla .= '    
+            <tr class="'.$clase.'">
+                  <td>'.$Cuenta.'</td>
+                  <td>'.$Notas.'</td>
+                  <td>'.$Estado_Cuenta.'</td>
+                  <td>'.$Empleado.'</td>
+                  <td>'.$Estado_Empleado.'</td>
+              </tr>';
+
+            $i++;
+          }
+        }else{
+          $tabla .= ' 
+          <tr><td colspan="5" class="empty"><span class="empty">No se encontraron resultados.</span></td></tr>
+          ';
+        }
+
+        $tabla .= '  </tbody>
+        </table>';
+
+    return $tabla;
+  }
+
 }

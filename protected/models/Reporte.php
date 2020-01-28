@@ -23,6 +23,7 @@ class Reporte extends CFormModel
     public $archivo;
     public $unidad_gerencia;
     public $estado;
+    public $dominio_correo;
 
    
     
@@ -41,7 +42,8 @@ class Reporte extends CFormModel
             array('opcion_exp', 'required','on'=>'contratos_fin'),  
             array('id_empleado', 'required','on'=>'elem_herr_emp'),  
             array('id_empleado', 'required','on'=>'obs_cuenta'), 
-            array('unidad_gerencia, estado', 'required','on'=>'empleados_x_ug'),               
+            array('unidad_gerencia, estado', 'required','on'=>'empleados_x_ug'),
+            array('opcion_exp', 'required','on'=>'cuentas'),               
         );  
     }
 
@@ -70,6 +72,7 @@ class Reporte extends CFormModel
             'id_empleado' => 'Empleado',
             'archivo' => 'Archivo',
             'unidad_gerencia' => 'Unidad de gerencia',
+            'dominio_correo' => 'Dominio de correo',
         );
     }
 
