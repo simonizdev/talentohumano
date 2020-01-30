@@ -26,6 +26,8 @@ if($estado != null){
 
 $query ="
 SELECT
+c.Cuenta_Usuario,
+dw.Dominio,
 CONCAT(c.Cuenta_Usuario, '@', dw.Dominio) AS Cuenta,
 CASE
 WHEN c.Observaciones IS NULL THEN '-'
@@ -69,14 +71,16 @@ $objPHPExcel->setActiveSheetIndex();
 
 /*Cabecera tabla*/
 
-$objPHPExcel->setActiveSheetIndex()->setCellValue('A1', 'Correo');
-$objPHPExcel->setActiveSheetIndex()->setCellValue('B1', 'Notas');
-$objPHPExcel->setActiveSheetIndex()->setCellValue('C1', 'Estado de Correo');
-$objPHPExcel->setActiveSheetIndex()->setCellValue('D1', 'Empleado');
-$objPHPExcel->setActiveSheetIndex()->setCellValue('E1', 'Estado de empleado');
+$objPHPExcel->setActiveSheetIndex()->setCellValue('A1', 'Cuenta');
+$objPHPExcel->setActiveSheetIndex()->setCellValue('B1', 'Dominio');
+$objPHPExcel->setActiveSheetIndex()->setCellValue('C1', 'Correo');
+$objPHPExcel->setActiveSheetIndex()->setCellValue('D1', 'Notas');
+$objPHPExcel->setActiveSheetIndex()->setCellValue('E1', 'Estado de Correo');
+$objPHPExcel->setActiveSheetIndex()->setCellValue('F1', 'Empleado');
+$objPHPExcel->setActiveSheetIndex()->setCellValue('G1', 'Estado de empleado');
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-$objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getFont()->setBold(true);
+$objPHPExcel->getActiveSheet()->getStyle('A1:G1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+$objPHPExcel->getActiveSheet()->getStyle('A1:G1')->getFont()->setBold(true);
 
 /*Inicio contenido tabla*/
 
@@ -86,19 +90,24 @@ $Fila = 2;
 
 foreach ($query1 as $reg1) {
 
+  $Cuenta_Usuario      = $reg1 ['Cuenta_Usuario']; 
+  $Dominio             = $reg1 ['Dominio']; 
   $Cuenta              = $reg1 ['Cuenta']; 
   $Notas               = $reg1 ['Observaciones']; 
   $Estado_Cuenta       = $reg1 ['Estado_Cuenta']; 
   $Empleado            = $reg1 ['Empleado']; 
   $Estado_Empleado     = $reg1 ['Estado_Empleado']; 
 
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('A'.$Fila, $Cuenta);
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('B'.$Fila, $Notas);
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('C'.$Fila, $Estado_Cuenta);
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('D'.$Fila, $Empleado);
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('E'.$Fila, $Estado_Empleado);
   
-  $objPHPExcel->getActiveSheet()->getStyle('A'.$Fila.':E'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('A'.$Fila, $Cuenta_Usuario);
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('B'.$Fila, $Dominio);
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('C'.$Fila, $Cuenta);
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('D'.$Fila, $Notas);
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('E'.$Fila, $Estado_Cuenta);
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('F'.$Fila, $Empleado);
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('G'.$Fila, $Estado_Empleado);
+  
+  $objPHPExcel->getActiveSheet()->getStyle('A'.$Fila.':G'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
 
   $Fila = $Fila + 1;
 
