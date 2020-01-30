@@ -1539,7 +1539,7 @@ class UtilidadesReportes {
 
   public static function cuentaspantalla($dominio, $estado) {
     
-    $condicion = "WHERE c.Clasificacion = 314 AND c.Tipo_Cuenta = 100";
+    $condicion = "WHERE c.Clasificacion = 314";
 
     if($dominio != ""){
       

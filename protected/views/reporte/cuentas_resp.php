@@ -8,7 +8,7 @@ set_time_limit(0);
 if (isset($model['dominio_correo'])) { $dominio_correo = $model['dominio_correo']; } else { $dominio_correo = ""; }
 if (isset($model['estado'])) { $estado = $model['estado']; } else { $estado = ""; }
 
-$condicion = "WHERE c.Clasificacion = 314 AND c.Tipo_Cuenta = 100";
+$condicion = "WHERE c.Clasificacion = 314";
 
 if($dominio_correo != null){
   
