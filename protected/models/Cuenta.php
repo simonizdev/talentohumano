@@ -49,7 +49,7 @@ class Cuenta extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Id_Cuenta_Red', 'required', 'on' => 'actred'),
+			array('Password, Id_Cuenta_Red', 'required', 'on' => 'actred'),
 			array('Clasificacion, Tipo_Cuenta, Tipo_Acceso, Dominio, Estado, Id_Usuario_Creacion, Id_Usuario_Actualizacion', 'numerical', 'integerOnly'=>true),
 			array('Cuenta_Usuario, Password', 'length', 'max'=>30),
 			array('Ext', 'length', 'max'=>10),

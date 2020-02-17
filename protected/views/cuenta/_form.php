@@ -71,7 +71,7 @@
         <div class="form-group">
             <div class="pull-right badge bg-red" id="error_password" style="display: none;"></div>
             <?php echo $form->label($model,'Password'); ?>
-            <?php echo $form->textField($model,'Password', array('class' => 'form-control', 'maxlength' => '10', 'autocomplete' => 'off')); ?>
+            <?php echo $form->textField($model,'Password', array('class' => 'form-control', 'maxlength' => '30', 'autocomplete' => 'off')); ?>
         </div>
     </div>
     <div class="col-sm-4" id="div_tipo_cuenta" style="display: none;">

@@ -383,6 +383,8 @@ class CuentaController extends Controller
 		$model=$this->loadModel($id);
 		$model->scenario = 'actred';
 
+		$password_act = $model->Password;
+
 		$cuenta = $model->Cuenta_Usuario.'@'.$model->dominioweb->Dominio;
 		
 
@@ -390,6 +392,15 @@ class CuentaController extends Controller
 		{
 
 			$model->attributes=$_POST['Cuenta'];
+
+			if($_POST['Cuenta']['Password'] != $password_act){
+				$password = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password'].UtilidadesCuenta::generateRandomString();
+				$model->Password = $password;
+				$novedad = "Password: ".$password_act." / ".$password.", ";
+			}else{
+				$model->Password = $password_act;
+				$novedad = '';	
+			}
 
 			$cuenta_red = $model->DescCuentaUsuario($model->Id_Cuenta_Red);
 
@@ -401,7 +412,8 @@ class CuentaController extends Controller
 
 				$nueva_novedad = new NovedadCuenta;
 				$nueva_novedad->Id_Cuenta = $id;
-				$nueva_novedad->Novedades = 'Correo para redirección: No asignado / '.$cuenta_red.'.';
+				$novedad .= 'Correo para redirección: No asignado / '.$cuenta_red.'.';
+				$nueva_novedad->Novedades = $novedad;
 				$nueva_novedad->Id_Usuario_Creacion = Yii::app()->user->getState('id_user');
 				$nueva_novedad->Fecha_Creacion = date('Y-m-d H:i:s');
 				if($nueva_novedad->save()){

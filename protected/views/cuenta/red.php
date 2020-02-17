@@ -25,30 +25,37 @@
         	<?php echo $model->DescCuentaUsuario($model->Id_Cuenta) ?>
         </div>
     </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <?php echo $form->error($model,'Password', array('class' => 'pull-right badge bg-red')); ?>
+            <?php echo $form->label($model,'Password'); ?>
+            <?php echo $form->textField($model,'Password', array('class' => 'form-control', 'maxlength' => '30', 'autocomplete' => 'off')); ?>
+        </div>
+    </div>
     <div class="col-sm-6">
         <div class="form-group">
         	<?php echo $form->error($model,'Id_Cuenta_Red', array('class' => 'pull-right badge bg-red')); ?>
-    		<?php echo $form->label($model,'Id_Cuenta_Red'); ?>
-            <?php echo $form->textField($model,'Id_Cuenta_Red'); ?>
-            <?php
-                $this->widget('ext.select2.ESelect2', array(
-                    'selector' => '#Cuenta_Id_Cuenta_Red',
-                    'options'  => array(
-                        'allowClear' => true,
-                        'minimumInputLength' => 3,
-                        'width' => '100%',
-                        'language' => 'es',
-                        'ajax' => array(
-                            'url' => Yii::app()->createUrl('cuenta/SearchCuentaRed'),
-                            'dataType'=>'json',
-                            'data'=>'js:function(term){return{q: term, id: '.$model->Id_Cuenta.'};}',
-                            'results'=>'js:function(data){ return {results:data};}'                   
-                        ),
-                        'formatNoMatches'=> 'js:function(){ clear_select2_ajax("Cuenta_Id_Cuenta_Red"); return "No se encontraron resultados"; }',
-                        'formatInputTooShort' =>  'js:function(){ return "Digite más de 3 caracteres para iniciar busqueda <button type=\"button\" class=\"btn btn-success btn-xs pull-right\" onclick=\"clear_select2_ajax(\'Cuenta_Id_Cuenta_Red\')\">Limpiar campo</button>"; }',
-                    ),
-                ));
-            ?>
+    		  <?php echo $form->label($model,'Id_Cuenta_Red'); ?>
+          <?php echo $form->textField($model,'Id_Cuenta_Red'); ?>
+          <?php
+              $this->widget('ext.select2.ESelect2', array(
+                  'selector' => '#Cuenta_Id_Cuenta_Red',
+                  'options'  => array(
+                      'allowClear' => true,
+                      'minimumInputLength' => 3,
+                      'width' => '100%',
+                      'language' => 'es',
+                      'ajax' => array(
+                          'url' => Yii::app()->createUrl('cuenta/SearchCuentaRed'),
+                          'dataType'=>'json',
+                          'data'=>'js:function(term){return{q: term, id: '.$model->Id_Cuenta.'};}',
+                          'results'=>'js:function(data){ return {results:data};}'                   
+                      ),
+                      'formatNoMatches'=> 'js:function(){ clear_select2_ajax("Cuenta_Id_Cuenta_Red"); return "No se encontraron resultados"; }',
+                      'formatInputTooShort' =>  'js:function(){ return "Digite más de 3 caracteres para iniciar busqueda <button type=\"button\" class=\"btn btn-success btn-xs pull-right\" onclick=\"clear_select2_ajax(\'Cuenta_Id_Cuenta_Red\')\">Limpiar campo</button>"; }',
+                  ),
+              ));
+          ?>
         </div>
     </div>
 </div>
