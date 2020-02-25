@@ -1564,7 +1564,7 @@ class UtilidadesReportes {
     est.Dominio AS Estado_Cuenta,
     CASE
     WHEN e.Id_Empleado IS NULL THEN '-'
-    WHEN e.Id_Empleado IS NOT NULL THEN CONCAT (e.Nombre, ' ', e.Apellido)
+    WHEN e.Id_Empleado IS NOT NULL THEN CONCAT (e.Nombre, ' ', e.Apellido, ' (',ti.Dominio,' ',e.Identificacion,')')
     Else '-'
     END AS Empleado,
     CASE
@@ -1574,7 +1574,8 @@ class UtilidadesReportes {
     END AS Estado_Empleado
     FROM TH_CUENTA c
     LEFT JOIN TH_CUENTA_EMPLEADO ce ON c.Id_Cuenta = ce.Id_Cuenta AND ce.Estado = 1
-    LEFT JOIN TH_EMPLEADO e ON ce.Id_Empleado = e.Id_Empleado 
+    LEFT JOIN TH_EMPLEADO e ON ce.Id_Empleado = e.Id_Empleado
+    LEFT JOIN TH_DOMINIO ti ON e.Id_Tipo_Ident = ti.Id_Dominio
     LEFT JOIN TH_DOMINIO est ON c.Estado = est.Id_Dominio
     LEFT JOIN TH_DOMINIO_WEB dw ON c.Dominio = dw.Id_Dominio_Web
     ".$condicion."
