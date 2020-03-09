@@ -95,8 +95,23 @@ class UsuarioController extends Controller
 				UtilidadesUsuario::adminperfilusuario($model->Id_Usuario, $model->perfiles);
 				//se administran las empresas relacionadas al usuario
 				UtilidadesUsuario::adminempresausuario($model->Id_Usuario, $model->empresas);
+				
 				if(isset($_POST['Usuario']['areas'])){
-					if(!empty($model->subareas)){
+					//se administran las areas relacionadas al usuario
+					UtilidadesUsuario::adminareausuario($model->Id_Usuario, $_POST['Usuario']['areas']);
+				}else{
+					UtilidadesUsuario::adminareausuario($model->Id_Usuario, array());	
+				}
+							
+				if(isset($_POST['Usuario']['subareas'])){
+					//se administran las subareas relacionadas al usuario
+					UtilidadesUsuario::adminsubareausuario($model->Id_Usuario, $_POST['Usuario']['subareas']);
+				}else{
+					UtilidadesUsuario::adminsubareausuario($model->Id_Usuario, array());	
+				}
+				
+				/*if(isset($_POST['Usuario']['areas'])){
+					if(!empty($model->areas)){
 						//se administran las areas relacionadas al usuario
 						UtilidadesUsuario::adminareausuario($model->Id_Usuario, $model->areas);
 					}
@@ -106,7 +121,8 @@ class UsuarioController extends Controller
 						//se administran las subareas relacionadas al usuario
 						UtilidadesUsuario::adminsubareausuario($model->Id_Usuario, $model->subareas);
 					}
-				}
+				}*/
+
 				$model->Password = sha1($model->Password);
 				$model->update();
 				$this->redirect(array('admin'));
