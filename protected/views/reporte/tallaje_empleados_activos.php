@@ -116,7 +116,7 @@ $(function() {
               }else{
                 form.submit();
                 $(".ajax-loader").fadeIn('fast');
-                setTimeout(function(){ $(".ajax-loader").fadeOut('fast'); }, 5000); 
+                setTimeout(function(){ $(".ajax-loader").fadeOut('fast'); }, 10000); 
               }  
           } else {
               settings = form.data('settings'),

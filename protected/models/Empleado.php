@@ -52,6 +52,7 @@
  * @property integer $Alergia
  * @property string $Observaciones
  * @property integer $Id_Regional_Labor
+ * @property integer $Id_Ciudad_Exp_Ident
  *
  * The followings are the available model relations:
  * @property THDISCIPLINARIOEMPLEADO[] $tHDISCIPLINARIOEMPLEADOs
@@ -92,6 +93,7 @@
  * @property THNOVEDADCONTRATO[] $tHNOVEDADCONTRATOs
  * @property THAUSENCIAEMPLEADO[] $tHAUSENCIAEMPLEADOs
  * @property THEVALUACIONEMPLEADO[] $tHEVALUACIONEMPLEADOs
+ * @property THCIUDAD $idCiudadExpIdent
  */
 class Empleado extends CActiveRecord
 {
@@ -119,7 +121,7 @@ class Empleado extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array(
-				'Id_Tipo_Ident, Identificacion, Apellido, Nombre, Fecha_Nacimiento, Id_Ciudad_Nacimiento, Direccion, Telefono, Correo, Id_Grado_Esc, Id_Estado_Civil, Id_Raza,	Id_Ciudad_Residencia, Id_Rh, Id_Genero, Id_Estrato, Persona_Contacto, Tel_Persona_Contacto, Id_Parentesco_Persona_Contacto, Id_Ciudad_Labor, Id_Regional_Labor', 'required'),
+				'Id_Tipo_Ident, Identificacion, Id_Ciudad_Exp_Ident, Apellido, Nombre, Fecha_Nacimiento, Id_Ciudad_Nacimiento, Direccion, Telefono, Correo, Id_Grado_Esc, Id_Estado_Civil, Id_Raza,	Id_Ciudad_Residencia, Id_Rh, Id_Genero, Id_Estrato, Persona_Contacto, Tel_Persona_Contacto, Id_Parentesco_Persona_Contacto, Id_Ciudad_Labor, Id_Regional_Labor', 'required'),
 			array('empleado', 'required', 'on' => 'asignacion, entrega, devolucion'),
 			array('Id_Tipo_Ident, Identificacion', 'ECompositeUniqueValidator', 'attributesToAddError'=>'Identificacion','message'=>'# Identificación ya existe en el sistema '),
 			array('Correo','email', 'message'=>'E-mail no valido'),
@@ -255,6 +257,7 @@ class Empleado extends CActiveRecord
 			'idusuarioact' => array(self::BELONGS_TO, 'Usuario', 'Id_Usuario_Actualizacion'),
 			'idempresa' => array(self::BELONGS_TO, 'Empresa', 'Id_Empresa'),
 			'idregional' => array(self::BELONGS_TO, 'Regional', 'Id_Regional_Labor'),
+			'idciudadexpident' => array(self::BELONGS_TO, 'Ciudad', 'Id_Ciudad_Exp_Ident'),
 		);
 	}
 
@@ -326,6 +329,7 @@ class Empleado extends CActiveRecord
 			'empleado' => 'Empleado',
 
 			'Id_Regional_Labor' => 'Regional de labor',
+			'Id_Ciudad_Exp_Ident' => 'Dpto - municipio de expedición',
 			
 		);
 	}

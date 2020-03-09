@@ -196,7 +196,11 @@
                     'header'=>'Empresa',
                     'value' => '($data->Id_Empleado == "") ? "-" :  UtilidadesEmpleado::empresaactualempleado($data->Id_Empleado)',
                 ),
-		        array(
+                array(
+                    'header'=>'Cargo',
+                    'value' => '($data->Id_Empleado == "") ? "-" :  UtilidadesEmpleado::cargoactualempleado($data->Id_Empleado)',
+                ),
+		        /*array(
 		            'name'=>'Id_Usuario_Creacion',
 		            'value'=>'$data->idusuariocre->Usuario',
 		        ),
@@ -211,7 +215,7 @@
 		        array(
 		            'name'=>'Fecha_Actualizacion',
 		            'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-		        ),
+		        ),*/
 				array(
 					'class'=>'CButtonColumn',
 		            'template'=>'{update}',

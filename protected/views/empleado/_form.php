@@ -49,13 +49,33 @@
     </div>
     <div class="col-sm-4">
         <div class="form-group">
+            <?php echo $form->error($model,'Id_Ciudad_Exp_Ident', array('class' => 'pull-right badge bg-red')); ?>
+            <?php echo $form->label($model,'Id_Ciudad_Exp_Ident'); ?>
+            <?php
+                $this->widget('ext.select2.ESelect2',array(
+                    'name'=>'Empleado[Id_Ciudad_Exp_Ident]',
+                    'id'=>'Empleado_Id_Ciudad_Exp_Ident',
+                    'data'=>$lista_ciudades,
+                    'value' => $model->Id_Ciudad_Exp_Ident,
+                    'htmlOptions'=>array(),
+                    'options'=>array(
+                        'placeholder'=>'Seleccione...',
+                        'width'=> '100%',
+                        'allowClear'=>true,
+                    ),
+                ));
+            ?>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-4">
+        <div class="form-group">
             <?php echo $form->error($model,'Apellido', array('class' => 'pull-right badge bg-red')); ?>
             <?php echo $form->label($model,'Apellido'); ?>
             <?php echo $form->textField($model,'Apellido', array('class' => 'form-control', 'maxlength' => '30', 'autocomplete' => 'off', 'onkeyup' => 'convert_may(this)')); ?>
         </div>
     </div> 
-</div>
-<div class="row">
     <div class="col-sm-4">
         <div class="form-group">
             <?php echo $form->error($model,'Nombre', array('class' => 'pull-right badge bg-red')); ?>
@@ -63,6 +83,8 @@
             <?php echo $form->textField($model,'Nombre', array('class' => 'form-control', 'maxlength' => '30', 'autocomplete' => 'off', 'onkeyup' => 'convert_may(this)')); ?>
         </div>
     </div>
+</div>
+<div class="row">
     <div class="col-sm-4">
         <div class="form-group">
             <?php echo $form->error($model,'Fecha_Nacimiento', array('class' => 'pull-right badge bg-red')); ?>
@@ -70,7 +92,7 @@
             <?php echo $form->textField($model,'Fecha_Nacimiento', array('class' => 'form-control datepicker', 'readonly' => true)); ?>
         </div>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-4">
         <div class="form-group">
             <?php echo $form->error($model,'edad', array('class' => 'pull-right badge bg-red')); ?>
             <?php echo $form->label($model,'edad'); ?>
@@ -97,6 +119,8 @@
             ?>
         </div>
     </div>
+</div>
+<div class="row">
     <div class="col-sm-4">
         <div class="form-group">
             <?php echo $form->error($model,'Direccion', array('class' => 'pull-right badge bg-red')); ?>
@@ -110,9 +134,7 @@
             <?php echo $form->label($model,'Telefono'); ?>
             <?php echo $form->textField($model,'Telefono', array('class' => 'form-control', 'maxlength' => '50', 'autocomplete' => 'off', 'onkeyup' => 'convert_may(this)')); ?>
         </div>
-    </div>
-</div>
-<div class="row">    
+    </div>   
     <div class="col-sm-4">
         <div class="form-group">
             <?php echo $form->error($model,'Correo', array('class' => 'pull-right badge bg-red')); ?>
@@ -900,7 +922,7 @@ function calcularEdad(fecha) {
         edad--;
     }
 
-    return edad+' AÑOS';
+    return edad+' Años';
 } 
 
 //se determina si se debe pedir la localidad de residencias

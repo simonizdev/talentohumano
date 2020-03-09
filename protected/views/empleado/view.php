@@ -71,7 +71,7 @@ function calcularEdad(fecha) {
         edad--;
     }
 
-    return edad+' AÑOS';
+    return edad+' Años';
 } 
 
 </script>
@@ -159,18 +159,27 @@ function calcularEdad(fecha) {
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
+                        <label>Dpto - municipio de expedición </label>
+                        <?php if($model->Id_Ciudad_Exp_Ident == "") { $Ciudad_E_I = "NO ASIGNADO"; } else { $Ciudad_E_I = $model->idciudadexpident->Ciudad; } ?>
+                        <?php echo '<p>'.$Ciudad_E_I.'</p>'; ?>
+                    </div>
+                </div>
+            </div> 
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
                         <label>Apellidos</label>
                         <?php echo '<p>'.$model->Apellido.'</p>';?>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                  <div class="col-sm-4">
                     <div class="form-group">
                         <label>Nombres</label>
                         <?php echo '<p>'.$model->Nombre.'</p>';?>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Fecha de nacimiento</label>
@@ -184,8 +193,6 @@ function calcularEdad(fecha) {
                         <?php echo '<p id="edad_emp"></p>';?>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Dpto - municipio nacimiento</label>
@@ -193,6 +200,8 @@ function calcularEdad(fecha) {
                         <?php echo '<p>'.$Ciudad_N.'</p>'; ?>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Dirección</label>
@@ -207,8 +216,6 @@ function calcularEdad(fecha) {
                         <?php echo '<p>'.$Telefono.'</p>'; ?>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>E-mail</label>

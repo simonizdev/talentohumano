@@ -978,7 +978,7 @@ class UtilidadesReportes {
 
   public static function tallajeempleadosactivospantalla($fecha_inicial_cont, $fecha_final_cont, $empresa) {
     
-    $condicion = "WHERE CE.Id_M_Retiro IS NULL AND EE.Id_A_Elemento IN (SELECT Id_A_Elemento FROM TH_AREA_ELEMENTO_DOT) AND EE.Estado = 1";
+    $condicion = "WHERE CE.Id_M_Retiro IS NULL";
 
     if($empresa != null){
       $empresa = implode(",", $empresa);
@@ -998,37 +998,34 @@ class UtilidadesReportes {
     }
 
     $query = "
-    SELECT
-    TI.Dominio AS Tipo_Ident,
+    SELECT 
+    TI.Dominio AS Tipo_Ident, 
     EMP.Identificacion AS Identificacion, 
     CONCAT (EMP.Apellido,' ',EMP.Nombre) AS Empleado, 
-    GEN.Dominio AS Genero,
-    EM.Descripcion AS Empresa,
+    GEN.Dominio AS Genero, 
+    EM.Descripcion AS Empresa, 
     CE.Fecha_Ingreso AS Fecha_Ingreso, 
-    UN.Unidad_Gerencia AS UN,
-    A.Area AS Area,
-    S.Subarea AS Subarea,
-    C.Cargo AS Cargo,
-    E.Elemento AS Elemento,
-    EMP.Talla_Camisa,
-    EMP.Talla_Pantalon,
-    EMP.Talla_Zapato,
-    EMP.Talla_Overol,
-    EMP.Talla_Bata
-    FROM TH_ELEMENTO_EMPLEADO EE
-    LEFT JOIN TH_AREA_ELEMENTO AE ON AE.Id_A_elemento = EE.Id_A_Elemento
-    LEFT JOIN TH_ELEMENTO E ON E.Id_Elemento = AE.Id_Elemento 
-    LEFT JOIN TH_CONTRATO_EMPLEADO CE ON CE.Id_Contrato = EE.Id_Contrato 
-    LEFT JOIN TH_EMPRESA EM ON EM.Id_Empresa = CE.Id_Empresa
-    LEFT JOIN TH_UNIDAD_GERENCIA UN ON UN.Id_Unidad_Gerencia = CE.Id_Unidad_Gerencia
-    LEFT JOIN TH_AREA A ON A.Id_Area = CE.Id_Area
-    LEFT JOIN TH_SUBAREA S ON S.Id_Subarea = CE.Id_Subarea
-    LEFT JOIN TH_CARGO C ON C.Id_Cargo = CE.Id_Cargo
-    LEFT JOIN TH_EMPLEADO EMP ON EMP.Id_Empleado = CE.Id_Empleado
-    LEFT JOIN TH_DOMINIO GEN ON GEN.Id_Dominio = EMP.Id_Genero
+    UN.Unidad_Gerencia AS UN, 
+    A.Area AS Area, S.Subarea AS Subarea, 
+    C.Cargo AS Cargo,  
+    EMP.Talla_Camisa, 
+    EMP.Talla_Pantalon, 
+    EMP.Talla_Zapato, 
+    EMP.Talla_Overol, 
+    EMP.Talla_Bata,
+    CE.Id_Contrato 
+    FROM TH_EMPLEADO E
+    LEFT JOIN TH_CONTRATO_EMPLEADO CE ON CE.Id_Empleado = E.Id_Empleado 
+    LEFT JOIN TH_EMPRESA EM ON EM.Id_Empresa = CE.Id_Empresa 
+    LEFT JOIN TH_UNIDAD_GERENCIA UN ON UN.Id_Unidad_Gerencia = CE.Id_Unidad_Gerencia 
+    LEFT JOIN TH_AREA A ON A.Id_Area = CE.Id_Area 
+    LEFT JOIN TH_SUBAREA S ON S.Id_Subarea = CE.Id_Subarea 
+    LEFT JOIN TH_CARGO C ON C.Id_Cargo = CE.Id_Cargo 
+    LEFT JOIN TH_EMPLEADO EMP ON EMP.Id_Empleado = CE.Id_Empleado 
+    LEFT JOIN TH_DOMINIO GEN ON GEN.Id_Dominio = EMP.Id_Genero 
     LEFT JOIN TH_DOMINIO TI ON TI.Id_Dominio = EMP.Id_Tipo_Ident 
-    ".$condicion."
-    ORDER BY 5,7,8,9,10,3
+    WHERE CE.Id_M_Retiro IS NULL 
+    AND CE.Id_Empresa IN (6,7,8,4,5,1,2,3) ORDER BY 5,7,8,9,3
     ";
 
     $tabla = '
@@ -1071,41 +1068,54 @@ class UtilidadesReportes {
       $Area = $reg['Area'];
       $Subarea = $reg['Subarea'];
       $Cargo = $reg['Cargo'];
-      $Elemento = $reg['Elemento'];
       $Talla_Camisa = $reg['Talla_Camisa'];
       $Talla_Pantalon = $reg['Talla_Pantalon'];
       $Talla_Zapato = $reg['Talla_Zapato'];
       $Talla_Overol = $reg['Talla_Overol'];
       $Talla_Bata = $reg['Talla_Bata'];
+      $Id_Contrato = $reg['Id_Contrato'];
 
-      if(!array_key_exists($Identificacion, $array)) {
-        $array[$Identificacion] = array();
-        $array[$Identificacion]['info'] = array();
-        $array[$Identificacion]['info']['Tipo_Ident'] = $Tipo_Ident;
-        $array[$Identificacion]['info']['Identificacion'] = $Identificacion;
-        $array[$Identificacion]['info']['Empleado'] = $Empleado;
-        $array[$Identificacion]['info']['Genero'] = $Genero;
-        $array[$Identificacion]['info']['Empresa'] = $Empresa;
-        $array[$Identificacion]['info']['Fecha_Ingreso'] = $Fecha_Ingreso;
-        $array[$Identificacion]['info']['UN'] = $UN;
-        $array[$Identificacion]['info']['Area'] = $Area;
-        $array[$Identificacion]['info']['Subarea'] = $Subarea;
-        $array[$Identificacion]['info']['Cargo'] = $Cargo;
-        $array[$Identificacion]['info']['Talla_Camisa'] = $Talla_Camisa;
-        $array[$Identificacion]['info']['Talla_Pantalon'] = $Talla_Pantalon;
-        $array[$Identificacion]['info']['Talla_Zapato'] = $Talla_Zapato;
-        $array[$Identificacion]['info']['Talla_Overol'] = $Talla_Overol;
-        $array[$Identificacion]['info']['Talla_Bata'] = $Talla_Bata;
-        $array[$Identificacion]['elementos'][$Elemento] = array(
-          'Elemento' => $Elemento,
-        );
-      }else{
-        if(!array_key_exists($Elemento, $array[$Identificacion]['elementos'])) {
-          $array[$Identificacion]['elementos'][$Elemento] = array(
-            'Elemento' => $Elemento,          
-          );   
+      $query2 = "
+        SELECT 
+        E.Elemento AS Elemento
+        FROM TH_ELEMENTO_EMPLEADO EE
+        LEFT JOIN TH_AREA_ELEMENTO AE ON AE.Id_A_elemento = EE.Id_A_Elemento 
+        LEFT JOIN TH_ELEMENTO E ON E.Id_Elemento = AE.Id_Elemento 
+        WHERE EE.Id_Contrato = ".$Id_Contrato." AND EE.Id_A_Elemento IN (SELECT Id_A_Elemento FROM TH_AREA_ELEMENTO_DOT) 
+        AND EE.Estado = 1 
+      ";
+
+      $query3 = Yii::app()->db->createCommand($query2)->queryAll();
+
+      $Elem = "";
+
+      if(!empty($query3)){
+
+        foreach ($query3 as $r) {
+          $Elem .= "".$r['Elemento'].", ";
         }
+
+        $Elem = substr ($Elem, 0, -2);    
       }
+
+      $array[$Identificacion] = array();
+      $array[$Identificacion]['info'] = array();
+      $array[$Identificacion]['info']['Tipo_Ident'] = $Tipo_Ident;
+      $array[$Identificacion]['info']['Identificacion'] = $Identificacion;
+      $array[$Identificacion]['info']['Empleado'] = $Empleado;
+      $array[$Identificacion]['info']['Genero'] = $Genero;
+      $array[$Identificacion]['info']['Empresa'] = $Empresa;
+      $array[$Identificacion]['info']['Fecha_Ingreso'] = $Fecha_Ingreso;
+      $array[$Identificacion]['info']['UN'] = $UN;
+      $array[$Identificacion]['info']['Area'] = $Area;
+      $array[$Identificacion]['info']['Subarea'] = $Subarea;
+      $array[$Identificacion]['info']['Cargo'] = $Cargo;
+      $array[$Identificacion]['info']['Talla_Camisa'] = $Talla_Camisa;
+      $array[$Identificacion]['info']['Talla_Pantalon'] = $Talla_Pantalon;
+      $array[$Identificacion]['info']['Talla_Zapato'] = $Talla_Zapato;
+      $array[$Identificacion]['info']['Talla_Overol'] = $Talla_Overol;
+      $array[$Identificacion]['info']['Talla_Bata'] = $Talla_Bata;
+      $array[$Identificacion]['info']['elementos'] =$Elem;
     }
 
     if(!empty($array)){
@@ -1124,23 +1134,12 @@ class UtilidadesReportes {
         $Area = ($registro['info']['Area'] == "") ? "NO ASIGNADO" : $registro['info']['Area'];
         $Subarea = ($registro['info']['Subarea'] == "") ? "NO ASIGNADO" : $registro['info']['Subarea'];
         $Cargo = ($registro['info']['Genero'] == "") ? "NO ASIGNADO" : $registro['info']['Genero'];
-
-        $array_elem = $registro['elementos'];
-
-
-        $Elem = "";
-
-        foreach ($array_elem as $r) {
-          $Elem .= "".$r['Elemento'].",";
-        }
-
-        $Elem = substr ($Elem, 0, -1);
-
         $Talla_Camisa = ($registro['info']['Talla_Camisa'] == "") ? "N/A" : $registro['info']['Talla_Camisa'];
         $Talla_Pantalon = ($registro['info']['Talla_Pantalon'] == "") ? "N/A" : $registro['info']['Talla_Pantalon'];
         $Talla_Zapato = ($registro['info']['Talla_Zapato'] == "") ? "N/A" : $registro['info']['Talla_Zapato'];
         $Talla_Overol = ($registro['info']['Talla_Overol'] == "") ? "N/A" : $registro['info']['Talla_Overol'];
         $Talla_Bata = ($registro['info']['Talla_Bata'] == "") ? "N/A" : $registro['info']['Talla_Bata'];
+        $Elem = ($registro['info']['elementos'] == "") ? "-" : $registro['info']['elementos'];
 
         if ($i % 2 == 0){
           $clase = 'odd'; 

@@ -67,7 +67,15 @@ $lista_usuarios = CHtml::listData($usuarios, 'Usuario', 'Usuario');
             'name'=>'Id_Empleado',
             'value'=>'UtilidadesEmpleado::nombreempleado($data->Id_Empleado)',
         ),
-		array(
+        array(
+            'header'=>'Empresa',
+            'value' => '($data->Id_Empleado == "") ? "-" :  UtilidadesEmpleado::empresaactualempleado($data->Id_Empleado)',
+        ),
+        array(
+            'header'=>'Cargo',
+            'value' => '($data->Id_Empleado == "") ? "-" :  UtilidadesEmpleado::cargoactualempleado($data->Id_Empleado)',
+        ),
+		/*array(
             'name'=>'Id_Usuario_Creacion',
             'value'=>'$data->idusuariocre->Usuario',
         ),
@@ -82,7 +90,7 @@ $lista_usuarios = CHtml::listData($usuarios, 'Usuario', 'Usuario');
         array(
             'name'=>'Fecha_Actualizacion',
             'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-        ),
+        ),*/
         array(
             'name' => 'Estado',
             'value' => 'UtilidadesVarias::textoestado1($data->Estado)',
