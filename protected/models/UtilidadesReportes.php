@@ -1134,11 +1134,11 @@ class UtilidadesReportes {
         $Area = ($registro['info']['Area'] == "") ? "NO ASIGNADO" : $registro['info']['Area'];
         $Subarea = ($registro['info']['Subarea'] == "") ? "NO ASIGNADO" : $registro['info']['Subarea'];
         $Cargo = ($registro['info']['Genero'] == "") ? "NO ASIGNADO" : $registro['info']['Genero'];
-        $Talla_Camisa = ($registro['info']['Talla_Camisa'] == "") ? "N/A" : $registro['info']['Talla_Camisa'];
-        $Talla_Pantalon = ($registro['info']['Talla_Pantalon'] == "") ? "N/A" : $registro['info']['Talla_Pantalon'];
-        $Talla_Zapato = ($registro['info']['Talla_Zapato'] == "") ? "N/A" : $registro['info']['Talla_Zapato'];
-        $Talla_Overol = ($registro['info']['Talla_Overol'] == "") ? "N/A" : $registro['info']['Talla_Overol'];
-        $Talla_Bata = ($registro['info']['Talla_Bata'] == "") ? "N/A" : $registro['info']['Talla_Bata'];
+        $Talla_Camisa = ($registro['info']['Talla_Camisa'] == "") ? "-" : $registro['info']['Talla_Camisa'];
+        $Talla_Pantalon = ($registro['info']['Talla_Pantalon'] == "") ? "-" : $registro['info']['Talla_Pantalon'];
+        $Talla_Zapato = ($registro['info']['Talla_Zapato'] == "") ? "-" : $registro['info']['Talla_Zapato'];
+        $Talla_Overol = ($registro['info']['Talla_Overol'] == "") ? "-" : $registro['info']['Talla_Overol'];
+        $Talla_Bata = ($registro['info']['Talla_Bata'] == "") ? "-" : $registro['info']['Talla_Bata'];
         $Elem = ($registro['info']['elementos'] == "") ? "-" : $registro['info']['elementos'];
 
         if ($i % 2 == 0){
