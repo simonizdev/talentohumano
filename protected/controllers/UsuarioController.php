@@ -109,19 +109,6 @@ class UsuarioController extends Controller
 				}else{
 					UtilidadesUsuario::adminsubareausuario($model->Id_Usuario, array());	
 				}
-				
-				/*if(isset($_POST['Usuario']['areas'])){
-					if(!empty($model->areas)){
-						//se administran las areas relacionadas al usuario
-						UtilidadesUsuario::adminareausuario($model->Id_Usuario, $model->areas);
-					}
-				}
-				if(isset($_POST['Usuario']['subareas'])){
-					if(!empty($model->subareas)){
-						//se administran las subareas relacionadas al usuario
-						UtilidadesUsuario::adminsubareausuario($model->Id_Usuario, $model->subareas);
-					}
-				}*/
 
 				$model->Password = sha1($model->Password);
 				$model->update();
