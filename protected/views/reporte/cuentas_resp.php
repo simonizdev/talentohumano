@@ -37,7 +37,17 @@ END AS Observaciones,
 est.Dominio AS Estado_Cuenta,
 CASE
 WHEN e.Id_Empleado IS NULL THEN '-'
-WHEN e.Id_Empleado IS NOT NULL THEN CONCAT (e.Nombre, ' ', e.Apellido, ' (',ti.Dominio,' ',e.Identificacion,')')
+WHEN e.Id_Empleado IS NOT NULL THEN ti.Dominio
+Else '-'
+END AS Tipo_ident,
+CASE
+WHEN e.Id_Empleado IS NULL THEN '-'
+WHEN e.Id_Empleado IS NOT NULL THEN e.Identificacion
+Else '-'
+END AS Ident,
+CASE
+WHEN e.Id_Empleado IS NULL THEN '-'
+WHEN e.Id_Empleado IS NOT NULL THEN CONCAT (e.Nombre, ' ', e.Apellido)
 Else '-'
 END AS Empleado,
 CASE
@@ -77,11 +87,13 @@ $objPHPExcel->setActiveSheetIndex()->setCellValue('B1', 'Dominio');
 $objPHPExcel->setActiveSheetIndex()->setCellValue('C1', 'Correo');
 $objPHPExcel->setActiveSheetIndex()->setCellValue('D1', 'Notas');
 $objPHPExcel->setActiveSheetIndex()->setCellValue('E1', 'Estado de Correo');
-$objPHPExcel->setActiveSheetIndex()->setCellValue('F1', 'Empleado');
-$objPHPExcel->setActiveSheetIndex()->setCellValue('G1', 'Estado de empleado');
+$objPHPExcel->setActiveSheetIndex()->setCellValue('F1', 'Tipo de ident.');
+$objPHPExcel->setActiveSheetIndex()->setCellValue('G1', '# de ident.');
+$objPHPExcel->setActiveSheetIndex()->setCellValue('H1', 'Empleado');
+$objPHPExcel->setActiveSheetIndex()->setCellValue('I1', 'Estado de empleado');
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:G1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-$objPHPExcel->getActiveSheet()->getStyle('A1:G1')->getFont()->setBold(true);
+$objPHPExcel->getActiveSheet()->getStyle('A1:I1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+$objPHPExcel->getActiveSheet()->getStyle('A1:I1')->getFont()->setBold(true);
 
 /*Inicio contenido tabla*/
 
@@ -96,6 +108,8 @@ foreach ($query1 as $reg1) {
   $Cuenta              = $reg1 ['Cuenta']; 
   $Notas               = $reg1 ['Observaciones']; 
   $Estado_Cuenta       = $reg1 ['Estado_Cuenta']; 
+  $Tipo_ident          = $reg1 ['Tipo_ident']; 
+  $Ident               = $reg1 ['Ident']; 
   $Empleado            = $reg1 ['Empleado']; 
   $Estado_Empleado     = $reg1 ['Estado_Empleado']; 
 
@@ -105,10 +119,12 @@ foreach ($query1 as $reg1) {
   $objPHPExcel->setActiveSheetIndex()->setCellValue('C'.$Fila, $Cuenta);
   $objPHPExcel->setActiveSheetIndex()->setCellValue('D'.$Fila, $Notas);
   $objPHPExcel->setActiveSheetIndex()->setCellValue('E'.$Fila, $Estado_Cuenta);
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('F'.$Fila, $Empleado);
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('G'.$Fila, $Estado_Empleado);
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('F'.$Fila, $Tipo_ident);
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('G'.$Fila, $Ident);
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('H'.$Fila, $Empleado);
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('I'.$Fila, $Estado_Empleado);
   
-  $objPHPExcel->getActiveSheet()->getStyle('A'.$Fila.':G'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+  $objPHPExcel->getActiveSheet()->getStyle('A'.$Fila.':I'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
 
   $Fila = $Fila + 1;
 
