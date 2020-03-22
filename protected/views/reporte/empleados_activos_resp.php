@@ -78,6 +78,9 @@ CONCAT (P.Apellido, ' ', P.Nombre) AS Empleado,
 GE.Dominio AS Gen, 
 P.Fecha_Nacimiento, 
 P.Correo,
+P.Telefono,
+P.Persona_Contacto,
+P.Tel_Persona_Contacto,
 E.Descripcion AS Empresa,  
 UG.Unidad_Gerencia,
 A.Area,
@@ -189,7 +192,7 @@ if($opcion == 1){
         if($reg1 ['Correo'] != ""){
           $correo = $reg1 ['Correo']; 
         }else{
-          $correo = "NO ASIGNADO";
+          $correo = "-";
         }
 
         $empresa = $reg1 ['Empresa'];
@@ -197,25 +200,25 @@ if($opcion == 1){
         if($reg1 ['Unidad_Gerencia'] != ""){
           $ug = $reg1 ['Unidad_Gerencia']; 
         }else{
-          $ug = "NO ASIGNADO";
+          $ug = "-";
         }
 
         if($reg1 ['Area'] != ""){
           $area = $reg1 ['Area']; 
         }else{
-          $area = "NO ASIGNADO";
+          $area = "-";
         }
 
         if($reg1 ['Subarea'] != ""){
           $subarea = $reg1 ['Subarea']; 
         }else{
-          $subarea = "NO ASIGNADO";
+          $subarea = "-";
         }
 
         if($reg1 ['Cargo'] != ""){
           $cargo = $reg1 ['Cargo']; 
         }else{
-          $cargo = "NO ASIGNADO";
+          $cargo = "-";
         }
 
         $fecha_ingreso = $reg1 ['Fecha_Ingreso']; 
@@ -286,16 +289,19 @@ if($opcion == 2){
   $objPHPExcel->setActiveSheetIndex()->setCellValue('D1', 'Género');
   $objPHPExcel->setActiveSheetIndex()->setCellValue('E1', 'Fec. nacimiento');
   $objPHPExcel->setActiveSheetIndex()->setCellValue('F1', 'E-mail');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('G1', 'Empresa');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('H1', 'Unidad de gerencia');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('I1', 'Área');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('J1', 'Subárea');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('K1', 'Cargo');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('L1', 'Fec. ingreso');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('M1', 'Salario');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('G1', 'Teléfono(s)');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('H1', 'Persona contacto');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('I1', 'Teléfono(s) contacto');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('J1', 'Empresa');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('K1', 'Unidad de gerencia');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('L1', 'Área');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('M1', 'Subárea');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('N1', 'Cargo');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('O1', 'Fec. ingreso');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('P1', 'Salario');
 
-  $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-  $objPHPExcel->getActiveSheet()->getStyle('A1:M1')->getFont()->setBold(true);
+  $objPHPExcel->getActiveSheet()->getStyle('A1:P1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+  $objPHPExcel->getActiveSheet()->getStyle('A1:P1')->getFont()->setBold(true);
 
   /*Inicio contenido tabla*/
 
@@ -314,7 +320,25 @@ if($opcion == 2){
     if($reg1 ['Correo'] != ""){
       $correo = $reg1 ['Correo']; 
     }else{
-      $correo = "NO ASIGNADO";
+      $correo = "-";
+    }
+
+    if($reg1 ['Telefono'] != ""){
+      $telefono = $reg1 ['Telefono']; 
+    }else{
+      $telefono = "-";
+    }
+
+    if($reg1 ['Persona_Contacto'] != ""){
+      $persona_contacto = $reg1 ['Persona_Contacto']; 
+    }else{
+      $persona_contacto = "-";
+    }
+
+    if($reg1 ['Tel_Persona_Contacto'] != ""){
+      $tel_persona_contacto = $reg1 ['Tel_Persona_Contacto']; 
+    }else{
+      $tel_persona_contacto = "-";
     }
 
     $empresa = $reg1 ['Empresa']; 
@@ -322,25 +346,25 @@ if($opcion == 2){
     if($reg1 ['Unidad_Gerencia'] != ""){
       $ug = $reg1 ['Unidad_Gerencia']; 
     }else{
-      $ug = "NO ASIGNADO";
+      $ug = "-";
     }
 
     if($reg1 ['Area'] != ""){
       $area = $reg1 ['Area']; 
     }else{
-      $area = "NO ASIGNADO";
+      $area = "-";
     }
 
     if($reg1 ['Subarea'] != ""){
       $subarea = $reg1 ['Subarea']; 
     }else{
-      $subarea = "NO ASIGNADO";
+      $subarea = "-";
     }
 
     if($reg1 ['Cargo'] != ""){
       $cargo = $reg1 ['Cargo']; 
     }else{
-      $cargo = "NO ASIGNADO";
+      $cargo = "-";
     }
 
     $fecha_ingreso = $reg1 ['Fecha_Ingreso']; 
@@ -352,17 +376,20 @@ if($opcion == 2){
     $objPHPExcel->setActiveSheetIndex()->setCellValue('D'.$Fila, $genero);
     $objPHPExcel->setActiveSheetIndex()->setCellValue('E'.$Fila, $fecha_nacimiento);
     $objPHPExcel->setActiveSheetIndex()->setCellValue('F'.$Fila, $correo);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('G'.$Fila, $empresa);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('H'.$Fila, $ug);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('I'.$Fila, $area);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('J'.$Fila, $subarea);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('K'.$Fila, $cargo);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('L'.$Fila, $fecha_ingreso);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('M'.$Fila, $salario);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('G'.$Fila, $telefono);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('H'.$Fila, $persona_contacto);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('I'.$Fila, $tel_persona_contacto);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('J'.$Fila, $empresa);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('K'.$Fila, $ug);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('L'.$Fila, $area);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('M'.$Fila, $subarea);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('N'.$Fila, $cargo);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('O'.$Fila, $fecha_ingreso);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('P'.$Fila, $salario);
     
-    $objPHPExcel->getActiveSheet()->getStyle('M'.$Fila)->getNumberFormat()->setFormatCode('0');
-    $objPHPExcel->getActiveSheet()->getStyle('A'.$Fila.':L'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
-    $objPHPExcel->getActiveSheet()->getStyle('M'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+    $objPHPExcel->getActiveSheet()->getStyle('P'.$Fila)->getNumberFormat()->setFormatCode('0');
+    $objPHPExcel->getActiveSheet()->getStyle('A'.$Fila.':O'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+    $objPHPExcel->getActiveSheet()->getStyle('P'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
     $Fila = $Fila + 1;
 

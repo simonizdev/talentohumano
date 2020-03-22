@@ -33,6 +33,9 @@ class UtilidadesReportes {
     GE.Dominio AS Gen, 
     P.Fecha_Nacimiento, 
     P.Correo,
+    P.Telefono,
+    P.Persona_Contacto,
+    P.Tel_Persona_Contacto,
     E.Descripcion AS Empresa,  
     UG.Unidad_Gerencia,
     A.Area,
@@ -63,6 +66,9 @@ class UtilidadesReportes {
                 <th>Género</th>
                 <th>Fecha de nacimiento</th>
                 <th>E-mail</th>
+                <th>Teléfono(s)</th>
+                <th>Persona contacto</th>
+                <th>Teléfono(s) contacto</th>
                 <th>Empresa</th>
                 <th>Unidad de gerencia</th>
                 <th>Área</th>
@@ -90,7 +96,25 @@ class UtilidadesReportes {
             if($reg1 ['Correo'] != ""){
               $correo = $reg1 ['Correo']; 
             }else{
-              $correo = "NO ASIGNADO";
+              $correo = "-";
+            }
+
+            if($reg1 ['Telefono'] != ""){
+              $telefono = $reg1 ['Telefono']; 
+            }else{
+              $telefono = "-";
+            }
+
+            if($reg1 ['Persona_Contacto'] != ""){
+              $persona_contacto = $reg1 ['Persona_Contacto']; 
+            }else{
+              $persona_contacto = "-";
+            }
+
+            if($reg1 ['Tel_Persona_Contacto'] != ""){
+              $tel_persona_contacto = $reg1 ['Tel_Persona_Contacto']; 
+            }else{
+              $tel_persona_contacto = "-";
             }
 
             $empresa = $reg1 ['Empresa']; 
@@ -98,25 +122,25 @@ class UtilidadesReportes {
             if($reg1 ['Unidad_Gerencia'] != ""){
               $ug = $reg1 ['Unidad_Gerencia']; 
             }else{
-              $ug = "NO ASIGNADO";
+              $ug = "-";
             }
 
             if($reg1 ['Area'] != ""){
               $area = $reg1 ['Area']; 
             }else{
-              $area = "NO ASIGNADO";
+              $area = "-";
             }
 
             if($reg1 ['Subarea'] != ""){
               $subarea = $reg1 ['Subarea']; 
             }else{
-              $subarea = "NO ASIGNADO";
+              $subarea = "-";
             }
 
             if($reg1 ['Cargo'] != ""){
               $cargo = $reg1 ['Cargo']; 
             }else{
-              $cargo = "NO ASIGNADO";
+              $cargo = "-";
             }
 
             $fecha_ingreso = $reg1 ['Fecha_Ingreso']; 
@@ -136,6 +160,9 @@ class UtilidadesReportes {
                   <td>'.$genero.'</td>
                   <td>'.$fecha_nacimiento.'</td>
                   <td>'.$correo.'</td>
+                  <td>'.$telefono.'</td>
+                  <td>'.$persona_contacto.'</td>
+                  <td>'.$tel_persona_contacto.'</td>
                   <td>'.$empresa.'</td>
                   <td>'.$ug.'</td>
                   <td>'.$area.'</td>
