@@ -39,30 +39,45 @@
   $objPHPExcel->getActiveSheet()->getStyle('A1:P1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
   $objPHPExcel->getActiveSheet()->getStyle('A1:P1')->getFont()->setBold(true);
 
-  $Prom = "";
   $Fila= 3;
 
   /*Inicio contenido tabla*/
 
   foreach ($data as $reg) {
 
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('A'.$Fila,$reg->ID);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('B'.$Fila,$reg->ROWID);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('C'.$Fila,$reg->NIT_VENDEDOR);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('D'.$Fila,$reg->NOMBRE_VENDEDOR);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('E'.$Fila,$reg->EMAIL);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('F'.$Fila,$reg->ID_VENDEDOR);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('G'.$Fila,$reg->RECIBO);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('H'.$Fila,$reg->RUTA);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('I'.$Fila,$reg->NOMBRE_RUTA);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('J'.$Fila,$reg->PORTAFOLIO);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('K'.$Fila,$reg->NIT_SUPERVISOR);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('L'.$Fila,$reg->NOMBRE_SUPERVISOR);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('M'.$Fila,($reg->TIPO == "") ? "NO ASIGNADO" : $reg->tipo->Dominio);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('N'.$Fila,$reg->idusuarioact->Usuario);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('O'.$Fila,UtilidadesVarias::textofechahora($reg->FECHA_ACTUALIZACION));
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('P'.$Fila,$reg->ESTADO);
+    $id = $reg->ID;
+    $rowid = $reg->ROWID;
+    $nit_vendedor = $reg->NIT_VENDEDOR;
+    $nombre_vendedor = $reg->NOMBRE_VENDEDOR;
+    $email = $reg->EMAIL;
+    $id_vendedor = $reg->ID_VENDEDOR;
+    $recibo = $reg->RECIBO;
+    $ruta = $reg->RUTA;
+    $nombre_ruta = $reg->NOMBRE_RUTA;
+    $portafolio = $reg->PORTAFOLIO;
+    $nit_supervisor = $reg->NIT_SUPERVISOR;
+    $nombre_supervisor = $reg->NOMBRE_SUPERVISOR;
+    if($reg->TIPO == "" ) { $tipo = "NO ASIGNADO"; } else { $tipo = $reg->tipo->Dominio; }
+    $usuario_act = $reg->idusuarioact->Usuario;
+    $fecha_act = UtilidadesVarias::textofechahora($reg->FECHA_ACTUALIZACION);
+    $estado = $reg->ESTADO;
 
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('A'.$Fila,$id);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('B'.$Fila,$rowid);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('C'.$Fila,$nit_vendedor);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('D'.$Fila,$nombre_vendedor);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('E'.$Fila,$email);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('F'.$Fila,$id_vendedor);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('G'.$Fila,$recibo);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('H'.$Fila,$ruta);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('I'.$Fila,$nombre_ruta);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('J'.$Fila,$portafolio);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('K'.$Fila,$nit_supervisor);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('L'.$Fila,$nombre_supervisor);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('M'.$Fila,$tipo);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('N'.$Fila,$usuario_act);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('O'.$Fila,$fecha_act);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('P'.$Fila,$estado);
 
     $objPHPExcel->getActiveSheet()->getStyle('A'.$Fila.':P'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
 
@@ -85,16 +100,16 @@
       }
   }
 
-  header('Content-Type: application/vnd.ms-excel');
-  header('Content-Disposition: attachment;filename="Vendedores_'.date('Y-m-d H_i_s').'.xls"');
+  $n = 'Vendedores_'.date('Y-m-d H_i_s');
+
+  ob_end_clean();
+  header( "Content-type: application/vnd.ms-excel" );
+  header('Content-Disposition: attachment; filename="'.$n.'.xlsx"');
   header('Cache-Control: max-age=0');
- 
-  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
+  ob_end_clean();
   $objWriter->save('php://output');
-
-  
   exit;
-
 
 ?>
 

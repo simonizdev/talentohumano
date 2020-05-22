@@ -29,6 +29,7 @@ class CVendedores extends CActiveRecord
 {
 	
 	public $usuario_actualizacion;
+	public $archivo;
 
 	/**
 	 * @return string the associated database table name
@@ -47,11 +48,12 @@ class CVendedores extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('TIPO', 'required'),
+			array('archivo','required','on'=>'imp'),
 			array('EMAIL','email', 'message'=>'E-mail no valido.'),
 			array('ROWID, TIPO, ID_USUARIO_ACTUALIZACION', 'numerical', 'integerOnly'=>true),
 			array('NIT_VENDEDOR, NIT_SUPERVISOR', 'length', 'max'=>25),
 			array('NOMBRE_VENDEDOR, NOMBRE_SUPERVISOR', 'length', 'max'=>100),
-			array('ID_VENDEDOR', 'length', 'max'=>4),
+			array('ID_VENDEDOR', 'length', 'max'=>10),
 			array('RECIBO', 'length', 'max'=>3),
 			array('RUTA', 'length', 'max'=>20),
 			array('ESTADO', 'length', 'max'=>8),
@@ -168,7 +170,7 @@ class CVendedores extends CActiveRecord
 			$criteria->AddCondition("idusuarioact.Usuario = '".$this->usuario_actualizacion."'"); 
 	    }
 
-	    $criteria->order = 't.NOMBRE_VENDEDOR'; 
+	    $criteria->order = 't.NOMBRE_VENDEDOR ASC'; 
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

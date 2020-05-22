@@ -1056,14 +1056,21 @@ if($opc == 2){
     }
 
 
-    $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true); 
-    $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);  
-    $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);  
-    $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);  
-    $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);  
-    $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true); 
-    $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true); 
-    $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true); 
+    /*fin contenido tabla*/
+
+    //se configura el ancho de cada columna en automatico solo funciona en el rango A-Z
+    foreach($objPHPExcel->getWorksheetIterator() as $worksheet) {
+
+      $objPHPExcel->setActiveSheetIndex($objPHPExcel->getIndex($worksheet));
+
+      $sheet = $objPHPExcel->getActiveSheet();
+      $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
+      $cellIterator->setIterateOnlyExistingCells(true);
+      foreach ($cellIterator as $cell) {
+          $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+      }
+      
+    }
 
     $n = 'Detalle_base_comisiones_'.$id.'_'.date('Y-m-d H_i_s');
 

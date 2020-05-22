@@ -135,8 +135,6 @@ if($opc == 1){
             $BASE_VENTA = $reg1['BASE_VENTA'];
             $VENTA = $reg1['VENTA'];
             $CORRERIA = $reg1['CORRERIA'];
-            $BASE_ACELERADOR = $reg1['BASE_ACELERADOR'];
-            $ACELERADOR = $reg1['ACELERADOR']; 
             $BASE_AJUSTE = $reg1['BASE_AJUSTE'];
             $AJUSTE = $reg1['AJUSTE']; 
             $TOTAL = $reg1['TOTAL']; 
@@ -248,8 +246,6 @@ if($opc == 2){
           $BASE_VENTA = $reg1['BASE_VENTA'];
           $VENTA = $reg1['VENTA'];
           $CORRERIA = $reg1['CORRERIA'];
-          $BASE_ACELERADOR = $reg1['BASE_ACELERADOR'];
-          $ACELERADOR = $reg1['ACELERADOR']; 
           $BASE_AJUSTE = $reg1['BASE_AJUSTE'];
           $AJUSTE = $reg1['AJUSTE']; 
           $TOTAL = $reg1['TOTAL'];
@@ -296,13 +292,13 @@ if($opc == 2){
 
     $n = 'Base_comisiones_'.$id.'_'.date('Y-m-d H_i_s');
 
-   header('Content-Type: application/vnd.ms-excel');
-   header('Content-Disposition: attachment;filename="'.$n.'.xlsx"');
-   header('Cache-Control: max-age=0');
-   $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
-   ob_end_clean();
-   $objWriter->save('php://output');
-   exit;
+    header('Content-Type: application/vnd.ms-excel');
+    header('Content-Disposition: attachment;filename="'.$n.'.xlsx"');
+    header('Cache-Control: max-age=0');
+    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
+    ob_end_clean();
+    $objWriter->save('php://output');
+    exit;
 }
 
 ?>

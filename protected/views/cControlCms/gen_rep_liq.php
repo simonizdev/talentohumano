@@ -93,18 +93,19 @@ if($opc == 1){
       $this->Cell(15,2,utf8_decode('NIT'),0,0,'L');
       $this->Cell(50,2,utf8_decode('VENDEDOR'),0,0,'L');
       $this->Cell(23,2,utf8_decode('TIPO'),0,0,'L');
-      $this->Cell(19,2,utf8_decode('FECHA INICIAL'),0,0,'L');
-      $this->Cell(19,2,utf8_decode('FECHA FINAL'),0,0,'L');
+      //$this->Cell(19,2,utf8_decode('FECHA INICIAL'),0,0,'L');
+      $this->Cell(17,2,utf8_decode('FECHA FINAL'),0,0,'L');
       $this->Cell(21,2,utf8_decode('BASE RECAUDO'),0,0,'R');
-      $this->Cell(21,2,utf8_decode('TOTAL RECAUDO'),0,0,'R');
+      $this->Cell(21,2,utf8_decode('COMIS. RECAUDO'),0,0,'R');
       $this->Cell(21,2,utf8_decode('BASE VENTA'),0,0,'R');
-      $this->Cell(21,2,utf8_decode('TOTAL VENTA'),0,0,'R');
-      $this->Cell(21,2,utf8_decode('TOTAL CORRERIA'),0,0,'R');
-      $this->Cell(21,2,utf8_decode('BASE ACEL.'),0,0,'R');
-      $this->Cell(21,2,utf8_decode('TOTAL ACEL.'),0,0,'R');
+      $this->Cell(21,2,utf8_decode('PRESUPUESTO'),0,0,'R');
+      $this->Cell(21,2,utf8_decode('% CUMPLIMIENTO'),0,0,'R');
+      $this->Cell(21,2,utf8_decode('% COMIS. VENTA'),0,0,'R');
+      $this->Cell(21,2,utf8_decode('COMIS. VENTA'),0,0,'R');
+      $this->Cell(21,2,utf8_decode('COMIS. CORRERIA'),0,0,'R');
       $this->Cell(21,2,utf8_decode('BASE AJUSTE'),0,0,'R');
       $this->Cell(21,2,utf8_decode('TOTAL AJUSTE'),0,0,'R');
-      $this->Cell(26,2,utf8_decode('TOTAL GENERAL'),0,0,'R');
+      $this->Cell(26,2,utf8_decode('TOTAL COMISIÓN'),0,0,'R');
       
       $this->Ln(3);   
       
@@ -130,15 +131,16 @@ if($opc == 1){
             $NIT_VENDEDOR = $reg1['NIT_VENDEDOR'];
             $NOMBRE_VENDEDOR = $reg1['NOMBRE_VENDEDOR']; 
             $TIPO = Dominio::model()->findByPk($reg1['TIPO'])->Dominio;
-            $FECHA_INICIAL = $reg1['FECHA1'];
+            //$FECHA_INICIAL = $reg1['FECHA1'];
             $FECHA_FINAL = $reg1['FECHA2'];
             $BASE_RECAUDO = $reg1['BASE_RECAUDO'];
             $RECAUDO = $reg1['RECAUDO'];
             $BASE_VENTA = $reg1['BASE_VENTA'];
+            $PRESUPUESTO = $reg1['PRESUPUESTO'];
+            $PTJ_CUMPLIMIENTO = $reg1['PTJ_CUMPLIMIENTO'];
+            $CUMPLIMIENTO = $reg1['CUMPLIMIENTO'];
             $VENTA = $reg1['VENTA'];
             $CORRERIA = $reg1['CORRERIA'];
-            $BASE_ACELERADOR = $reg1['BASE_ACELERADOR'];
-            $ACELERADOR = $reg1['ACELERADOR']; 
             $BASE_AJUSTE = $reg1['BASE_AJUSTE'];
             $AJUSTE = $reg1['AJUSTE']; 
             $TOTAL = $reg1['TOTAL']; 
@@ -147,15 +149,16 @@ if($opc == 1){
             $this->Cell(15,3,$NIT_VENDEDOR,0,0,'L');
             $this->Cell(50,3,substr(utf8_decode($NOMBRE_VENDEDOR),0, 35),0,0,'L');
             $this->Cell(23,3,substr(utf8_decode($TIPO), 0, 15),0,0,'L');
-            $this->Cell(19,3,$FECHA_INICIAL,0,0,'L');
-            $this->Cell(19,3,$FECHA_FINAL,0,0,'L');
+            //$this->Cell(19,3,$FECHA_INICIAL,0,0,'L');
+            $this->Cell(17,3,$FECHA_FINAL,0,0,'L');
             $this->Cell(21,3,number_format(($BASE_RECAUDO),2,".",","),0,0,'R');
             $this->Cell(21,3,number_format(($RECAUDO),2,".",","),0,0,'R');
             $this->Cell(21,3,number_format(($BASE_VENTA),2,".",","),0,0,'R');
+            $this->Cell(21,3,number_format(($PRESUPUESTO),2,".",","),0,0,'R');
+            $this->Cell(21,3,number_format(($PTJ_CUMPLIMIENTO),2,".",","),0,0,'R');
+            $this->Cell(21,3,number_format(($CUMPLIMIENTO),2,".",","),0,0,'R');
             $this->Cell(21,3,number_format(($VENTA),2,".",","),0,0,'R');
             $this->Cell(21,3,number_format(($CORRERIA),2,".",","),0,0,'R');
-            $this->Cell(21,3,number_format(($BASE_ACELERADOR),2,".",","),0,0,'R');
-            $this->Cell(21,3,number_format(($ACELERADOR),2,".",","),0,0,'R');
             $this->Cell(21,3,number_format(($BASE_AJUSTE),2,".",","),0,0,'R');
             $this->Cell(21,3,number_format(($AJUSTE),2,".",","),0,0,'R');
             $this->Cell(26,3,number_format(($TOTAL),2,".",","),0,0,'R');
@@ -218,18 +221,19 @@ if($opc == 2){
     $objPHPExcel->setActiveSheetIndex()->setCellValue('A3', 'NIT');
     $objPHPExcel->setActiveSheetIndex()->setCellValue('B3', 'VENDEDOR');
     $objPHPExcel->setActiveSheetIndex()->setCellValue('C3', 'TIPO');
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('D3', 'FECHA INICIAL');
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('E3', 'FECHA FINAL');
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('F3', 'BASE RECAUDO');
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('G3', 'TOTAL RECAUDO');
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('H3', 'BASE VENTA');
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('I3', 'TOTAL VENTA');
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('J3', 'TOTAL CORRERIA');
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('K3', 'BASE ACEL.');
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('L3', 'TOTAL ACEL.');
+    //$objPHPExcel->setActiveSheetIndex()->setCellValue('D3', 'FECHA INICIAL');
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('D3', 'FECHA FINAL');
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('E3', 'BASE RECAUDO');
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('F3', 'COMIS. RECAUDO');
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('G3', 'BASE VENTA');
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('H3', 'PRESUPUESTO');
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('I3', '% CUMPLIMIENTO');
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('J3', '% COMIS. VENTA');
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('K3', 'COMIS. VENTA');
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('L3', 'COMIS. CORRERIA');
     $objPHPExcel->setActiveSheetIndex()->setCellValue('M3', 'BASE AJUSTE');
     $objPHPExcel->setActiveSheetIndex()->setCellValue('N3', 'TOTAL AJUSTE');
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('O3', 'TOTAL GENERAL');
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('O3', 'TOTAL COMISIÓN');
 
     $objPHPExcel->getActiveSheet()->getStyle('A3:O3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
     $objPHPExcel->getActiveSheet()->getStyle('A3:O3')->getFont()->setBold(true);
@@ -248,15 +252,16 @@ if($opc == 2){
           $NIT_VENDEDOR = $reg1['NIT_VENDEDOR'];
           $NOMBRE_VENDEDOR = $reg1['NOMBRE_VENDEDOR']; 
           $TIPO = Dominio::model()->findByPk($reg1['TIPO'])->Dominio;
-          $FECHA_INICIAL = $reg1['FECHA1'];
+          //$FECHA_INICIAL = $reg1['FECHA1'];
           $FECHA_FINAL = $reg1['FECHA2'];
           $BASE_RECAUDO = $reg1['BASE_RECAUDO'];
           $RECAUDO = $reg1['RECAUDO'];
           $BASE_VENTA = $reg1['BASE_VENTA'];
           $VENTA = $reg1['VENTA'];
+          $PRESUPUESTO = $reg1['PRESUPUESTO'];
+          $PTJ_CUMPLIMIENTO = $reg1['PTJ_CUMPLIMIENTO'];
+          $CUMPLIMIENTO = $reg1['CUMPLIMIENTO'];
           $CORRERIA = $reg1['CORRERIA'];
-          $BASE_ACELERADOR = $reg1['BASE_ACELERADOR'];
-          $ACELERADOR = $reg1['ACELERADOR']; 
           $BASE_AJUSTE = $reg1['BASE_AJUSTE'];
           $AJUSTE = $reg1['AJUSTE']; 
           $TOTAL = $reg1['TOTAL'];  
@@ -264,23 +269,24 @@ if($opc == 2){
           $objPHPExcel->setActiveSheetIndex()->setCellValue('A'.$Fila, $NIT_VENDEDOR);
           $objPHPExcel->setActiveSheetIndex()->setCellValue('B'.$Fila, $NOMBRE_VENDEDOR);
           $objPHPExcel->setActiveSheetIndex()->setCellValue('C'.$Fila, $TIPO);
-          $objPHPExcel->setActiveSheetIndex()->setCellValue('D'.$Fila, $FECHA_INICIAL);
-          $objPHPExcel->setActiveSheetIndex()->setCellValue('E'.$Fila, $FECHA_FINAL);
-          $objPHPExcel->setActiveSheetIndex()->setCellValue('F'.$Fila, $BASE_RECAUDO);
-          $objPHPExcel->setActiveSheetIndex()->setCellValue('G'.$Fila, $RECAUDO);
-          $objPHPExcel->setActiveSheetIndex()->setCellValue('H'.$Fila, $BASE_VENTA);
-          $objPHPExcel->setActiveSheetIndex()->setCellValue('I'.$Fila, $VENTA);
-          $objPHPExcel->setActiveSheetIndex()->setCellValue('J'.$Fila, $CORRERIA);
-          $objPHPExcel->setActiveSheetIndex()->setCellValue('K'.$Fila, $BASE_ACELERADOR);
-          $objPHPExcel->setActiveSheetIndex()->setCellValue('L'.$Fila, $ACELERADOR);
+          //$objPHPExcel->setActiveSheetIndex()->setCellValue('D'.$Fila, $FECHA_INICIAL);
+          $objPHPExcel->setActiveSheetIndex()->setCellValue('D'.$Fila, $FECHA_FINAL);
+          $objPHPExcel->setActiveSheetIndex()->setCellValue('E'.$Fila, $BASE_RECAUDO);
+          $objPHPExcel->setActiveSheetIndex()->setCellValue('F'.$Fila, $RECAUDO);
+          $objPHPExcel->setActiveSheetIndex()->setCellValue('G'.$Fila, $BASE_VENTA);
+          $objPHPExcel->setActiveSheetIndex()->setCellValue('H'.$Fila, $PRESUPUESTO);
+          $objPHPExcel->setActiveSheetIndex()->setCellValue('I'.$Fila, $PTJ_CUMPLIMIENTO);
+          $objPHPExcel->setActiveSheetIndex()->setCellValue('J'.$Fila, $CUMPLIMIENTO);
+          $objPHPExcel->setActiveSheetIndex()->setCellValue('K'.$Fila, $VENTA);
+          $objPHPExcel->setActiveSheetIndex()->setCellValue('L'.$Fila, $CORRERIA);
           $objPHPExcel->setActiveSheetIndex()->setCellValue('M'.$Fila, $BASE_AJUSTE);
           $objPHPExcel->setActiveSheetIndex()->setCellValue('N'.$Fila, $AJUSTE);
           $objPHPExcel->setActiveSheetIndex()->setCellValue('O'.$Fila, $TOTAL);
 
 
-          $objPHPExcel->getActiveSheet()->getStyle('A'.$Fila.':E'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
-          $objPHPExcel->getActiveSheet()->getStyle('F'.$Fila.':O'.$Fila)->getNumberFormat()->setFormatCode('#,##0.00');
-          $objPHPExcel->getActiveSheet()->getStyle('F'.$Fila.':O'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+          $objPHPExcel->getActiveSheet()->getStyle('A'.$Fila.':D'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+          $objPHPExcel->getActiveSheet()->getStyle('E'.$Fila.':O'.$Fila)->getNumberFormat()->setFormatCode('#,##0.00');
+          $objPHPExcel->getActiveSheet()->getStyle('E'.$Fila.':O'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
           $Fila = $Fila + 1;
         } 
@@ -312,6 +318,8 @@ if($opc == 2){
     ob_end_clean();
     $objWriter->save('php://output');
     exit;
+
+
 }
 
 ?>
