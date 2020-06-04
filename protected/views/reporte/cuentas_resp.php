@@ -22,6 +22,16 @@ if($estado != null){
 
 }
 
+$id_user = Yii::app()->user->getState('id_user');
+$user_cuentas_esp = Yii::app()->params->usuarios_cuentas_esp;
+$cuentas_esp = implode(",", Yii::app()->params->cuentas_esp);
+
+if(!in_array($id_user, $user_cuentas_esp)){
+  $condicion .= " AND c.Id_Cuenta NOT IN (".$cuentas_esp.")"; 
+}else{
+  $condicion .= "";  
+}
+
 /*inicio configuración array de datos*/
 
 $query ="

@@ -56,6 +56,16 @@ class NovedadCuenta extends CActiveRecord
  	}
 
  	public function searchByCuenta($filtro) {
+
+ 		$id_user = Yii::app()->user->getState('id_user');
+	    $user_cuentas_esp = Yii::app()->params->usuarios_cuentas_esp;
+	    $cuentas_esp = implode(",", Yii::app()->params->cuentas_esp);
+
+	    if(!in_array($id_user, $user_cuentas_esp)){
+	    	$condicion = " AND C.Id_Cuenta NOT IN (".$cuentas_esp.")"; 
+	    }else{
+	    	$condicion = ""; 	
+	    }
        
  		$resp = Yii::app()->db->createCommand("
 			SELECT 
@@ -70,7 +80,7 @@ class NovedadCuenta extends CActiveRecord
 		    FROM TH_CUENTA C
 			LEFT JOIN TH_DOMINIO_WEB DW ON C.Dominio = DW.Id_Dominio_Web
 			LEFT JOIN TH_DOMINIO CL ON C.Clasificacion = CL.Id_Dominio
-			WHERE (C.Cuenta_Usuario LIKE '%".$filtro."%' OR DW.Dominio LIKE '%".$filtro."%')
+			WHERE (C.Cuenta_Usuario LIKE '%".$filtro."%' OR DW.Dominio LIKE '%".$filtro."%') ".$condicion."
 		")->queryAll();
 
         return $resp;

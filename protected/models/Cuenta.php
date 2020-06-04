@@ -229,6 +229,14 @@ class Cuenta extends CActiveRecord
 			$criteria->AddCondition("idusuarioact.Usuario = '".$this->usuario_actualizacion."'"); 
 	    }
 
+	    $id_user = Yii::app()->user->getState('id_user');
+	    $user_cuentas_esp = Yii::app()->params->usuarios_cuentas_esp;
+	    $cuentas_esp = implode(",", Yii::app()->params->cuentas_esp);
+
+	    if(!in_array($id_user, $user_cuentas_esp)){
+	    	$criteria->AddCondition("t.Id_Cuenta NOT IN (".$cuentas_esp.")"); 
+	    }
+
 	    if(empty($this->orderby)){
 			$criteria->order = 't.Id_Cuenta DESC'; 	
 		}else{
