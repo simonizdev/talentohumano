@@ -32,7 +32,11 @@ $('.search-form form').submit(function(){
 $lista_clases = CHtml::listData($clases, 'Id_Dominio', 'Dominio'); 
 
 //para combo de dominios (correo electronico)
-$lista_dominios = CHtml::listData($dominios, 'Id_Dominio_Web', 'Dominio'); 
+$lista_dominios = array();
+foreach ($dominios as $d) {
+    $m_d = DominioWeb::model()->findByPk($d['Id_Dominio_Web']);
+    $lista_dominios[$m_d->Id_Dominio_Web] = $m_d->Dominio.' ('.$m_d->Empresa_Administradora.')';
+}
 
 //para combo de tipos
 $lista_tipos = CHtml::listData($tipos, 'Id_Dominio', 'Dominio');

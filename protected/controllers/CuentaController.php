@@ -303,13 +303,13 @@ class CuentaController extends Controller
 
 		$model=new Cuenta('search');
 
-		$clases= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE d.Estado = 1 AND Id_Padre = '.Yii::app()->params->clase_cuenta.' ORDER BY d.Dominio')->queryAll();
+		$clases= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->clase_cuenta.' ORDER BY d.Dominio')->queryAll();
 
-		$dominios= Yii::app()->db->createCommand('SELECT d.Id_Dominio_Web, d.Dominio FROM TH_DOMINIO_WEB d WHERE d.Estado = 1 AND Id_Tipo = '.Yii::app()->params->dominios_cuenta_correo.' ORDER BY d.Dominio')->queryAll();
+		$dominios= Yii::app()->db->createCommand('SELECT d.Id_Dominio_Web, d.Dominio FROM TH_DOMINIO_WEB d WHERE Id_Tipo = '.Yii::app()->params->dominios_cuenta_correo.' ORDER BY d.Dominio')->queryAll();
 
-		$tipos= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE d.Estado = 1 AND Id_Padre = '.Yii::app()->params->tipo_correo.' ORDER BY d.Dominio')->queryAll();
+		$tipos= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->tipo_correo.' ORDER BY d.Dominio')->queryAll();
 
-		$estados= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE d.Estado = 1 AND Id_Padre = '.Yii::app()->params->estado_cuenta.' ORDER BY d.Dominio')->queryAll();
+		$estados= Yii::app()->db->createCommand('SELECT d.Id_Dominio, d.Dominio FROM TH_DOMINIO d WHERE Id_Padre = '.Yii::app()->params->estado_cuenta.' ORDER BY d.Dominio')->queryAll();
 		
 		$usuarios=Usuario::model()->findAll(array('order'=>'Usuario'));
 
