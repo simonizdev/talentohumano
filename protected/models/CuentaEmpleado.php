@@ -197,6 +197,15 @@ class CuentaEmpleado extends CActiveRecord
 		$criteria->compare('t.Id_Usuario_Actualizacion',$this->Id_Usuario_Actualizacion);
 		$criteria->compare('t.Fecha_Actualizacion',$this->Fecha_Actualizacion,true);
 		$criteria->compare('t.Estado',$this->Estado);
+
+		$id_user = Yii::app()->user->getState('id_user');
+	    $user_cuentas_esp = Yii::app()->params->usuarios_cuentas_esp;
+	    $cuentas_esp = implode(",", Yii::app()->params->cuentas_esp);
+
+	    if(!in_array($id_user, $user_cuentas_esp)){
+	    	$criteria->AddCondition("t.Id_Cuenta NOT IN (".$cuentas_esp.")"); 
+	    }
+
 		$criteria->order = 't.Id_Cuenta_Emp DESC'; 
 
 		return new CActiveDataProvider($this, array(
