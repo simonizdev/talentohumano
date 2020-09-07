@@ -65,7 +65,7 @@ $lista_empresas = CHtml::listData($empresas, 'Id_Empresa', 'Descripcion');
           	<?php echo $form->label($model,'opcion_exp'); ?><br>
 			<?php 
 				echo $form->radioButtonList($model,'opcion_exp',
-			    	array('3'=>'<i class="fa fa-desktop" aria-hidden="true"></i> Pantalla','1'=>'<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF','2'=>'<i class="fa fa-file-excel-o" aria-hidden="true"></i> EXCEL'),
+			    	array('3'=>'<i class="fa fa-desktop" aria-hidden="true"></i> Pantalla','2'=>'<i class="fa fa-file-excel-o" aria-hidden="true"></i> EXCEL'),
 			    	array(
 			        	'template'=>'{input}{label}',
 			        	'separator'=>'',

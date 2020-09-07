@@ -34,6 +34,7 @@ class UtilidadesReportes {
     P.Fecha_Nacimiento, 
     P.Correo,
     P.Telefono,
+    GRES.Dominio AS Gr_Esc,
     P.Persona_Contacto,
     P.Tel_Persona_Contacto,
     E.Descripcion AS Empresa,  
@@ -46,7 +47,8 @@ class UtilidadesReportes {
     FROM TH_CONTRATO_EMPLEADO HP 
     LEFT JOIN TH_EMPLEADO P ON HP.Id_Empleado = P.Id_Empleado 
     LEFT JOIN TH_DOMINIO TI ON P.Id_Tipo_Ident = TI.Id_Dominio 
-    LEFT JOIN TH_DOMINIO GE ON P.Id_Genero = GE.Id_Dominio 
+    LEFT JOIN TH_DOMINIO GE ON P.Id_Genero = GE.Id_Dominio
+    LEFT JOIN TH_DOMINIO GRES ON P.Id_Grado_Esc = GRES.Id_Dominio  
     LEFT JOIN TH_EMPRESA E ON HP.Id_Empresa = E.Id_Empresa 
     LEFT JOIN TH_UNIDAD_GERENCIA UG ON HP.Id_Unidad_Gerencia = UG.Id_Unidad_Gerencia 
     LEFT JOIN TH_AREA A ON HP.Id_Area = A.Id_Area
@@ -67,6 +69,7 @@ class UtilidadesReportes {
                 <th>Fecha de nacimiento</th>
                 <th>E-mail</th>
                 <th>Teléfono(s)</th>
+                <th>Grado escolaridad</th>
                 <th>Persona contacto</th>
                 <th>Teléfono(s) contacto</th>
                 <th>Empresa</th>
@@ -117,7 +120,13 @@ class UtilidadesReportes {
               $tel_persona_contacto = "-";
             }
 
-            $empresa = $reg1 ['Empresa']; 
+            $empresa = $reg1 ['Empresa'];
+
+            if($reg1 ['Gr_Esc'] != ""){
+              $gr_es = $reg1 ['Gr_Esc']; 
+            }else{
+              $gr_es = "-";
+            }
 
             if($reg1 ['Unidad_Gerencia'] != ""){
               $ug = $reg1 ['Unidad_Gerencia']; 
@@ -161,6 +170,7 @@ class UtilidadesReportes {
                   <td>'.$fecha_nacimiento.'</td>
                   <td>'.$correo.'</td>
                   <td>'.$telefono.'</td>
+                  <td>'.$gr_es.'</td>
                   <td>'.$persona_contacto.'</td>
                   <td>'.$tel_persona_contacto.'</td>
                   <td>'.$empresa.'</td>

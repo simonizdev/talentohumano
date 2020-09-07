@@ -79,6 +79,7 @@ GE.Dominio AS Gen,
 P.Fecha_Nacimiento, 
 P.Correo,
 P.Telefono,
+GRES.Dominio AS Gr_Esc,
 P.Persona_Contacto,
 P.Tel_Persona_Contacto,
 E.Descripcion AS Empresa,  
@@ -91,7 +92,8 @@ HP.Fecha_Ingreso
 FROM TH_CONTRATO_EMPLEADO HP 
 LEFT JOIN TH_EMPLEADO P ON HP.Id_Empleado = P.Id_Empleado 
 LEFT JOIN TH_DOMINIO TI ON P.Id_Tipo_Ident = TI.Id_Dominio 
-LEFT JOIN TH_DOMINIO GE ON P.Id_Genero = GE.Id_Dominio 
+LEFT JOIN TH_DOMINIO GE ON P.Id_Genero = GE.Id_Dominio
+LEFT JOIN TH_DOMINIO GRES ON P.Id_Grado_Esc = GRES.Id_Dominio 
 LEFT JOIN TH_EMPRESA E ON HP.Id_Empresa = E.Id_Empresa 
 LEFT JOIN TH_UNIDAD_GERENCIA UG ON HP.Id_Unidad_Gerencia = UG.Id_Unidad_Gerencia 
 LEFT JOIN TH_AREA A ON HP.Id_Area = A.Id_Area
@@ -197,6 +199,12 @@ if($opcion == 1){
 
         $empresa = $reg1 ['Empresa'];
         
+        if($reg1 ['Gr_Esc'] != ""){
+          $gr_esc = $reg1 ['Gr_Esc']; 
+        }else{
+          $gr_esc = "-";
+        }
+
         if($reg1 ['Unidad_Gerencia'] != ""){
           $ug = $reg1 ['Unidad_Gerencia']; 
         }else{
@@ -290,15 +298,16 @@ if($opcion == 2){
   $objPHPExcel->setActiveSheetIndex()->setCellValue('E1', 'Fec. nacimiento');
   $objPHPExcel->setActiveSheetIndex()->setCellValue('F1', 'E-mail');
   $objPHPExcel->setActiveSheetIndex()->setCellValue('G1', 'Teléfono(s)');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('H1', 'Persona contacto');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('I1', 'Teléfono(s) contacto');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('J1', 'Empresa');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('K1', 'Unidad de gerencia');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('L1', 'Área');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('M1', 'Subárea');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('N1', 'Cargo');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('O1', 'Fec. ingreso');
-  $objPHPExcel->setActiveSheetIndex()->setCellValue('P1', 'Salario');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('H1', 'Grado escolaridad');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('I1', 'Persona contacto');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('J1', 'Teléfono(s) contacto');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('K1', 'Empresa');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('L1', 'Unidad de gerencia');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('M1', 'Área');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('N1', 'Subárea');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('O1', 'Cargo');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('P1', 'Fec. ingreso');
+  $objPHPExcel->setActiveSheetIndex()->setCellValue('Q1', 'Salario');
 
   $objPHPExcel->getActiveSheet()->getStyle('A1:P1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
   $objPHPExcel->getActiveSheet()->getStyle('A1:P1')->getFont()->setBold(true);
@@ -341,7 +350,13 @@ if($opcion == 2){
       $tel_persona_contacto = "-";
     }
 
-    $empresa = $reg1 ['Empresa']; 
+    $empresa = $reg1 ['Empresa'];
+        
+    if($reg1 ['Gr_Esc'] != ""){
+      $gr_esc = $reg1 ['Gr_Esc']; 
+    }else{
+      $gr_esc = "-";
+    }
     
     if($reg1 ['Unidad_Gerencia'] != ""){
       $ug = $reg1 ['Unidad_Gerencia']; 
@@ -377,19 +392,20 @@ if($opcion == 2){
     $objPHPExcel->setActiveSheetIndex()->setCellValue('E'.$Fila, $fecha_nacimiento);
     $objPHPExcel->setActiveSheetIndex()->setCellValue('F'.$Fila, $correo);
     $objPHPExcel->setActiveSheetIndex()->setCellValue('G'.$Fila, $telefono);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('H'.$Fila, $persona_contacto);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('I'.$Fila, $tel_persona_contacto);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('J'.$Fila, $empresa);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('K'.$Fila, $ug);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('L'.$Fila, $area);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('M'.$Fila, $subarea);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('N'.$Fila, $cargo);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('O'.$Fila, $fecha_ingreso);
-    $objPHPExcel->setActiveSheetIndex()->setCellValue('P'.$Fila, $salario);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('H'.$Fila, $gr_esc);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('I'.$Fila, $persona_contacto);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('J'.$Fila, $tel_persona_contacto);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('K'.$Fila, $empresa);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('L'.$Fila, $ug);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('M'.$Fila, $area);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('N'.$Fila, $subarea);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('O'.$Fila, $cargo);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('P'.$Fila, $fecha_ingreso);
+    $objPHPExcel->setActiveSheetIndex()->setCellValue('Q'.$Fila, $salario);
     
-    $objPHPExcel->getActiveSheet()->getStyle('P'.$Fila)->getNumberFormat()->setFormatCode('0');
-    $objPHPExcel->getActiveSheet()->getStyle('A'.$Fila.':O'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
-    $objPHPExcel->getActiveSheet()->getStyle('P'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+    $objPHPExcel->getActiveSheet()->getStyle('Q'.$Fila)->getNumberFormat()->setFormatCode('0');
+    $objPHPExcel->getActiveSheet()->getStyle('A'.$Fila.':P'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+    $objPHPExcel->getActiveSheet()->getStyle('Q'.$Fila)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
     $Fila = $Fila + 1;
 
