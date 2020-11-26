@@ -43,8 +43,8 @@ class CPtjCump extends CActiveRecord
 		return array(
 			array('TIPO, CUM_INICIAL, CUM_FINAL, PORCENTAJE', 'required'),
 			array('TIPO, ESTADO, ID_USUARIO_CREACION, ID_USUARIO_ACTUALIZACION', 'numerical', 'integerOnly'=>true),
-			array('CUM_INICIAL, CUM_FINAL', 'length', 'max'=>6),
-			array('PORCENTAJE', 'length', 'max'=>5),
+			//array('CUM_INICIAL, CUM_FINAL', 'length', 'max'=>6),
+			//array('PORCENTAJE', 'length', 'max'=>5),
 			array('FECHA_CREACION, FECHA_ACTUALIZACION', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
