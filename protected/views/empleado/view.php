@@ -91,7 +91,7 @@ function calcularEdad(fecha) {
             <li><a role="menuitem" tabindex="-1" href="<?php echo Yii::app()->getBaseUrl(true).'/index.php?r=nucleoEmpleado/create&e='.$model->Id_Empleado; ?>">Registro de pariente</a></li>
             <li><a role="menuitem" tabindex="-1" href="<?php echo Yii::app()->getBaseUrl(true).'/index.php?r=formacionEmpleado/create&e='.$model->Id_Empleado; ?>">Registro de estudio</a></li>
             <li><a role="menuitem" tabindex="-1" href="<?php echo Yii::app()->getBaseUrl(true).'/index.php?r=evaluacionEmpleado/create&e='.$model->Id_Empleado; ?>">Registro de evaluación</a></li>
-            <?php if ($asociacion_elementos == 0) { ?>  
+            <?php if ($asociacion_elementos == 0 && $upd_th == true) { ?>  
                 <li><a role="menuitem" tabindex="-1" href="<?php echo Yii::app()->getBaseUrl(true).'/index.php?r=contratoEmpleado/create&e='.$model->Id_Empleado; ?>">Registro de contrato</a></li>
             <?php } else { ?>
                 <li><a role="menuitem" tabindex="-1" href="<?php echo Yii::app()->getBaseUrl(true).'/index.php?r=turnoEmpleado/create&e='.$model->Id_Empleado; ?>">Registro de turno</a></li>
@@ -99,7 +99,7 @@ function calcularEdad(fecha) {
                 <li><a role="menuitem" tabindex="-1" href="<?php echo Yii::app()->getBaseUrl(true).'/index.php?r=disciplinarioEmpleado/create&e='.$model->Id_Empleado.'&opc=1'; ?>">Registro llamado de atención</a></li>
                 <li><a role="menuitem" tabindex="-1" href="<?php echo Yii::app()->getBaseUrl(true).'/index.php?r=disciplinarioEmpleado/create&e='.$model->Id_Empleado.'&opc=2'; ?>">Registro de sanción</a></li>
                 <li><a role="menuitem" tabindex="-1" href="<?php echo Yii::app()->getBaseUrl(true).'/index.php?r=disciplinarioEmpleado/create&e='.$model->Id_Empleado.'&opc=3'; ?>">Registro de comparendo</a></li>
-                <?php if ($ter_cont == 1) { ?>  
+                <?php if ($ter_cont == 1 && $upd_th == true) { ?>  
                     <li><a role="menuitem" tabindex="-1" href="<?php echo Yii::app()->getBaseUrl(true).'/index.php?r=contratoEmpleado/terminacion&e='.$model->Id_Empleado; ?>">Terminación de contrato</a></li>
         
                 <?php } ?>
@@ -677,7 +677,9 @@ function calcularEdad(fecha) {
             <div class="nav-tabs-custom" style="margin-top: 2%;">
                 <ul class="nav nav-tabs" style="font-size: 12px !important;">
                     <li class="active"><a href="#con_act" data-toggle="tab">Contrato</a></li>
-                    <li><a href="#nov_act" data-toggle="tab">Novedades de contrato</a></li>
+                    <?php if($upd_th == true){ ?>
+                        <li><a href="#nov_act" data-toggle="tab">Novedades de contrato</a></li>
+                    <?php } ?>
                     <li><a href="#tur_act" data-toggle="tab">Turnos</a></li>
                     <li><a href="#aus_act" data-toggle="tab">Ausencias</a></li>
                     <li><a href="#dis_act" data-toggle="tab">Llam. de atención / Sanciones</a></li>
@@ -730,6 +732,7 @@ function calcularEdad(fecha) {
                                     return number_format($data->Salario, 0);
                                 },
                                 'htmlOptions'=>array('style' => 'text-align: right;'),
+                                'visible'=>$upd_th,
                             ),
                             array(
                                 'class'=>'CButtonColumn',
@@ -746,7 +749,7 @@ function calcularEdad(fecha) {
                                         'imageUrl'=>false,
                                         'options'=>array('title'=>'Actualizar'),
                                         'url'=>'Yii::app()->createUrl("contratoEmpleado/update", array("id"=>$data->Id_Contrato))',
-                                        'visible'=> '(Yii::app()->user->getState("permiso_act") == true && $data->Id_M_Retiro == "")',
+                                        'visible'=> '(Yii::app()->user->getState("permiso_act") == true && $data->Id_M_Retiro == "" && Yii::app()->user->getState("upd_th") == true)',
                                     ),
                                 )
                             ),
@@ -1097,7 +1100,9 @@ function calcularEdad(fecha) {
             <div class="nav-tabs-custom" style="margin-top: 2%;">
                 <ul class="nav nav-tabs" style="font-size: 12px !important;">
                     <li class="active"><a href="#con_ant" data-toggle="tab">Contratos</a></li>
-                    <li><a href="#nov_ant" data-toggle="tab">Novedades de contratos</a></li>
+                    <?php if($upd_th == true){ ?>
+                        <li><a href="#nov_ant" data-toggle="tab">Novedades de contratos</a></li>
+                    <?php } ?>
                     <li><a href="#tur_ant" data-toggle="tab">Turnos</a></li>
                     <li><a href="#aus_ant" data-toggle="tab">Ausencias</a></li>
                     <li><a href="#dis_ant" data-toggle="tab">Llam. de atención / Sanciones</a></li>
@@ -1151,6 +1156,7 @@ function calcularEdad(fecha) {
                                     return number_format($data->Salario, 0);
                                 },
                                 'htmlOptions'=>array('style' => 'text-align: right;'),
+                                'visible'=>$upd_th,
                             ),
                             array(
                                 'name'=>'Fecha_Retiro',
@@ -1171,7 +1177,7 @@ function calcularEdad(fecha) {
                                         'imageUrl'=>false,
                                         'options'=>array('title'=>'Asignar fecha de liquidación'),
                                         'url'=>'Yii::app()->createUrl("contratoEmpleado/update2", array("id"=>$data->Id_Contrato))',
-                                        'visible'=> '(Yii::app()->user->getState("permiso_act") == true && $data->Fecha_Liquidacion == "")',
+                                        'visible'=> '(Yii::app()->user->getState("permiso_act") == true && $data->Fecha_Liquidacion == "" && Yii::app()->user->getState("upd_th") == true)',
                                     ),
                                 )
                             ),

@@ -21,6 +21,7 @@
 
 <div class="btn-group" style="padding-bottom: 2%">
    <button type="button" class="btn btn-success" onclick="location.href = '<?php echo Yii::app()->getBaseUrl(true).'/index.php?r=cuenta/admin'; ?>';"><i class="fa fa-reply"></i> Volver </button>
+   <button type="button" class="btn btn-success" id="view_p"><i class="fa fa-key"></i> Ver password actual</button>
 </div>
 
 <div class="row">
@@ -46,13 +47,6 @@
         <div class="form-group">
             <?php echo $form->label($model,'Dominio'); ?><br>
             <p><?php if($model->Dominio != "" ){ echo $model->dominioweb->Dominio; } ?></p>
-        </div>
-    </div>
-    <div class="col-sm-4" id="div_password" style="display: none;">
-        <div class="form-group">
-            <div class="pull-right badge bg-red" id="error_password" style="display: none;"></div>
-            <?php echo $form->label($model,'Password'); ?>
-            <p><?php echo $model->Password; ?></p>
         </div>
     </div>
     <div class="col-sm-4" id="div_tipo_cuenta" style="display: none;">
@@ -142,22 +136,6 @@
                     'header'=>'Cargo',
                     'value' => '($data->Id_Empleado == "") ? "-" :  UtilidadesEmpleado::cargoactualempleado($data->Id_Empleado)',
                 ),
-                /*array(
-                    'name'=>'Id_Usuario_Creacion',
-                    'value'=>'$data->idusuariocre->Usuario',
-                ),
-                array(
-                    'name'=>'Fecha_Creacion',
-                    'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-                ),
-                array(
-                    'name'=>'Id_Usuario_Actualizacion',
-                    'value'=>'$data->idusuarioact->Usuario',
-                ),
-                array(
-                    'name'=>'Fecha_Actualizacion',
-                    'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-                ),*/
             ),
         ));
 
@@ -188,6 +166,22 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+            	<p align="center"><?php echo $pass; ?></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <?php $this->endWidget(); ?>
 
@@ -200,7 +194,6 @@ $(function() {
     if(clase == <?php echo Yii::app()->params->c_correo ?>){
         $('#div_cuenta_usuario').show();
         $('#div_dominio').show(); 
-        $('#div_password').show();
         $('#div_tipo_cuenta').show(); 
         $('#div_tipo_acceso').hide();
         $('#div_observaciones').show();
@@ -217,15 +210,16 @@ $(function() {
     }else{
         $('#div_cuenta_usuario').show();
         $('#div_dominio').hide(); 
-        $('#div_password').show();
         $('#div_tipo_cuenta').hide(); 
         $('#div_tipo_acceso').show();
         $('#div_observaciones').show();
         $('#div_estado').show();
     }
 
+    $("#view_p").click(function() {
+		$('#myModal').modal({show:true});
+	});
+
 });
-
-
 
 </script>

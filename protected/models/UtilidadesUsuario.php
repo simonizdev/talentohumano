@@ -275,6 +275,64 @@ class UtilidadesUsuario {
 		}
 	}
 
+	public static function adminusuarioupdth($id, $array) {
+		$array_users_selec = array();
+		foreach ($array as $clave => $valor) {
+		    
+		    //se busca el registro para saber si tiene que ser creado 
+		    $criteria=new CDbCriteria;
+			$criteria->condition='Id_Upd_Th=:Id_Upd_Th AND Id_Usuario=:Id_Usuario';
+			$criteria->params=array(':Id_Upd_Th'=>$id,':Id_Usuario'=>$valor);
+			$modelo_usuario_updth=UsuarioUpdTh::model()->find($criteria);
+
+			if(!is_null($modelo_usuario_updth)){
+				//si el estado es inactivo se cambia a activo, si ya esta activo no se realiza ninguna acción
+				if($modelo_usuario_updth->Estado == 0){
+					$modelo_usuario_updth->Id_Usuario_Actualizacion = Yii::app()->user->getState('id_user');
+					$modelo_usuario_updth->Fecha_Actualizacion = date('Y-m-d H:i:s');
+					$modelo_usuario_updth->Estado = 1;
+					if($modelo_usuario_updth->save()){
+						array_push($array_users_selec, intval($valor));
+					}	
+				}else{
+					array_push($array_users_selec, intval($valor));	
+				}
+			}else{
+				//se debe insertar un nuevo registro en la tabla
+				$nuevo_usuario_updth_usuario = new UsuarioUpdTh;
+			    $nuevo_usuario_updth_usuario->Id_Upd_Th = $id;
+			    $nuevo_usuario_updth_usuario->Id_Usuario = $valor;
+				$nuevo_usuario_updth_usuario->Id_Usuario_Creacion = Yii::app()->user->getState('id_user');
+				$nuevo_usuario_updth_usuario->Id_Usuario_Actualizacion = Yii::app()->user->getState('id_user');
+				$nuevo_usuario_updth_usuario->Fecha_Creacion = date('Y-m-d H:i:s');
+				$nuevo_usuario_updth_usuario->Fecha_Actualizacion = date('Y-m-d H:i:s');
+				$nuevo_usuario_updth_usuario->Estado = 1;
+				if($nuevo_usuario_updth_usuario->save()){
+					array_push($array_users_selec, intval($valor));
+				}
+			}
+		}
+
+		//se inactivan los usuarios que no vienen en el array
+		$usuarios_excluidos = implode(",",$array_users_selec);
+		$ue = str_replace("'", "", $usuarios_excluidos);
+		$criteria=new CDbCriteria;
+		$criteria->condition='Id_Upd_Th=:Id_Upd_Th AND Id_Usuario NOT IN ('.$ue.')';
+		$criteria->params=array(':Id_Upd_Th'=>$id);
+		$modelo_usuarios_updth_inactivar=UsuarioUpdTh::model()->findAll($criteria);
+		if(!is_null($modelo_usuarios_updth_inactivar)){
+			foreach ($modelo_usuarios_updth_inactivar as $usuarios_inactivar) {
+				//si el estado es activo se cambia a inactivo, si ya esta inactivo no se realiza ninguna acción
+				if($usuarios_inactivar->Estado == 1){
+					$usuarios_inactivar->Id_Usuario_Actualizacion = Yii::app()->user->getState('id_user');
+					$usuarios_inactivar->Fecha_Actualizacion = date('Y-m-d H:i:s');
+					$usuarios_inactivar->Estado = 0;
+					$usuarios_inactivar->save();
+				}	
+			}
+		}
+	}
+
 	public static function perfilesactivos($id_user) {
 		//opciones activas en el combo perfiles
 		$criteria=new CDbCriteria;
@@ -329,6 +387,20 @@ class UtilidadesUsuario {
 		}
 
 		return json_encode($array_subareas_activas);
+	}
+
+	public static function usuariosactivosupdth($id_upd) {
+		//opciones activas en el combo de usuarios -> permisos
+		$criteria=new CDbCriteria;
+		$criteria->condition='Id_Upd_Th=:Id_Upd_Th AND Estado=:Estado';
+		$criteria->params=array(':Id_Upd_Th'=>$id_upd,':Estado'=> 1);
+		$array_usuarios_activos = array();
+		$usuarios_activos=UsuarioUpdTh::model()->findAll($criteria);
+		foreach ($usuarios_activos as $user_act) {
+			array_push($array_usuarios_activos, $user_act->Id_Usuario);
+		}
+
+		return json_encode($array_usuarios_activos);
 	}
 
 }

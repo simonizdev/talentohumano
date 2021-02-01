@@ -35,6 +35,7 @@
 <div class="btn-group" style="padding-bottom: 2%" id="div_buttons">
     <button type="button" class="btn btn-success" onclick="location.href = '<?php echo Yii::app()->getBaseUrl(true).'/index.php?r=cuenta/admin'; ?>';"><i class="fa fa-reply"></i> Volver</button>    
     <button type="button" class="btn btn-success" id="btn_asoc" onclick="location.href = '<?php echo Yii::app()->getBaseUrl(true).'/index.php?r=CuentaEmpleado/create&id='.$model->Id_Cuenta; ?>';"><i class="fa fa-plus"></i> Asociar empleado</button>
+    <button type="button" class="btn btn-success" id="view_p"><i class="fa fa-key"></i> Ver password actual</button>
     <button type="button" class="btn btn-success" id="valida_form"><i class="fa fa-floppy-o"></i> <?php if($model->isNewRecord){echo 'Crear';}else{ echo 'Guardar';} ?></button>
 </div>
 
@@ -67,7 +68,7 @@
         <div class="form-group">
             <div class="pull-right badge bg-red" id="error_password" style="display: none;"></div>
             <?php echo $form->label($model,'Password'); ?>
-            <?php echo $form->textField($model,'Password', array('class' => 'form-control', 'maxlength' => '30', 'autocomplete' => 'off')); ?>
+            <input type="text" name="Cuenta[Password]" id="Cuenta_Password" class="form-control" autocomplete="off">
         </div>
     </div>
     <div class="col-sm-4" id="div_tipo_cuenta" style="display: none;">
@@ -200,22 +201,6 @@
                     'header'=>'Cargo',
                     'value' => '($data->Id_Empleado == "") ? "-" :  UtilidadesEmpleado::cargoactualempleado($data->Id_Empleado)',
                 ),
-		        /*array(
-		            'name'=>'Id_Usuario_Creacion',
-		            'value'=>'$data->idusuariocre->Usuario',
-		        ),
-		        array(
-		            'name'=>'Fecha_Creacion',
-		            'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Creacion)',
-		        ),
-		        array(
-		            'name'=>'Id_Usuario_Actualizacion',
-		            'value'=>'$data->idusuarioact->Usuario',
-		        ),
-		        array(
-		            'name'=>'Fecha_Actualizacion',
-		            'value'=>'UtilidadesVarias::textofechahora($data->Fecha_Actualizacion)',
-		        ),*/
 				array(
 					'class'=>'CButtonColumn',
 		            'template'=>'{update}',
@@ -259,7 +244,20 @@
    	</div>
 </div>
 
-
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+            	<p align="center"><?php echo $pass; ?></p>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?php $this->endWidget(); ?>
 
@@ -317,11 +315,10 @@ $(function() {
 	    if(clase == <?php echo Yii::app()->params->c_correo ?>){
 	      	//CORREO ELECTRONICO
 
-	        var password = $('#Cuenta_Password').val();
 	        var tipo_cuenta = $('#Cuenta_Tipo_Cuenta').val();
 	        var estado = $('#Cuenta_Estado').val();
 
-			if(password != "" && tipo_cuenta != "" && estado != ""){
+			if(tipo_cuenta != "" && estado != ""){
 
 	            limpiar_errores();
 				$('#div_buttons').hide();
@@ -329,11 +326,6 @@ $(function() {
 				form.submit();
 		                
 			}else{
-
-				if(password == ""){
-				  $('#error_password').html('Password no puede ser nulo.');
-				  $('#error_password').show(); 
-				}
 
 				if(tipo_cuenta == ""){
 				  $('#error_tipo_cuenta').html('Tipo de cuenta no puede ser nulo.');
@@ -349,11 +341,10 @@ $(function() {
 		}else{
 		  	//DEMAS CUENTAS / USUARIOS
 
-	        var password = $('#Cuenta_Password').val();
 	        var tipo_acceso = $('#Cuenta_Tipo_Acceso').val();
 			var estado = $('#Cuenta_Estado').val();
 
-			if(password != "" && tipo_acceso != "" && estado != ""){
+			if(tipo_acceso != "" && estado != ""){
 
                 limpiar_errores();
 				$('#div_buttons').hide();
@@ -361,11 +352,6 @@ $(function() {
 				form.submit();
 
 			}else{
-
-				if(password == ""){
-				  $('#error_password').html('Password no puede ser nulo.');
-				  $('#error_password').show(); 
-				}
 
 				if(tipo_acceso == ""){
 				  $('#error_tipo_acceso').html('Tipo de acceso no puede ser nulo.');
@@ -400,14 +386,6 @@ $(function() {
 		}
 	});
 
-	$("#Cuenta_Password").change(function() {
-		var valor = $('#Cuenta_Password').val(); 
-
-		if(valor != ""){
-	  		$('#error_password').html('');
-	  		$('#error_password').hide();
-		}
-	});
 
 	$("#Cuenta_Tipo_Cuenta").change(function() {
 	    var valor = $('#Cuenta_Tipo_Cuenta').val(); 
@@ -444,6 +422,11 @@ $(function() {
 		}
 	});
 
+
+	$("#view_p").click(function() {
+		$('#myModal').modal({show:true});
+	});
+
 });
 
 function limpiar_errores(){
@@ -452,8 +435,6 @@ function limpiar_errores(){
   $('#error_cuenta_usuario').hide(); 
   $('#error_dominio').html('');
   $('#error_dominio').hide(); 
-  $('#error_password').html('');
-  $('#error_password').hide(); 
   $('#error_tipo_cuenta').html('');
   $('#error_tipo_cuenta').hide(); 
   $('#error_tipo_acceso').html('');

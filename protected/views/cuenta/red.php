@@ -29,7 +29,7 @@
         <div class="form-group">
             <?php echo $form->error($model,'Password', array('class' => 'pull-right badge bg-red')); ?>
             <?php echo $form->label($model,'Password'); ?>
-            <?php echo $form->textField($model,'Password', array('class' => 'form-control', 'maxlength' => '30', 'autocomplete' => 'off')); ?>
+            <input type="text" name="Cuenta[Password]" id="Cuenta_Password" class="form-control">
         </div>
     </div>
     <div class="col-sm-6">
@@ -62,7 +62,23 @@
 
 <div class="btn-group" style="padding-bottom: 2%" id="div_buttons">
     <button type="button" class="btn btn-success" onclick="location.href = '<?php echo Yii::app()->getBaseUrl(true).'/index.php?r=cuenta/admin'; ?>';"><i class="fa fa-reply"></i> Volver</button>
+    <button type="button" class="btn btn-success" id="view_p"><i class="fa fa-key"></i> Ver password actual</button>
     <button type="button" class="btn btn-success" id="valida_form"><i class="fa fa-floppy-o"></i> Guardar</button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+              <p align="center"><?php echo $pass; ?></p>
+            </div>
+        </div>
+    </div>
 </div>
 
 <?php $this->endWidget(); ?>
@@ -96,6 +112,11 @@ $(function() {
           }
       });
   });
+
+  $("#view_p").click(function() {
+    $('#myModal').modal({show:true});
+  });
+
 });
 
 	

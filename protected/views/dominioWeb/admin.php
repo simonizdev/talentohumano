@@ -82,12 +82,6 @@ $lista_tipos = CHtml::listData($tipos, 'Id_Dominio', 'Dominio');
             'name' => 'Estado',
             'value' => 'UtilidadesVarias::textoestado1($data->Estado)',
         ),
-		/*
-		'Observaciones',
-		'Id_Usuario_Creacion',
-		'Fecha_Creacion',
-		'Id_Usuario_Actualizacion',
-		'Fecha_Actualizacion',*/
 		array(
 			'class'=>'CButtonColumn',
             'template'=>'{view}{update}',

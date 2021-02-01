@@ -52,6 +52,9 @@ class CuentaController extends Controller
 	public function actionView($id)
 	{
 		
+		$model = $this->loadModel($id);
+		$pass = substr(base64_decode($model->Password), 5,-5);
+
 		//usuarios asoc. 
 		$emp_asoc=new CuentaEmpleado('search');
 		$emp_asoc->unsetAttributes();  // clear any default values
@@ -63,9 +66,10 @@ class CuentaController extends Controller
 		$nov_cue->Id_Cuenta = $id;
 
 		$this->render('view',array(
-			'model'=>$this->loadModel($id),
+			'model'=>$model,
 			'emp_asoc'=>$emp_asoc,
 			'nov_cue'=>$nov_cue,
+			'pass'=>$pass,
 		));
 	}
 
@@ -96,7 +100,7 @@ class CuentaController extends Controller
 				$model->Tipo_Cuenta = $_POST['Cuenta']['Tipo_Cuenta'];
 				$model->Tipo_Acceso = NULL;
 				$model->Cuenta_Usuario = trim($_POST['Cuenta']['Cuenta_Usuario']);
-				$model->Password = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password'].UtilidadesCuenta::generateRandomString();
+				$model->Password = base64_encode(UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password'].UtilidadesCuenta::generateRandomString());
 				$model->Dominio = $_POST['Cuenta']['Dominio'];
 				$model->Estado = Yii::app()->params->estado_act;
 				
@@ -111,7 +115,7 @@ class CuentaController extends Controller
 				$model->Tipo_Cuenta = NULL;
 				$model->Tipo_Acceso = $_POST['Cuenta']['Tipo_Acceso'];
 				$model->Cuenta_Usuario = trim($_POST['Cuenta']['Cuenta_Usuario']);
-				$model->Password = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password'].UtilidadesCuenta::generateRandomString();
+				$model->Password = base64_encode(UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password'].UtilidadesCuenta::generateRandomString());
 				$model->Dominio = $_POST['Cuenta']['Dominio'];
 				$model->Estado = Yii::app()->params->estado_act;
 				$model->Ext = NULL;
@@ -159,6 +163,7 @@ class CuentaController extends Controller
 		$nov_cue->Id_Cuenta = $model->Id_Cuenta;
 
 		$password_act = $model->Password;
+		$pass = substr(base64_decode($model->Password), 5,-5);
 		$observaciones_act = $model->Observaciones;
 		$estado_act = $model->Estado;
 
@@ -194,11 +199,19 @@ class CuentaController extends Controller
 
 			$model->attributes=$_POST['Cuenta'];
 
-			if($_POST['Cuenta']['Password'] != $password_act){
-				$password = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password'].UtilidadesCuenta::generateRandomString();
-				$model->Password = $password;
+			if($_POST['Cuenta']['Password'] != ""){
+
+				if($_POST['Cuenta']['Password'] != $password_act){
+					$password = base64_encode(UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password'].UtilidadesCuenta::generateRandomString());
+					$model->Password = $password;
+				}else{
+					$model->Password = $password_act;	
+				}
+
 			}else{
+				
 				$model->Password = $password_act;	
+			
 			}	
 
 			if($_POST['Cuenta']['Observaciones'] == ""){
@@ -262,6 +275,7 @@ class CuentaController extends Controller
 			'estados'=>$estados,
 			'emp_asoc'=>$emp_asoc,
 			'nov_cue'=>$nov_cue,
+			'pass'=>$pass,
 		));
 	}
 
@@ -384,6 +398,7 @@ class CuentaController extends Controller
 		$model->scenario = 'actred';
 
 		$password_act = $model->Password;
+		$pass = substr(base64_encode($model->Password), 5,-5);
 
 		$cuenta = $model->Cuenta_Usuario.'@'.$model->dominioweb->Dominio;
 		
@@ -394,7 +409,7 @@ class CuentaController extends Controller
 			$model->attributes=$_POST['Cuenta'];
 
 			if($_POST['Cuenta']['Password'] != $password_act){
-				$password = UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password'].UtilidadesCuenta::generateRandomString();
+				$password = base64_encode(UtilidadesCuenta::generateRandomString().$_POST['Cuenta']['Password'].UtilidadesCuenta::generateRandomString());
 				$model->Password = $password;
 				$novedad = "Password: ".$password_act." / ".$password.", ";
 			}else{
@@ -430,6 +445,7 @@ class CuentaController extends Controller
 
 		$this->render('red',array(
 			'model'=>$model,
+			'pass'=>$pass,
 		));
 
 	}

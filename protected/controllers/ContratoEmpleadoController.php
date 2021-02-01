@@ -53,6 +53,7 @@ class ContratoEmpleadoController extends Controller
 	{
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
+			'upd_th'=>Yii::app()->user->getState('upd_th'),
 		));
 	}
 

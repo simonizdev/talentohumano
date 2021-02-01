@@ -18,4 +18,4 @@ $lista_estados = CHtml::listData($estados, 'Id_Dominio', 'Dominio');
 
 <h3>Actualización de cuenta / usuario</h3>
 
-<?php $this->renderPartial('_form2', array('model'=>$model, 'lista_clases'=>$lista_clases, 'lista_dominios'=>$lista_dominios, 'lista_tipos'=>$lista_tipos, 'lista_estados'=>$lista_estados, 'emp_asoc' => $emp_asoc, 'nov_cue' => $nov_cue)); ?>
+<?php $this->renderPartial('_form2', array('model'=>$model, 'lista_clases'=>$lista_clases, 'lista_dominios'=>$lista_dominios, 'lista_tipos'=>$lista_tipos, 'lista_estados'=>$lista_estados, 'emp_asoc' => $emp_asoc, 'nov_cue' => $nov_cue, 'pass' => $pass)); ?>

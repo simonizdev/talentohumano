@@ -46,10 +46,12 @@
         array(
             'name'=>'Salario',
             'value'=>number_format($model->Salario, 0),
+            'visible'=>$upd_th,
         ),
         array(
             'name'=>'Salario_Flexible',
             'value'=>($model->Salario_Flexible == "" ) ? "NO ASIGNADO" :UtilidadesVarias::textoestado2($model->Salario_Flexible),
+            'visible'=>$upd_th,
         ),
         array(
             'name'=>'Id_M_Retiro',

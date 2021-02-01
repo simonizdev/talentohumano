@@ -42,6 +42,15 @@ class UserIdentity extends CUserIdentity
       //permisos para actualizar registros
       $permiso_act = false;
 
+      //se verifica si el usuario esta autorizado a ver información de log de contratos y salarios
+      $usuario_updth=UsuarioUpdTh::model()->findByAttributes(array("Id_Upd_Th" => 1, "Id_Usuario" => $modelousuario->Id_Usuario, "Estado" => 1));
+
+      if(is_null($usuario_updth)){
+        $upd_th = false;
+      }else{
+        $upd_th = true;
+      }
+
       //se verifica cuantos perfiles tiene asociado el usuario
       $criteria = new CDbCriteria;
       $criteria->join ='LEFT JOIN TH_PERFIL p ON t.Id_Perfil = p.Id_Perfil';
@@ -140,6 +149,7 @@ class UserIdentity extends CUserIdentity
         $this->setState('array_subareas', $array_subareas);
         $this->setState('permiso_act', $permiso_act);
         $this->setState('niv_det_vis_emp', $modelousuario->Id_Niv_Det_Emp);
+        $this->setState('upd_th', $upd_th);
         $this->errorCode=self::ERROR_NONE;
 
       }

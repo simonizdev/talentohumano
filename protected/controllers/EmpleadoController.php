@@ -53,7 +53,6 @@ class EmpleadoController extends Controller
 	{
 		$model=$this->loadModel($id);
 
-
 		//logica visibilidad boton nuevo contrato
 		$query_contrato= Yii::app()->db->createCommand('SELECT TOP 1 Id_Contrato FROM TH_CONTRATO_EMPLEADO WHERE Id_Empleado = '.$id.' AND Id_M_Retiro IS NULL ORDER BY 1 DESC')->queryRow();
 
@@ -90,6 +89,9 @@ class EmpleadoController extends Controller
 			}
 
 		}
+
+		//Permiso para ver / modificar log / sueldo en contratos
+		$upd_th = Yii::app()->user->getState('upd_th');
 
 		//parientes del empleado
 		$model_parientes=new NucleoEmpleado('search');
@@ -296,7 +298,8 @@ class EmpleadoController extends Controller
 			'model_herramientas_act'=>$model_herramientas_act,
 			'model_herramientas_ant'=>$model_herramientas_ant,
 			'model_cuentas_act'=>$model_cuentas_act,
-			'model_cuentas_ant'=>$model_cuentas_ant,	
+			'model_cuentas_ant'=>$model_cuentas_ant,
+			'upd_th'=>$upd_th,
 		));
 	}
 
