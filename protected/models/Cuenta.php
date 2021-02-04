@@ -51,7 +51,7 @@ class Cuenta extends CActiveRecord
 		return array(
 			array('Password, Id_Cuenta_Red', 'required', 'on' => 'actred'),
 			array('Clasificacion, Tipo_Cuenta, Tipo_Acceso, Dominio, Estado, Id_Usuario_Creacion, Id_Usuario_Actualizacion', 'numerical', 'integerOnly'=>true),
-			array('Cuenta_Usuario, Password', 'length', 'max'=>30),
+			array('Cuenta_Usuario', 'length', 'max'=>30),
 			array('Ext', 'length', 'max'=>10),
 			array('Observaciones', 'safe'),
 			// The following rule is used by search().
